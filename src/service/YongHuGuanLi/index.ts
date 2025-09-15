@@ -431,7 +431,7 @@ export interface PostUsersAssignRoleRequestType {
   /**
    * 用户ID
    */
-  id: string
+  userId: string
 }
 
 /**
@@ -488,7 +488,7 @@ export interface PostUsersAssignRolesBatchRequestType {
   /**
    * 用户ID
    */
-  id: string
+  userId: string
 }
 
 /**

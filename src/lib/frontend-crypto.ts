@@ -15,14 +15,14 @@ export class FrontendCrypto {
       // 生成随机IV
       const iv = CryptoJS.lib.WordArray.random(16)
 
-      // 加密
+      // 加密 - 与后端保持一致的配置
       const encrypted = CryptoJS.AES.encrypt(text, keyWordArray, {
         iv: iv,
         mode: CryptoJS.mode.CTR,
-        padding: CryptoJS.pad.NoPadding,
+        padding: CryptoJS.pad.NoPadding, // 与后端保持一致
       })
 
-      // 返回格式: iv:encryptedText
+      // 返回格式: iv:encryptedText (与后端保持一致)
       return `${iv.toString(CryptoJS.enc.Hex)}:${encrypted.ciphertext.toString(CryptoJS.enc.Hex)}`
     } catch {
       throw new Error('加密失败')
@@ -49,18 +49,19 @@ export class FrontendCrypto {
       const ivWordArray = CryptoJS.enc.Hex.parse(ivHex)
       const encryptedWordArray = CryptoJS.enc.Hex.parse(encrypted)
 
-      // 解密
-      const decrypted = CryptoJS.AES.decrypt(
-        { ciphertext: encryptedWordArray } as any,
-        keyWordArray,
-        {
-          iv: ivWordArray,
-          mode: CryptoJS.mode.CTR,
-          padding: CryptoJS.pad.NoPadding,
-        }
-      )
+      // 创建解密器 - 与后端保持一致的配置
+      const decryptor = CryptoJS.algo.AES.createDecryptor(keyWordArray, {
+        iv: ivWordArray,
+        mode: CryptoJS.mode.CTR,
+        padding: CryptoJS.pad.NoPadding, // 与后端保持一致
+      })
 
-      return decrypted.toString(CryptoJS.enc.Utf8)
+      // 解密
+      const decrypted = decryptor.process(encryptedWordArray)
+      decryptor.finalize()
+
+      // 转换为UTF-8字符串
+      return CryptoJS.enc.Utf8.stringify(decrypted)
     } catch {
       throw new Error('解密失败')
     }
@@ -85,11 +86,12 @@ export class FrontendCrypto {
 
     // 验证hex格式
     const hexPattern = /^[0-9a-fA-F]+$/
+    // IV长度应该是16字节 = 32个hex字符，加密数据应该是有效的hex字符串
     return (
       hexPattern.test(ivHex) &&
       hexPattern.test(encrypted) &&
-      ivHex.length === 32
-    ) // 16字节 = 32 hex字符
+      ivHex.length === 32 // 16字节 = 32 hex字符
+    )
   }
 }
 

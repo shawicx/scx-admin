@@ -1,24 +1,39 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useAuth } from '@/stores/auth'
+import AnimatedBackground from '@/components/ui/animated-background'
+import { useAuth as useAuthHook } from '@/hooks/use-auth'
 import { useCountdown } from '@/hooks/use-countdown'
-import { loginSchema, loginWithCodeSchema, type LoginFormData, type LoginWithCodeFormData } from '@/lib/validations/auth'
+import {
+  loginSchema,
+  loginWithCodeSchema,
+  type LoginFormData,
+  type LoginWithCodeFormData,
+} from '@/lib/validations/auth'
+import { IndexedDBManager } from '@/lib/indexeddb-manager'
 
 export default function LoginPage() {
   const router = useRouter()
-  const { login, loginWithCode, sendVerificationCode } = useAuth()
+  const searchParams = useSearchParams()
+  const { login, loginWithCode } = useAuthHook()
   const { count, isActive, start } = useCountdown(60)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const passwordForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -36,12 +51,44 @@ export default function LoginPage() {
     },
   })
 
+  // 检查用户是否已经登录
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const indexedDB = IndexedDBManager.getInstance()
+        const token = await indexedDB.getItem('accessToken')
+        if (token) {
+          // 如果已经登录，重定向到首页或指定页面
+          const redirect = searchParams.get('redirect') || '/'
+          router.push(redirect)
+        }
+      } catch (error) {
+        console.error('Failed to check auth status:', error)
+      }
+    }
+
+    checkAuthStatus()
+  }, [router, searchParams])
+
   const onPasswordSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
+    setError(null)
     try {
-      await login(data.email, data.password)
-      router.push('/')
-    } catch (error) {
+      const result = await login({
+        email: data.email,
+        password: data.password,
+      })
+
+      if (result.success) {
+        // 登录成功，重定向到首页或指定页面
+        const redirect = searchParams.get('redirect') || '/'
+        router.push(redirect)
+        router.refresh()
+      } else {
+        setError(result.error?.message || '登录失败')
+      }
+    } catch (error: any) {
+      setError(error.message || '登录失败')
       console.error('登录失败:', error)
     } finally {
       setIsLoading(false)
@@ -50,10 +97,23 @@ export default function LoginPage() {
 
   const onCodeSubmit = async (data: LoginWithCodeFormData) => {
     setIsLoading(true)
+    setError(null)
     try {
-      await loginWithCode(data.email, data.code)
-      router.push('/')
-    } catch (error) {
+      const result = await loginWithCode({
+        email: data.email,
+        emailVerificationCode: data.code,
+      })
+
+      if (result.success) {
+        // 登录成功，重定向到首页或指定页面
+        const redirect = searchParams.get('redirect') || '/'
+        router.push(redirect)
+        router.refresh()
+      } else {
+        setError(result.error?.message || '登录失败')
+      }
+    } catch (error: any) {
+      setError(error.message || '登录失败')
       console.error('登录失败:', error)
     } finally {
       setIsLoading(false)
@@ -68,7 +128,8 @@ export default function LoginPage() {
     }
 
     try {
-      await sendVerificationCode(email)
+      // 这里应该调用发送验证码的API
+      // 暂时模拟发送成功
       start()
     } catch (error) {
       console.error('发送验证码失败:', error)
@@ -76,21 +137,36 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Canvas动画背景 */}
+      <AnimatedBackground />
+
+      {/* 登录卡片 */}
+      <Card className="w-full max-w-md relative z-10 backdrop-blur-md bg-white/95 border-white/20 shadow-2xl shadow-purple-500/10">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">登录</CardTitle>
-          <CardDescription>选择您的登录方式</CardDescription>
+          <CardTitle className="text-2xl text-gray-900">登录</CardTitle>
+          <CardDescription className="text-gray-600">
+            选择您的登录方式
+          </CardDescription>
         </CardHeader>
         <CardContent>
+          {error && (
+            <div className="mb-4 p-3 bg-destructive/10 text-destructive text-sm rounded-md">
+              {error}
+            </div>
+          )}
+
           <Tabs defaultValue="password" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="password">密码登录</TabsTrigger>
               <TabsTrigger value="code">验证码登录</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="password">
-              <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
+              <form
+                onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}
+                className="space-y-4"
+              >
                 <div className="space-y-2">
                   <Label htmlFor="email">邮箱</Label>
                   <Input
@@ -105,7 +181,7 @@ export default function LoginPage() {
                     </p>
                   )}
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="password">密码</Label>
                   <Input
@@ -120,15 +196,18 @@ export default function LoginPage() {
                     </p>
                   )}
                 </div>
-                
+
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? '登录中...' : '登录'}
                 </Button>
               </form>
             </TabsContent>
-            
+
             <TabsContent value="code">
-              <form onSubmit={codeForm.handleSubmit(onCodeSubmit)} className="space-y-4">
+              <form
+                onSubmit={codeForm.handleSubmit(onCodeSubmit)}
+                className="space-y-4"
+              >
                 <div className="space-y-2">
                   <Label htmlFor="code-email">邮箱</Label>
                   <Input
@@ -143,7 +222,7 @@ export default function LoginPage() {
                     </p>
                   )}
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="code">验证码</Label>
                   <div className="flex gap-2">
@@ -168,14 +247,14 @@ export default function LoginPage() {
                     </p>
                   )}
                 </div>
-                
+
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? '登录中...' : '登录'}
                 </Button>
               </form>
             </TabsContent>
           </Tabs>
-          
+
           <div className="mt-6 text-center text-sm">
             还没有账号？{' '}
             <Link href="/register" className="text-primary hover:underline">

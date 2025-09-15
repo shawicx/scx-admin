@@ -125,12 +125,7 @@ export const getRolesApi = (params: GetRolesRequestType) => {
  * @method PUT
  * @path /api/roles
  */
-export interface PutRolesRequestType {
-  /**
-   * 角色ID
-   */
-  id: string
-}
+export interface PutRolesRequestType {}
 
 /**
  * @description 接口 更新角色 的 **返回类型**
@@ -350,13 +345,13 @@ export const getRolesByCodeApi = (params: GetRolesByCodeRequestType) => {
  */
 export interface PostRolesAssignPermissionsRequestType {
   /**
-   * 权限ID列表
-   */
-  permissionIds: string[]
-  /**
    * 角色ID
    */
   id: string
+  /**
+   * 权限ID列表
+   */
+  permissionIds: string[]
 }
 
 /**

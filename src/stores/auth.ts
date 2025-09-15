@@ -2,6 +2,9 @@
 
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { useAuth as useAuthHook } from '@/hooks/use-auth'
+import { IndexedDBManager } from '@/lib/indexeddb-manager'
+import type { PostUsersLoginPasswordResponseType } from '@/service'
 
 interface User {
   id: string
@@ -15,65 +18,122 @@ interface AuthState {
   login: (email: string, password: string) => Promise<void>
   loginWithCode: (email: string, code: string) => Promise<void>
   register: (email: string, password: string, code: string) => Promise<void>
-  logout: () => void
   sendVerificationCode: (email: string) => Promise<void>
+  logout: () => Promise<void>
+  checkAuthStatus: () => Promise<void>
 }
 
 export const useAuth = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       isAuthenticated: false,
-      
+
       login: async (email: string, password: string) => {
-        // 模拟登录 API 调用
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        // 使用 password 参数进行验证（这里是模拟）
-        if (password.length < 6) {
-          throw new Error('密码长度至少6位')
+        const { login: loginHook } = useAuthHook()
+        const result = await loginHook({ email, password })
+
+        if (result.success) {
+          const userData = result.data
+          const user = {
+            id: userData.id,
+            email: userData.email,
+            name: userData.name,
+          }
+          set({ user, isAuthenticated: true })
+        } else {
+          throw new Error(result.error?.message || '登录失败')
         }
-        
-        const user = { id: '1', email, name: email.split('@')[0] }
-        set({ user, isAuthenticated: true })
       },
-      
+
       loginWithCode: async (email: string, code: string) => {
-        // 模拟验证码登录 API 调用
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        if (code === '123456') {
-          const user = { id: '1', email, name: email.split('@')[0] }
+        const { loginWithCode: loginWithCodeHook } = useAuthHook()
+        const result = await loginWithCodeHook({
+          email,
+          emailVerificationCode: code,
+        })
+
+        if (result.success) {
+          const userData = result.data
+          const user = {
+            id: userData.id,
+            email: userData.email,
+            name: userData.name,
+          }
           set({ user, isAuthenticated: true })
         } else {
-          throw new Error('验证码错误')
+          throw new Error(result.error?.message || '登录失败')
         }
       },
-      
+
       register: async (email: string, password: string, code: string) => {
-        // 模拟注册 API 调用
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        if (code === '123456') {
-          const user = { id: '1', email, name: email.split('@')[0] }
+        const { register: registerHook } = useAuthHook()
+        const result = await registerHook({
+          email,
+          password,
+          emailVerificationCode: code,
+        })
+
+        if (result.success) {
+          const userData = result.data
+          const user = {
+            id: userData.id,
+            email: userData.email,
+            name: userData.name,
+          }
           set({ user, isAuthenticated: true })
         } else {
-          throw new Error('验证码错误')
+          throw new Error(result.error?.message || '注册失败')
         }
       },
-      
-      logout: () => {
+
+      sendVerificationCode: async (email: string) => {
+        const { sendVerificationCode: sendCodeHook } = useAuthHook()
+        const result = await sendCodeHook(email)
+
+        if (!result.success) {
+          throw new Error(result.error?.message || '发送验证码失败')
+        }
+      },
+
+      logout: async () => {
+        const { logout: logoutHook } = useAuthHook()
+        await logoutHook()
         set({ user: null, isAuthenticated: false })
       },
-      
-      sendVerificationCode: async (email: string) => {
-        // 模拟发送验证码 API 调用
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        console.log(`验证码已发送到 ${email}`)
+
+      checkAuthStatus: async () => {
+        try {
+          const indexedDB = IndexedDBManager.getInstance()
+          const token = await indexedDB.getItem('accessToken')
+          const userData = (await indexedDB.getItem(
+            'user'
+          )) as PostUsersLoginPasswordResponseType | null
+
+          if (token && userData) {
+            set({
+              user: {
+                id: userData.id,
+                email: userData.email,
+                name: userData.name,
+              },
+              isAuthenticated: true,
+            })
+          } else {
+            set({ user: null, isAuthenticated: false })
+          }
+        } catch (error) {
+          console.error('Failed to check auth status:', error)
+          set({ user: null, isAuthenticated: false })
+        }
       },
     }),
     {
       name: 'auth-storage',
+      partialize: state => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
     }
   )
 )

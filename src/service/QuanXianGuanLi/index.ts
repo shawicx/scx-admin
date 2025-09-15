@@ -137,12 +137,7 @@ export const getPermissionsApi = (params: GetPermissionsRequestType) => {
  * @method PUT
  * @path /api/permissions
  */
-export interface PutPermissionsRequestType {
-  /**
-   * 权限ID
-   */
-  id: string
-}
+export interface PutPermissionsRequestType {}
 
 /**
  * @description 接口 更新权限 的 **返回类型**

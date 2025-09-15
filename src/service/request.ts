@@ -1,12 +1,13 @@
 import { Request_Method, ValueOf } from '@scxfe/api-tool'
 import type { AxiosRequestConfig } from 'axios'
 import axios from 'axios'
-// import { AESToken } from '.';
+import { IndexedDBManager } from '@/lib/indexeddb-manager'
+import { toast } from '@/components/ui/use-toast'
 
 type Method = ValueOf<typeof Request_Method>
 
 // 用于转发请求的代理地址
-const BASE_LINE_PROXY_PATH = ''
+const BASE_LINE_PROXY_PATH = 'http://127.0.0.1:3000'
 // 用于 token 加密（基线）
 
 // 取消请求白名单
@@ -53,6 +54,26 @@ const HttpStatusMessage = new Map<HttpStatus, string>([
   [HttpStatus.UnKnownError, '未知错误'],
 ])
 
+// 添加消息提示函数
+function showMessage(
+  message: string,
+  type: 'error' | 'success' | 'warning' | 'info' = 'error'
+) {
+  // 使用项目中的 toast 组件显示消息
+  toast({
+    variant: type === 'error' ? 'destructive' : 'default',
+    title:
+      type === 'error'
+        ? '错误'
+        : type === 'success'
+          ? '成功'
+          : type === 'warning'
+            ? '警告'
+            : '提示',
+    description: message,
+  })
+}
+
 function hashObject(obj: unknown): string {
   const str = JSON.stringify(obj)
   // 使用简单的哈希算法，在实际使用时可以选择 crypto
@@ -82,8 +103,10 @@ function getRequestKey(
 function handleError(error: Error) {
   if (axios.isCancel(error)) {
     console.log('请求取消的错误', error.message)
+    showMessage('请求已被取消: ' + error.message, 'warning')
   } else {
     console.log('其他未知的错误', (error as Error).message)
+    showMessage('请求失败: ' + (error as Error).message, 'error')
   }
 }
 
@@ -146,6 +169,15 @@ export default async function request(url: string, config: AxiosRequestConfig) {
   }
   pendingRequests.set(requestKey, controller)
 
+  // 获取访问令牌
+  let accessToken = null
+  try {
+    const indexedDB = IndexedDBManager.getInstance()
+    accessToken = await indexedDB.getItem('accessToken')
+  } catch (error) {
+    console.error('Failed to get access token from IndexedDB:', error)
+  }
+
   // const secret = AESToken(BASE_LINE_KEY_24);
   const { headers = {}, params: configParams, ...axiosRequestConfig } = config
 
@@ -157,6 +189,7 @@ export default async function request(url: string, config: AxiosRequestConfig) {
     const response = await axios(url, {
       headers: {
         ...headers,
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         token: 'secret',
       },
       ...axiosRequestConfig,
@@ -174,17 +207,17 @@ export default async function request(url: string, config: AxiosRequestConfig) {
       )
     ) {
       if (
-        !response.data.success &&
-        response.data.status === TOKEN_ERROR_STATUS
+        response.status >= HttpStatus.Redirection ||
+        response.data?.statusCode >= HttpStatus.Redirection
       ) {
-        return null
+        const errorMessage = `${httpStatusMessage} ${response.data.message} ${response.data.status}`
+        showMessage(errorMessage, 'error')
+        throw new Error(errorMessage)
       }
-      if (!response.data.success) {
-        return null
-      }
-      return response.data
+      return response.data.data
     } else {
-      const message = httpStatusMessage?.[0] ?? '未知错误'
+      const message = httpStatusMessage ?? '未知错误'
+      showMessage(message, 'error')
       return new Error(message)
     }
   } catch (error) {
