@@ -8,7 +8,13 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { useAuth } from '@/stores/auth'
 import { useCountdown } from '@/hooks/use-countdown'
 import { registerSchema, type RegisterFormData } from '@/lib/validations/auth'
@@ -79,7 +85,7 @@ export default function RegisterPage() {
                 </p>
               )}
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">密码</Label>
               <Input
@@ -94,7 +100,7 @@ export default function RegisterPage() {
                 </p>
               )}
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">确认密码</Label>
               <Input
@@ -109,7 +115,7 @@ export default function RegisterPage() {
                 </p>
               )}
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="code">邮箱验证码</Label>
               <div className="flex gap-2">
@@ -134,12 +140,12 @@ export default function RegisterPage() {
                 </p>
               )}
             </div>
-            
+
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? '注册中...' : '注册'}
             </Button>
           </form>
-          
+
           <div className="mt-6 text-center text-sm">
             已有账号？{' '}
             <Link href="/login" className="text-primary hover:underline">

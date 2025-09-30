@@ -33,7 +33,6 @@ export default function LoginPage() {
   const { login, loginWithCode } = useAuthHook()
   const { count, isActive, start } = useCountdown(60)
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const passwordForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -72,23 +71,19 @@ export default function LoginPage() {
 
   const onPasswordSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
-    setError(null)
     try {
       const result = await login({
         email: data.email,
         password: data.password,
       })
-
       if (result.success) {
         // 登录成功，重定向到首页或指定页面
         const redirect = searchParams.get('redirect') || '/'
+        console.log('Redirecting to:', redirect)
         router.push(redirect)
         router.refresh()
-      } else {
-        setError(result.error?.message || '登录失败')
       }
     } catch (error: any) {
-      setError(error.message || '登录失败')
       console.error('登录失败:', error)
     } finally {
       setIsLoading(false)
@@ -97,7 +92,6 @@ export default function LoginPage() {
 
   const onCodeSubmit = async (data: LoginWithCodeFormData) => {
     setIsLoading(true)
-    setError(null)
     try {
       const result = await loginWithCode({
         email: data.email,
@@ -109,11 +103,8 @@ export default function LoginPage() {
         const redirect = searchParams.get('redirect') || '/'
         router.push(redirect)
         router.refresh()
-      } else {
-        setError(result.error?.message || '登录失败')
       }
     } catch (error: any) {
-      setError(error.message || '登录失败')
       console.error('登录失败:', error)
     } finally {
       setIsLoading(false)
@@ -150,12 +141,6 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {error && (
-            <div className="mb-4 p-3 bg-destructive/10 text-destructive text-sm rounded-md">
-              {error}
-            </div>
-          )}
-
           <Tabs defaultValue="password" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="password">密码登录</TabsTrigger>

@@ -10,7 +10,6 @@ import {
   postUsersRegisterApi,
   postUsersSendEmailCodeApi,
 } from '@/service'
-import { useState, useEffect } from 'react'
 import type {
   PostUsersLoginPasswordRequestType,
   PostUsersLoginPasswordResponseType,
@@ -30,8 +29,7 @@ export function useAuth() {
     try {
       // 获取加密密钥
       const keyResponse = await getUsersEncryptionKeyApi({})
-      const { key, keyId } = keyResponse
-      console.log(keyResponse, 'postUsersLoginPasswordApi keyResponse')
+      const { key, keyId } = keyResponse.data || {}
       // 加密密码
       const encryptedPassword = FrontendCrypto.encrypt(params.password, key)
 
@@ -41,7 +39,6 @@ export function useAuth() {
         password: encryptedPassword,
         keyId,
       })
-      console.log(result, 'postUsersLoginPasswordApi result')
       // 将用户信息和访问令牌分别存储到 IndexDB
       try {
         await indexedDB.setItem('user', result.data)
@@ -51,7 +48,6 @@ export function useAuth() {
       }
       return result
     } catch (error) {
-      console.error('Login failed:', error)
       return { success: false, error }
     }
   }
@@ -73,7 +69,6 @@ export function useAuth() {
       }
       return result
     } catch (error) {
-      console.error('Login with code failed:', error)
       return { success: false, error }
     }
   }

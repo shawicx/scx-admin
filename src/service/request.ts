@@ -1,5 +1,5 @@
 import { Request_Method, ValueOf } from '@scxfe/api-tool'
-import type { AxiosRequestConfig } from 'axios'
+import type { AxiosError, AxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
 import { toast } from '@/components/ui/use-toast'
@@ -8,16 +8,12 @@ type Method = ValueOf<typeof Request_Method>
 
 // 用于转发请求的代理地址
 const BASE_LINE_PROXY_PATH = 'http://127.0.0.1:3000'
-// 用于 token 加密（基线）
 
 // 取消请求白名单
 const CANCEL_WHITE_LIST: Array<{ path: string; method: Method }> = []
 
 // 超时时间
 const TIMEOUT = 5 * 1000
-
-// token 报错
-const TOKEN_ERROR_STATUS = 3001
 
 // 请求队列
 const pendingRequests = new Map()
@@ -54,22 +50,33 @@ const HttpStatusMessage = new Map<HttpStatus, string>([
   [HttpStatus.UnKnownError, '未知错误'],
 ])
 
+const getText = (type: 'error' | 'success' | 'warning' | 'info') => {
+  switch (type) {
+    case 'error':
+      return '错误'
+    case 'success':
+      return '成功'
+    case 'warning':
+      return '警告'
+    case 'info':
+      return '提示'
+    default:
+      return '提示'
+  }
+}
+
 // 添加消息提示函数
 function showMessage(
   message: string,
   type: 'error' | 'success' | 'warning' | 'info' = 'error'
 ) {
+  const text = getText(type)
+  const variant = type === 'error' ? 'destructive' : 'default'
+  console.log(`${text}: ${message}`)
   // 使用项目中的 toast 组件显示消息
   toast({
-    variant: type === 'error' ? 'destructive' : 'default',
-    title:
-      type === 'error'
-        ? '错误'
-        : type === 'success'
-          ? '成功'
-          : type === 'warning'
-            ? '警告'
-            : '提示',
+    variant,
+    title: text,
     description: message,
   })
 }
@@ -100,19 +107,23 @@ function getRequestKey(
   return `${method}:${urlObj.pathname}:${paramsHash}:${dataHash}`
 }
 
-function handleError(error: Error) {
+function handleError(error: AxiosError) {
   if (axios.isCancel(error)) {
-    console.log('请求取消的错误', error.message)
     showMessage('请求已被取消: ' + error.message, 'warning')
   } else {
-    console.log('其他未知的错误', (error as Error).message)
+    const responseError =
+      (error as AxiosError<any>).response?.data?.message || ''
+    if (responseError) {
+      showMessage('请求失败: ' + responseError, 'error')
+      return
+    }
     showMessage('请求失败: ' + (error as Error).message, 'error')
   }
 }
 
 function getHttpStatus(statusCode: number): HttpStatus {
   // 请求完成
-  if (statusCode === HttpStatus.OK) {
+  if (statusCode >= HttpStatus.OK) {
     return HttpStatus.OK
   }
 
@@ -206,22 +217,17 @@ export default async function request(url: string, config: AxiosRequestConfig) {
         httpStatus as any
       )
     ) {
-      if (
-        response.status >= HttpStatus.Redirection ||
-        response.data?.statusCode >= HttpStatus.Redirection
-      ) {
-        const errorMessage = `${httpStatusMessage} ${response.data.message} ${response.data.status}`
+      if (response.data?.statusCode >= HttpStatus.Redirection) {
+        const errorMessage = `${response.data?.statusCode} ${response.data.message} ${response.data.status}`
         showMessage(errorMessage, 'error')
-        throw new Error(errorMessage)
       }
-      return response.data.data
+      return response.data
     } else {
       const message = httpStatusMessage ?? '未知错误'
       showMessage(message, 'error')
-      return new Error(message)
     }
   } catch (error) {
-    handleError(error as Error)
+    handleError(error as AxiosError)
     throw error
   } finally {
     pendingRequests.delete(requestKey)
