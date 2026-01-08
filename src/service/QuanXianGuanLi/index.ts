@@ -1,463 +1,420 @@
-import request from '@/service/request'
+import { RequestConfig, request } from '../request'
+import type { PermissionResponseDto } from '../types'
 
 /**
- * @description 接口 创建权限 的 **请求类型**
- * @category 权限管理
- * @method POST
- * @path /api/permissions
+ * @description 创建权限
+ * @param params ApiPermissionsPOSTRequest
+ * @returns Promise<ApiPermissionsPOSTResponse>
  */
-export interface PostPermissionsRequestType {
-  /**
-   * 权限名称
-   */
+export interface ApiPermissionsPOSTRequest {
+  /** @description 权限名称 */
   name: string
-  /**
-   * 操作动作
-   */
+  /** @description 操作动作 */
   action: string
-  /**
-   * 资源名称
-   */
+  /** @description 资源名称 */
   resource: string
-  /**
-   * 权限描述
-   */
+  /** @description 权限描述 */
   description?: string
+  /** @description  */
+  Authorization?: string
 }
 
 /**
- * @description 接口 创建权限 的 **返回类型**
- * @category 权限管理
- * @method POST
- * @path /api/permissions
+ * @description 创建权限 的返回数据类型
  */
-export interface PostPermissionsResponseType {
-  /**
-   * 权限ID
-   */
+export interface ApiPermissionsPOSTResponse {
+  /** @description 权限ID */
   id: string
-  /**
-   * 权限名称
-   */
+  /** @description 权限名称 */
   name: string
-  /**
-   * 操作动作
-   */
+  /** @description 操作动作 */
   action: string
-  /**
-   * 资源名称
-   */
+  /** @description 资源名称 */
   resource: string
-  /**
-   * 权限描述
-   */
-  description: string | null
-  /**
-   * 创建时间
-   */
+  /** @description 权限描述 */
+  description: any
+  /** @description 创建时间 */
   createdAt: string
-  /**
-   * 更新时间
-   */
+  /** @description 更新时间 */
   updatedAt: string
 }
 
 /**
- * @description 接口 创建权限 的 **请求函数**
- * @category 权限管理
- * @method POST
- * @path /api/permissions
+ * @description 创建权限
+ * @param params ApiPermissionsPOSTRequest
+ * @returns Promise<ApiPermissionsPOSTResponse>
  */
-export const postPermissionsApi = (params: PostPermissionsRequestType) => {
-  return request('/api/permissions', {
+export async function apiPermissionsPOST(
+  params: ApiPermissionsPOSTRequest
+): Promise<ApiPermissionsPOSTResponse> {
+  const config: RequestConfig = {
+    url: '/api/permissions',
     method: 'POST',
     data: params,
-  })
+  }
+  return request<ApiPermissionsPOSTResponse>(config)
 }
 
 /**
- * @description 接口 获取权限列表 的 **请求类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions
+ * @description 获取权限列表
+ * @param params ApiPermissionsGETRequest
+ * @returns Promise<ApiPermissionsGETResponse>
  */
-export interface GetPermissionsRequestType {
-  /**
-   * 搜索关键词（权限名称、动作或资源）
-   */
+export interface ApiPermissionsGETRequest {
+  /** @description 搜索关键词（权限名称、动作或资源） */
   search?: string
-  /**
-   * 按动作筛选
-   */
+  /** @description 按动作筛选 */
   action?: string
-  /**
-   * 按资源筛选
-   */
+  /** @description 按资源筛选 */
   resource?: string
-  /**
-   * 每页数量
-   */
+  /** @description 每页数量 */
   limit?: string
-  /**
-   * 页码
-   */
+  /** @description 页码 */
   page?: string
+  /** @description  */
+  Authorization?: string
 }
 
 /**
- * @description 接口 获取权限列表 的 **返回类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions
+ * @description 获取权限列表 的返回数据类型
  */
-export interface GetPermissionsResponseType {
-  permissions?: {}[]
-  /**
-   * 总数量
-   */
-  total?: number
+export interface ApiPermissionsGETResponse {
+  /** @description  */
+  permissions: PermissionResponseDto[]
+  /** @description 总数量 */
+  total: number
 }
 
 /**
- * @description 接口 获取权限列表 的 **请求函数**
- * @category 权限管理
- * @method GET
- * @path /api/permissions
+ * @description 获取权限列表
+ * @param params ApiPermissionsGETRequest
+ * @returns Promise<ApiPermissionsGETResponse>
  */
-export const getPermissionsApi = (params: GetPermissionsRequestType) => {
-  return request('/api/permissions', {
+export async function apiPermissionsGET(
+  params: ApiPermissionsGETRequest
+): Promise<ApiPermissionsGETResponse> {
+  const config: RequestConfig = {
+    url: '/api/permissions',
     method: 'GET',
-    params: params,
-  })
+    params,
+  }
+  return request<ApiPermissionsGETResponse>(config)
 }
 
 /**
- * @description 接口 更新权限 的 **请求类型**
- * @category 权限管理
- * @method PUT
- * @path /api/permissions
+ * @description 更新权限
+ * @param params ApiPermissionsPUTRequest
+ * @returns Promise<ApiPermissionsPUTResponse>
  */
-export interface PutPermissionsRequestType {}
+export interface ApiPermissionsPUTRequest {
+  /** @description 权限ID */
+  id: string
+  /** @description 权限名称 */
+  name?: string
+  /** @description 操作动作 */
+  action?: string
+  /** @description 资源名称 */
+  resource?: string
+  /** @description 权限描述 */
+  description?: string
+  /** @description  */
+  Authorization?: string
+}
 
 /**
- * @description 接口 更新权限 的 **返回类型**
- * @category 权限管理
- * @method PUT
- * @path /api/permissions
+ * @description 更新权限 的返回数据类型
  */
-export interface PutPermissionsResponseType {
-  /**
-   * 权限ID
-   */
+export interface ApiPermissionsPUTResponse {
+  /** @description 权限ID */
   id: string
-  /**
-   * 权限名称
-   */
+  /** @description 权限名称 */
   name: string
-  /**
-   * 操作动作
-   */
+  /** @description 操作动作 */
   action: string
-  /**
-   * 资源名称
-   */
+  /** @description 资源名称 */
   resource: string
-  /**
-   * 权限描述
-   */
-  description: string | null
-  /**
-   * 创建时间
-   */
+  /** @description 权限描述 */
+  description: any
+  /** @description 创建时间 */
   createdAt: string
-  /**
-   * 更新时间
-   */
+  /** @description 更新时间 */
   updatedAt: string
 }
 
 /**
- * @description 接口 更新权限 的 **请求函数**
- * @category 权限管理
- * @method PUT
- * @path /api/permissions
+ * @description 更新权限
+ * @param params ApiPermissionsPUTRequest
+ * @returns Promise<ApiPermissionsPUTResponse>
  */
-export const putPermissionsApi = (params: PutPermissionsRequestType) => {
-  return request('/api/permissions', {
+export async function apiPermissionsPUT(
+  params: ApiPermissionsPUTRequest
+): Promise<ApiPermissionsPUTResponse> {
+  const config: RequestConfig = {
+    url: '/api/permissions',
     method: 'PUT',
     data: params,
-  })
+  }
+  return request<ApiPermissionsPUTResponse>(config)
 }
 
 /**
- * @description 接口 删除权限 的 **请求类型**
- * @category 权限管理
- * @method DELETE
- * @path /api/permissions
+ * @description 删除权限
+ * @param params ApiPermissionsDELETERequest
+ * @returns Promise<ApiPermissionsDELETEResponse>
  */
-export interface DeletePermissionsRequestType {
-  /**
-   * 权限ID
-   */
+export interface ApiPermissionsDELETERequest {
+  /** @description 权限ID */
   id: string
+  /** @description  */
+  Authorization?: string
 }
 
 /**
- * @description 接口 删除权限 的 **返回类型**
- * @category 权限管理
- * @method DELETE
- * @path /api/permissions
+ * @description 删除权限 的返回数据类型
  */
-export type DeletePermissionsResponseType = string
+export interface ApiPermissionsDELETEResponse {
+  /** @description 响应数据 */
+  data: any
+}
 
 /**
- * @description 接口 删除权限 的 **请求函数**
- * @category 权限管理
- * @method DELETE
- * @path /api/permissions
+ * @description 删除权限
+ * @param params ApiPermissionsDELETERequest
+ * @returns Promise<ApiPermissionsDELETEResponse>
  */
-export const deletePermissionsApi = (params: DeletePermissionsRequestType) => {
-  return request('/api/permissions', {
+export async function apiPermissionsDELETE(
+  params: ApiPermissionsDELETERequest
+): Promise<ApiPermissionsDELETEResponse> {
+  const config: RequestConfig = {
+    url: '/api/permissions',
     method: 'DELETE',
-    data: params,
-  })
+    params,
+  }
+  return request<ApiPermissionsDELETEResponse>(config)
 }
 
 /**
- * @description 接口 搜索权限 的 **请求类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/search
+ * @description 搜索权限
+ * @param params ApiPermissionsSearchGETRequest
+ * @returns Promise<ApiPermissionsSearchGETResponse>
  */
-export interface GetPermissionsSearchRequestType {
-  /**
-   * 搜索关键词
-   */
+export interface ApiPermissionsSearchGETRequest {
+  /** @description 搜索关键词 */
   keyword: string
-  /**
-   * 返回数量限制
-   */
+  /** @description 返回数量限制 */
   limit?: string
+  /** @description  */
+  Authorization?: string
 }
 
 /**
- * @description 接口 搜索权限 的 **返回类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/search
+ * @description 搜索权限 的返回数据类型
  */
-export type GetPermissionsSearchResponseType = unknown[]
+export interface ApiPermissionsSearchGETResponse {
+  /** @description 响应数据数组 */
+  data: PermissionResponseDto[]
+}
 
 /**
- * @description 接口 搜索权限 的 **请求函数**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/search
+ * @description 搜索权限
+ * @param params ApiPermissionsSearchGETRequest
+ * @returns Promise<ApiPermissionsSearchGETResponse>
  */
-export const getPermissionsSearchApi = (
-  params: GetPermissionsSearchRequestType
-) => {
-  return request('/api/permissions/search', {
+export async function apiPermissionsSearchGET(
+  params: ApiPermissionsSearchGETRequest
+): Promise<ApiPermissionsSearchGETResponse> {
+  const config: RequestConfig = {
+    url: '/api/permissions/search',
     method: 'GET',
-    params: params,
-  })
+    params,
+  }
+  return request<ApiPermissionsSearchGETResponse>(config)
 }
 
 /**
- * @description 接口 获取所有动作 的 **请求类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/actions
+ * @description 获取所有动作
+ * @param params ApiPermissionsActionsGETRequest
+ * @returns Promise<ApiPermissionsActionsGETResponse>
  */
-export interface GetPermissionsActionsRequestType {}
+export interface ApiPermissionsActionsGETRequest {
+  /** @description  */
+  Authorization?: string
+}
 
 /**
- * @description 接口 获取所有动作 的 **返回类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/actions
+ * @description 获取所有动作 的返回数据类型
  */
-export type GetPermissionsActionsResponseType = string[]
+export interface ApiPermissionsActionsGETResponse {
+  /** @description 响应数据数组 */
+  data: string[]
+}
 
 /**
- * @description 接口 获取所有动作 的 **请求函数**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/actions
+ * @description 获取所有动作
+ * @param params ApiPermissionsActionsGETRequest
+ * @returns Promise<ApiPermissionsActionsGETResponse>
  */
-export const getPermissionsActionsApi = (
-  params: GetPermissionsActionsRequestType
-) => {
-  return request('/api/permissions/actions', {
+export async function apiPermissionsActionsGET(
+  params: ApiPermissionsActionsGETRequest
+): Promise<ApiPermissionsActionsGETResponse> {
+  const config: RequestConfig = {
+    url: '/api/permissions/actions',
     method: 'GET',
-    params: params,
-  })
+    params,
+  }
+  return request<ApiPermissionsActionsGETResponse>(config)
 }
 
 /**
- * @description 接口 获取所有资源 的 **请求类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/resources
+ * @description 获取所有资源
+ * @param params ApiPermissionsResourcesGETRequest
+ * @returns Promise<ApiPermissionsResourcesGETResponse>
  */
-export interface GetPermissionsResourcesRequestType {}
+export interface ApiPermissionsResourcesGETRequest {
+  /** @description  */
+  Authorization?: string
+}
 
 /**
- * @description 接口 获取所有资源 的 **返回类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/resources
+ * @description 获取所有资源 的返回数据类型
  */
-export type GetPermissionsResourcesResponseType = string[]
+export interface ApiPermissionsResourcesGETResponse {
+  /** @description 响应数据数组 */
+  data: string[]
+}
 
 /**
- * @description 接口 获取所有资源 的 **请求函数**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/resources
+ * @description 获取所有资源
+ * @param params ApiPermissionsResourcesGETRequest
+ * @returns Promise<ApiPermissionsResourcesGETResponse>
  */
-export const getPermissionsResourcesApi = (
-  params: GetPermissionsResourcesRequestType
-) => {
-  return request('/api/permissions/resources', {
+export async function apiPermissionsResourcesGET(
+  params: ApiPermissionsResourcesGETRequest
+): Promise<ApiPermissionsResourcesGETResponse> {
+  const config: RequestConfig = {
+    url: '/api/permissions/resources',
     method: 'GET',
-    params: params,
-  })
+    params,
+  }
+  return request<ApiPermissionsResourcesGETResponse>(config)
 }
 
 /**
- * @description 接口 根据动作获取权限 的 **请求类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/by-action
+ * @description 根据动作获取权限
+ * @param params ApiPermissionsByActionGETRequest
+ * @returns Promise<ApiPermissionsByActionGETResponse>
  */
-export interface GetPermissionsByActionRequestType {
-  /**
-   * 动作名称
-   */
+export interface ApiPermissionsByActionGETRequest {
+  /** @description 动作名称 */
   action: string
+  /** @description  */
+  Authorization?: string
 }
 
 /**
- * @description 接口 根据动作获取权限 的 **返回类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/by-action
+ * @description 根据动作获取权限 的返回数据类型
  */
-export type GetPermissionsByActionResponseType = unknown[]
+export interface ApiPermissionsByActionGETResponse {
+  /** @description 响应数据数组 */
+  data: PermissionResponseDto[]
+}
 
 /**
- * @description 接口 根据动作获取权限 的 **请求函数**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/by-action
+ * @description 根据动作获取权限
+ * @param params ApiPermissionsByActionGETRequest
+ * @returns Promise<ApiPermissionsByActionGETResponse>
  */
-export const getPermissionsByActionApi = (
-  params: GetPermissionsByActionRequestType
-) => {
-  return request('/api/permissions/by-action', {
+export async function apiPermissionsByActionGET(
+  params: ApiPermissionsByActionGETRequest
+): Promise<ApiPermissionsByActionGETResponse> {
+  const config: RequestConfig = {
+    url: '/api/permissions/by-action',
     method: 'GET',
-    params: params,
-  })
+    params,
+  }
+  return request<ApiPermissionsByActionGETResponse>(config)
 }
 
 /**
- * @description 接口 根据资源获取权限 的 **请求类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/by-resource
+ * @description 根据资源获取权限
+ * @param params ApiPermissionsByResourceGETRequest
+ * @returns Promise<ApiPermissionsByResourceGETResponse>
  */
-export interface GetPermissionsByResourceRequestType {
-  /**
-   * 资源名称
-   */
+export interface ApiPermissionsByResourceGETRequest {
+  /** @description 资源名称 */
   resource: string
+  /** @description  */
+  Authorization?: string
 }
 
 /**
- * @description 接口 根据资源获取权限 的 **返回类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/by-resource
+ * @description 根据资源获取权限 的返回数据类型
  */
-export type GetPermissionsByResourceResponseType = unknown[]
+export interface ApiPermissionsByResourceGETResponse {
+  /** @description 响应数据数组 */
+  data: PermissionResponseDto[]
+}
 
 /**
- * @description 接口 根据资源获取权限 的 **请求函数**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/by-resource
+ * @description 根据资源获取权限
+ * @param params ApiPermissionsByResourceGETRequest
+ * @returns Promise<ApiPermissionsByResourceGETResponse>
  */
-export const getPermissionsByResourceApi = (
-  params: GetPermissionsByResourceRequestType
-) => {
-  return request('/api/permissions/by-resource', {
+export async function apiPermissionsByResourceGET(
+  params: ApiPermissionsByResourceGETRequest
+): Promise<ApiPermissionsByResourceGETResponse> {
+  const config: RequestConfig = {
+    url: '/api/permissions/by-resource',
     method: 'GET',
-    params: params,
-  })
+    params,
+  }
+  return request<ApiPermissionsByResourceGETResponse>(config)
 }
 
 /**
- * @description 接口 获取权限详情 的 **请求类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/detail
+ * @description 获取权限详情
+ * @param params ApiPermissionsDetailGETRequest
+ * @returns Promise<ApiPermissionsDetailGETResponse>
  */
-export interface GetPermissionsDetailRequestType {
-  /**
-   * 权限ID
-   */
+export interface ApiPermissionsDetailGETRequest {
+  /** @description 权限ID */
   id: string
+  /** @description  */
+  Authorization?: string
 }
 
 /**
- * @description 接口 获取权限详情 的 **返回类型**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/detail
+ * @description 获取权限详情 的返回数据类型
  */
-export interface GetPermissionsDetailResponseType {
-  /**
-   * 权限ID
-   */
+export interface ApiPermissionsDetailGETResponse {
+  /** @description 权限ID */
   id: string
-  /**
-   * 权限名称
-   */
+  /** @description 权限名称 */
   name: string
-  /**
-   * 操作动作
-   */
+  /** @description 操作动作 */
   action: string
-  /**
-   * 资源名称
-   */
+  /** @description 资源名称 */
   resource: string
-  /**
-   * 权限描述
-   */
-  description: string | null
-  /**
-   * 创建时间
-   */
+  /** @description 权限描述 */
+  description: any
+  /** @description 创建时间 */
   createdAt: string
-  /**
-   * 更新时间
-   */
+  /** @description 更新时间 */
   updatedAt: string
 }
 
 /**
- * @description 接口 获取权限详情 的 **请求函数**
- * @category 权限管理
- * @method GET
- * @path /api/permissions/detail
+ * @description 获取权限详情
+ * @param params ApiPermissionsDetailGETRequest
+ * @returns Promise<ApiPermissionsDetailGETResponse>
  */
-export const getPermissionsDetailApi = (
-  params: GetPermissionsDetailRequestType
-) => {
-  return request('/api/permissions/detail', {
+export async function apiPermissionsDetailGET(
+  params: ApiPermissionsDetailGETRequest
+): Promise<ApiPermissionsDetailGETResponse> {
+  const config: RequestConfig = {
+    url: '/api/permissions/detail',
     method: 'GET',
-    params: params,
-  })
+    params,
+  }
+  return request<ApiPermissionsDetailGETResponse>(config)
 }

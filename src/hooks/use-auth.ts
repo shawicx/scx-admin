@@ -1,6 +1,6 @@
-/*
- * @Author: shawicx d35f3153@proton.me
- * @Description: 登录相关
+/**
+ * @author: shawicx d35f3153@proton.me
+ * @description: 登录相关
  */
 import {
   postUsersLoginPasswordApi,

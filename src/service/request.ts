@@ -4,6 +4,11 @@ import axios from 'axios'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
 import { toast } from '@/components/ui/use-toast'
 
+export interface RequestConfig extends AxiosRequestConfig {
+  url: string
+  method: string
+}
+
 type Method = ValueOf<typeof Request_Method>
 
 // 用于转发请求的代理地址
@@ -163,7 +168,7 @@ function getHttpStatus(statusCode: number): HttpStatus {
   return HttpStatus.UnKnownError
 }
 
-export default async function request(url: string, config: AxiosRequestConfig) {
+export async function request(url: string, config: AxiosRequestConfig) {
   const controller = new AbortController()
   // 生成请求键值
   const requestKey = getRequestKey(url, config)

@@ -1,221 +1,173 @@
-import request from '@/service/request'
+import { RequestConfig, request } from '../request'
 
 /**
- * @description 接口 发送验证码邮件 的 **请求类型**
- * @category 邮箱服务
- * @method POST
- * @path /api/mail/send-verification-code
+ * @description 发送验证码邮件
+ * @param params ApiMailSendVerificationCodePOSTRequest
+ * @returns Promise<ApiMailSendVerificationCodePOSTResponse>
  */
-export interface PostMailSendVerificationCodeRequestType {
-  /**
-   * 收件人邮箱
-   */
+export interface ApiMailSendVerificationCodePOSTRequest {
+  /** @description 收件人邮箱 */
   email: string
+  /** @description  */
+  Authorization?: string
 }
 
 /**
- * @description 接口 发送验证码邮件 的 **返回类型**
- * @category 邮箱服务
- * @method POST
- * @path /api/mail/send-verification-code
+ * @description 发送验证码邮件 的返回数据类型
  */
-export interface PostMailSendVerificationCodeResponseType {
-  /**
-   * 发送是否成功
-   */
+export interface ApiMailSendVerificationCodePOSTResponse {
+  /** @description 发送是否成功 */
   success: boolean
-  /**
-   * 发送结果消息
-   */
+  /** @description 发送结果消息 */
   message: string
-  /**
-   * 错误信息（发送失败时）
-   */
-  error?: string
-  /**
-   * 验证码（仅用于开发环境调试，生产环境不返回）
-   */
-  code?: string
+  /** @description 错误信息（发送失败时） */
+  error: string
+  /** @description 验证码（仅用于开发环境调试，生产环境不返回） */
+  code: string
 }
 
 /**
- * @description 接口 发送验证码邮件 的 **请求函数**
- * @category 邮箱服务
- * @method POST
- * @path /api/mail/send-verification-code
+ * @description 发送验证码邮件
+ * @param params ApiMailSendVerificationCodePOSTRequest
+ * @returns Promise<ApiMailSendVerificationCodePOSTResponse>
  */
-export const postMailSendVerificationCodeApi = (
-  params: PostMailSendVerificationCodeRequestType
-) => {
-  return request('/api/mail/send-verification-code', {
+export async function apiMailSendVerificationCodePOST(
+  params: ApiMailSendVerificationCodePOSTRequest
+): Promise<ApiMailSendVerificationCodePOSTResponse> {
+  const config: RequestConfig = {
+    url: '/api/mail/send-verification-code',
     method: 'POST',
     data: params,
-  })
+  }
+  return request<ApiMailSendVerificationCodePOSTResponse>(config)
 }
 
 /**
- * @description 接口 发送欢迎邮件 的 **请求类型**
- * @category 邮箱服务
- * @method POST
- * @path /api/mail/send-welcome-email
+ * @description 发送欢迎邮件
+ * @param params ApiMailSendWelcomeEmailPOSTRequest
+ * @returns Promise<ApiMailSendWelcomeEmailPOSTResponse>
  */
-export interface PostMailSendWelcomeEmailRequestType {
-  /**
-   * 收件人邮箱
-   */
+export interface ApiMailSendWelcomeEmailPOSTRequest {
+  /** @description 收件人邮箱 */
   email: string
-  /**
-   * 用户名
-   */
+  /** @description 用户名 */
   username: string
+  /** @description  */
+  Authorization?: string
 }
 
 /**
- * @description 接口 发送欢迎邮件 的 **返回类型**
- * @category 邮箱服务
- * @method POST
- * @path /api/mail/send-welcome-email
+ * @description 发送欢迎邮件 的返回数据类型
  */
-export interface PostMailSendWelcomeEmailResponseType {
-  /**
-   * 发送是否成功
-   */
+export interface ApiMailSendWelcomeEmailPOSTResponse {
+  /** @description 发送是否成功 */
   success: boolean
-  /**
-   * 发送结果消息
-   */
+  /** @description 发送结果消息 */
   message: string
-  /**
-   * 错误信息（发送失败时）
-   */
-  error?: string
+  /** @description 错误信息（发送失败时） */
+  error: string
 }
 
 /**
- * @description 接口 发送欢迎邮件 的 **请求函数**
- * @category 邮箱服务
- * @method POST
- * @path /api/mail/send-welcome-email
+ * @description 发送欢迎邮件
+ * @param params ApiMailSendWelcomeEmailPOSTRequest
+ * @returns Promise<ApiMailSendWelcomeEmailPOSTResponse>
  */
-export const postMailSendWelcomeEmailApi = (
-  params: PostMailSendWelcomeEmailRequestType
-) => {
-  return request('/api/mail/send-welcome-email', {
+export async function apiMailSendWelcomeEmailPOST(
+  params: ApiMailSendWelcomeEmailPOSTRequest
+): Promise<ApiMailSendWelcomeEmailPOSTResponse> {
+  const config: RequestConfig = {
+    url: '/api/mail/send-welcome-email',
     method: 'POST',
     data: params,
-  })
+  }
+  return request<ApiMailSendWelcomeEmailPOSTResponse>(config)
 }
 
 /**
- * @description 接口 发送密码重置邮件 的 **请求类型**
- * @category 邮箱服务
- * @method POST
- * @path /api/mail/send-password-reset
+ * @description 发送密码重置邮件
+ * @param params ApiMailSendPasswordResetPOSTRequest
+ * @returns Promise<ApiMailSendPasswordResetPOSTResponse>
  */
-export interface PostMailSendPasswordResetRequestType {
-  /**
-   * 收件人邮箱
-   */
+export interface ApiMailSendPasswordResetPOSTRequest {
+  /** @description 收件人邮箱 */
   email: string
-  /**
-   * 重置令牌
-   */
+  /** @description 重置令牌 */
   resetToken: string
-  /**
-   * 重置链接
-   */
+  /** @description 重置链接 */
   resetUrl: string
+  /** @description  */
+  Authorization?: string
 }
 
 /**
- * @description 接口 发送密码重置邮件 的 **返回类型**
- * @category 邮箱服务
- * @method POST
- * @path /api/mail/send-password-reset
+ * @description 发送密码重置邮件 的返回数据类型
  */
-export interface PostMailSendPasswordResetResponseType {
-  /**
-   * 发送是否成功
-   */
+export interface ApiMailSendPasswordResetPOSTResponse {
+  /** @description 发送是否成功 */
   success: boolean
-  /**
-   * 发送结果消息
-   */
+  /** @description 发送结果消息 */
   message: string
-  /**
-   * 错误信息（发送失败时）
-   */
-  error?: string
+  /** @description 错误信息（发送失败时） */
+  error: string
 }
 
 /**
- * @description 接口 发送密码重置邮件 的 **请求函数**
- * @category 邮箱服务
- * @method POST
- * @path /api/mail/send-password-reset
+ * @description 发送密码重置邮件
+ * @param params ApiMailSendPasswordResetPOSTRequest
+ * @returns Promise<ApiMailSendPasswordResetPOSTResponse>
  */
-export const postMailSendPasswordResetApi = (
-  params: PostMailSendPasswordResetRequestType
-) => {
-  return request('/api/mail/send-password-reset', {
+export async function apiMailSendPasswordResetPOST(
+  params: ApiMailSendPasswordResetPOSTRequest
+): Promise<ApiMailSendPasswordResetPOSTResponse> {
+  const config: RequestConfig = {
+    url: '/api/mail/send-password-reset',
     method: 'POST',
     data: params,
-  })
+  }
+  return request<ApiMailSendPasswordResetPOSTResponse>(config)
 }
 
 /**
- * @description 接口 发送HTML邮件 的 **请求类型**
- * @category 邮箱服务
- * @method POST
- * @path /api/mail/send-html-email
+ * @description 发送HTML邮件
+ * @param params ApiMailSendHtmlEmailPOSTRequest
+ * @returns Promise<ApiMailSendHtmlEmailPOSTResponse>
  */
-export interface PostMailSendHtmlEmailRequestType {
-  /**
-   * 收件人邮箱
-   */
+export interface ApiMailSendHtmlEmailPOSTRequest {
+  /** @description 收件人邮箱 */
   email: string
-  /**
-   * 邮件主题
-   */
+  /** @description 邮件主题 */
   subject: string
-  /**
-   * HTML内容
-   */
+  /** @description HTML内容 */
   html: string
+  /** @description  */
+  Authorization?: string
 }
 
 /**
- * @description 接口 发送HTML邮件 的 **返回类型**
- * @category 邮箱服务
- * @method POST
- * @path /api/mail/send-html-email
+ * @description 发送HTML邮件 的返回数据类型
  */
-export interface PostMailSendHtmlEmailResponseType {
-  /**
-   * 发送是否成功
-   */
+export interface ApiMailSendHtmlEmailPOSTResponse {
+  /** @description 发送是否成功 */
   success: boolean
-  /**
-   * 发送结果消息
-   */
+  /** @description 发送结果消息 */
   message: string
-  /**
-   * 错误信息（发送失败时）
-   */
-  error?: string
+  /** @description 错误信息（发送失败时） */
+  error: string
 }
 
 /**
- * @description 接口 发送HTML邮件 的 **请求函数**
- * @category 邮箱服务
- * @method POST
- * @path /api/mail/send-html-email
+ * @description 发送HTML邮件
+ * @param params ApiMailSendHtmlEmailPOSTRequest
+ * @returns Promise<ApiMailSendHtmlEmailPOSTResponse>
  */
-export const postMailSendHtmlEmailApi = (
-  params: PostMailSendHtmlEmailRequestType
-) => {
-  return request('/api/mail/send-html-email', {
+export async function apiMailSendHtmlEmailPOST(
+  params: ApiMailSendHtmlEmailPOSTRequest
+): Promise<ApiMailSendHtmlEmailPOSTResponse> {
+  const config: RequestConfig = {
+    url: '/api/mail/send-html-email',
     method: 'POST',
     data: params,
-  })
+  }
+  return request<ApiMailSendHtmlEmailPOSTResponse>(config)
 }
