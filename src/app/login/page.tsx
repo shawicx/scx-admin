@@ -76,13 +76,11 @@ export default function LoginPage() {
         email: data.email,
         password: data.password,
       })
-      if (result.success) {
-        // 登录成功，重定向到首页或指定页面
-        const redirect = searchParams.get('redirect') || '/'
-        console.log('Redirecting to:', redirect)
-        router.push(redirect)
-        router.refresh()
-      }
+      // 登录成功，重定向到首页或指定页面
+      const redirect = searchParams.get('redirect') || '/'
+      console.log('Redirecting to:', redirect)
+      router.push(redirect)
+      router.refresh()
     } catch (error: any) {
       console.error('登录失败:', error)
     } finally {
@@ -98,12 +96,10 @@ export default function LoginPage() {
         emailVerificationCode: data.code,
       })
 
-      if (result.success) {
-        // 登录成功，重定向到首页或指定页面
-        const redirect = searchParams.get('redirect') || '/'
-        router.push(redirect)
-        router.refresh()
-      }
+      // 登录成功，重定向到首页或指定页面
+      const redirect = searchParams.get('redirect') || '/'
+      router.push(redirect)
+      router.refresh()
     } catch (error: any) {
       console.error('登录失败:', error)
     } finally {

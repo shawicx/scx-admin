@@ -1,15 +1,22 @@
-import { Request_Method, ValueOf } from '@scxfe/api-tool'
+import { RequestMethod } from '@scxfe/api-tool'
 import type { AxiosError, AxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
 import { toast } from '@/components/ui/use-toast'
+
+type ValueOf<T> = T[keyof T]
 
 export interface RequestConfig extends AxiosRequestConfig {
   url: string
   method: string
 }
 
-type Method = ValueOf<typeof Request_Method>
+interface BaseRes<D> {
+  data: D
+  success: boolean
+}
+
+type Method = ValueOf<typeof RequestMethod>
 
 // 用于转发请求的代理地址
 const BASE_LINE_PROXY_PATH = 'http://127.0.0.1:3000'
@@ -168,7 +175,8 @@ function getHttpStatus(statusCode: number): HttpStatus {
   return HttpStatus.UnKnownError
 }
 
-export async function request(url: string, config: AxiosRequestConfig) {
+export async function request<D>(config: AxiosRequestConfig): Promise<D> {
+  const url = config.url as string
   const controller = new AbortController()
   // 生成请求键值
   const requestKey = getRequestKey(url, config)
@@ -226,10 +234,12 @@ export async function request(url: string, config: AxiosRequestConfig) {
         const errorMessage = `${response.data?.statusCode} ${response.data.message} ${response.data.status}`
         showMessage(errorMessage, 'error')
       }
-      return response.data
+      // 从响应中提取 data 字段并返回
+      return response.data.data as D
     } else {
       const message = httpStatusMessage ?? '未知错误'
       showMessage(message, 'error')
+      return response.data.data as D
     }
   } catch (error) {
     handleError(error as AxiosError)

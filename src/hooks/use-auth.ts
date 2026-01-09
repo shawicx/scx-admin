@@ -29,47 +29,47 @@ export function useAuth() {
     try {
       // 获取加密密钥
       const keyResponse = await getUsersEncryptionKeyApi({})
-      const { key, keyId } = keyResponse.data || {}
+      const { key, keyId } = keyResponse || {}
       // 加密密码
       const encryptedPassword = FrontendCrypto.encrypt(params.password, key)
 
-      // 调用登录接口
-      const result = await postUsersLoginPasswordApi({
+      // 调用登录接口，直接返回用户数据
+      const user = await postUsersLoginPasswordApi({
         ...params,
         password: encryptedPassword,
         keyId,
       })
+      console.log(user, 'user')
       // 将用户信息和访问令牌分别存储到 IndexDB
       try {
-        await indexedDB.setItem('user', result.data)
-        await indexedDB.setItem('accessToken', result.data.accessToken)
+        await indexedDB.setItem('user', user)
+        await indexedDB.setItem('accessToken', user.accessToken)
       } catch (error) {
         console.error('Failed to save user data to IndexedDB:', error)
+        throw Error('登录失败')
       }
-      return result
+      return user
     } catch (error) {
-      return { success: false, error }
+      throw Error('密码登录失败')
     }
   }
 
   // 验证码登录
   const loginWithCode = async (params: PostUsersLoginRequestType) => {
     try {
-      // 调用登录接口
-      const result = await postUsersLoginApi(params)
+      // 调用登录接口，直接返回用户数据
+      const user = await postUsersLoginApi(params)
 
-      if (result.success) {
-        // 将用户信息和访问令牌分别存储到 IndexDB
-        try {
-          await indexedDB.setItem('user', result.data)
-          await indexedDB.setItem('accessToken', result.data.accessToken)
-        } catch (error) {
-          console.error('Failed to save user data to IndexedDB:', error)
-        }
+      // 将用户信息和访问令牌分别存储到 IndexDB
+      try {
+        await indexedDB.setItem('user', user)
+        await indexedDB.setItem('accessToken', user.accessToken)
+      } catch (error) {
+        console.error('Failed to save user data to IndexedDB:', error)
       }
-      return result
+      return user
     } catch (error) {
-      return { success: false, error }
+      throw Error('验证码登录失败')
     }
   }
 
@@ -78,25 +78,23 @@ export function useAuth() {
     params: Omit<PostUsersRegisterRequestType, 'name'>
   ) => {
     try {
-      // 调用注册接口
-      const result = await postUsersRegisterApi({
+      // 调用注册接口，直接返回用户数据
+      const user = await postUsersRegisterApi({
         ...params,
         name: params.email, // 使用邮箱作为用户名
       })
 
-      if (result.success) {
-        // 将用户信息和访问令牌分别存储到 IndexDB
-        try {
-          await indexedDB.setItem('user', result.data)
-          await indexedDB.setItem('accessToken', result.data.accessToken)
-        } catch (error) {
-          console.error('Failed to save user data to IndexedDB:', error)
-        }
+      // 将用户信息和访问令牌分别存储到 IndexDB
+      try {
+        await indexedDB.setItem('user', user)
+        await indexedDB.setItem('accessToken', user.accessToken)
+      } catch (error) {
+        console.error('Failed to save user data to IndexedDB:', error)
       }
-      return result
+      return user
     } catch (error) {
       console.error('Registration failed:', error)
-      return { success: false, error }
+      throw Error('注册失败')
     }
   }
 
@@ -104,11 +102,10 @@ export function useAuth() {
   const sendVerificationCode = async (email: string) => {
     try {
       // 调用发送验证码接口
-      const result = await postUsersSendEmailCodeApi({ email })
-      return result
+      return await postUsersSendEmailCodeApi({ email })
     } catch (error) {
       console.error('Failed to send verification code:', error)
-      return { success: false, error }
+      throw Error('发送验证码失败')
     }
   }
 

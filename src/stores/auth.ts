@@ -31,69 +31,49 @@ export const useAuth = create<AuthState>()(
 
       login: async (email: string, password: string) => {
         const { login: loginHook } = useAuthHook()
-        const result = await loginHook({ email, password })
-
-        if (result.success) {
-          const userData = result.data
-          const user = {
-            id: userData.id,
-            email: userData.email,
-            name: userData.name,
-          }
-          set({ user, isAuthenticated: true })
-        } else {
-          throw new Error(result.error?.message || '登录失败')
+        const userData = await loginHook({ email, password })
+        const user = {
+          id: userData.id,
+          email: userData.email,
+          name: userData.name,
         }
+        set({ user, isAuthenticated: true })
       },
 
       loginWithCode: async (email: string, code: string) => {
         const { loginWithCode: loginWithCodeHook } = useAuthHook()
-        const result = await loginWithCodeHook({
+        const userData = await loginWithCodeHook({
           email,
           emailVerificationCode: code,
         })
 
-        if (result.success) {
-          const userData = result.data
-          const user = {
-            id: userData.id,
-            email: userData.email,
-            name: userData.name,
-          }
-          set({ user, isAuthenticated: true })
-        } else {
-          throw new Error(result.error?.message || '登录失败')
+        const user = {
+          id: userData.id,
+          email: userData.email,
+          name: userData.name,
         }
+        set({ user, isAuthenticated: true })
       },
 
       register: async (email: string, password: string, code: string) => {
         const { register: registerHook } = useAuthHook()
-        const result = await registerHook({
+        const userData = await registerHook({
           email,
           password,
           emailVerificationCode: code,
         })
 
-        if (result.success) {
-          const userData = result.data
-          const user = {
-            id: userData.id,
-            email: userData.email,
-            name: userData.name,
-          }
-          set({ user, isAuthenticated: true })
-        } else {
-          throw new Error(result.error?.message || '注册失败')
+        const user = {
+          id: userData.id,
+          email: userData.email,
+          name: userData.name,
         }
+        set({ user, isAuthenticated: true })
       },
 
       sendVerificationCode: async (email: string) => {
         const { sendVerificationCode: sendCodeHook } = useAuthHook()
-        const result = await sendCodeHook(email)
-
-        if (!result.success) {
-          throw new Error(result.error?.message || '发送验证码失败')
-        }
+        await sendCodeHook(email)
       },
 
       logout: async () => {

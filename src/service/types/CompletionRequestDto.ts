@@ -1,3 +1,5 @@
+import type { AiMessageDto } from '@/service/types/index'
+
 /**
  * @description CompletionRequestDto
  */

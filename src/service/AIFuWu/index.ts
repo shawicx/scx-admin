@@ -1,12 +1,12 @@
-import { RequestConfig, request } from '../request'
-import type { AiMessageDto } from '../types'
+import { RequestConfig, request } from '@/service/request'
+import type { AiMessageDto } from '@/service/types'
 
 /**
  * @description 生成 AI 回复
- * @param params ApiAiCompletionPOSTRequest
- * @returns Promise<ApiAiCompletionPOSTResponse>
+ * @param params PostAiCompletionRequestType
+ * @returns Promise<PostAiCompletionResponseType>
  */
-export interface ApiAiCompletionPOSTRequest {
+export interface PostAiCompletionRequestType {
   /** @description 消息列表 */
   messages: AiMessageDto[]
   /** @description 生成选项 */
@@ -20,7 +20,7 @@ export interface ApiAiCompletionPOSTRequest {
 /**
  * @description 生成 AI 回复 的返回数据类型
  */
-export interface ApiAiCompletionPOSTResponse {
+export interface PostAiCompletionResponseType {
   /** @description  */
   success: boolean
   /** @description  */
@@ -29,26 +29,26 @@ export interface ApiAiCompletionPOSTResponse {
 
 /**
  * @description 生成 AI 回复
- * @param params ApiAiCompletionPOSTRequest
- * @returns Promise<ApiAiCompletionPOSTResponse>
+ * @param params PostAiCompletionRequestType
+ * @returns Promise<PostAiCompletionResponseType>
  */
-export async function apiAiCompletionPOST(
-  params: ApiAiCompletionPOSTRequest
-): Promise<ApiAiCompletionPOSTResponse> {
+export async function postAiCompletionApi(
+  params: PostAiCompletionRequestType
+): Promise<PostAiCompletionResponseType> {
   const config: RequestConfig = {
     url: '/api/ai/completion',
     method: 'POST',
     data: params,
   }
-  return request<ApiAiCompletionPOSTResponse>(config)
+  return request<PostAiCompletionResponseType>(config)
 }
 
 /**
  * @description 更新用户 AI 配置
- * @param params ApiAiConfigPUTRequest
- * @returns Promise<ApiAiConfigPUTResponse>
+ * @param params PutAiConfigRequestType
+ * @returns Promise<PutAiConfigResponseType>
  */
-export interface ApiAiConfigPUTRequest {
+export interface PutAiConfigRequestType {
   /** @description 默认平台 */
   defaultProvider?: string
   /** @description  */
@@ -60,7 +60,7 @@ export interface ApiAiConfigPUTRequest {
 /**
  * @description 更新用户 AI 配置 的返回数据类型
  */
-export interface ApiAiConfigPUTResponse {
+export interface PutAiConfigResponseType {
   /** @description  */
   success: boolean
   /** @description  */
@@ -69,26 +69,26 @@ export interface ApiAiConfigPUTResponse {
 
 /**
  * @description 更新用户 AI 配置
- * @param params ApiAiConfigPUTRequest
- * @returns Promise<ApiAiConfigPUTResponse>
+ * @param params PutAiConfigRequestType
+ * @returns Promise<PutAiConfigResponseType>
  */
-export async function apiAiConfigPUT(
-  params: ApiAiConfigPUTRequest
-): Promise<ApiAiConfigPUTResponse> {
+export async function putAiConfigApi(
+  params: PutAiConfigRequestType
+): Promise<PutAiConfigResponseType> {
   const config: RequestConfig = {
     url: '/api/ai/config',
     method: 'PUT',
     data: params,
   }
-  return request<ApiAiConfigPUTResponse>(config)
+  return request<PutAiConfigResponseType>(config)
 }
 
 /**
  * @description 测试平台连接
- * @param params ApiAiTestConnectionPOSTRequest
- * @returns Promise<ApiAiTestConnectionPOSTResponse>
+ * @param params PostAiTestConnectionRequestType
+ * @returns Promise<PostAiTestConnectionResponseType>
  */
-export interface ApiAiTestConnectionPOSTRequest {
+export interface PostAiTestConnectionRequestType {
   /** @description 要测试的平台 */
   provider: string
   /** @description  */
@@ -98,7 +98,7 @@ export interface ApiAiTestConnectionPOSTRequest {
 /**
  * @description 测试平台连接 的返回数据类型
  */
-export interface ApiAiTestConnectionPOSTResponse {
+export interface PostAiTestConnectionResponseType {
   /** @description  */
   success: boolean
   /** @description  */
@@ -107,26 +107,26 @@ export interface ApiAiTestConnectionPOSTResponse {
 
 /**
  * @description 测试平台连接
- * @param params ApiAiTestConnectionPOSTRequest
- * @returns Promise<ApiAiTestConnectionPOSTResponse>
+ * @param params PostAiTestConnectionRequestType
+ * @returns Promise<PostAiTestConnectionResponseType>
  */
-export async function apiAiTestConnectionPOST(
-  params: ApiAiTestConnectionPOSTRequest
-): Promise<ApiAiTestConnectionPOSTResponse> {
+export async function postAiTestConnectionApi(
+  params: PostAiTestConnectionRequestType
+): Promise<PostAiTestConnectionResponseType> {
   const config: RequestConfig = {
     url: '/api/ai/test-connection',
     method: 'POST',
     data: params,
   }
-  return request<ApiAiTestConnectionPOSTResponse>(config)
+  return request<PostAiTestConnectionResponseType>(config)
 }
 
 /**
  * @description 获取可用平台列表
- * @param params ApiAiProvidersGETRequest
- * @returns Promise<ApiAiProvidersGETResponse>
+ * @param params GetAiProvidersRequestType
+ * @returns Promise<GetAiProvidersResponseType>
  */
-export interface ApiAiProvidersGETRequest {
+export interface GetAiProvidersRequestType {
   /** @description  */
   Authorization?: string
 }
@@ -134,7 +134,7 @@ export interface ApiAiProvidersGETRequest {
 /**
  * @description 获取可用平台列表 的返回数据类型
  */
-export interface ApiAiProvidersGETResponse {
+export interface GetAiProvidersResponseType {
   /** @description  */
   success: boolean
   /** @description  */
@@ -143,26 +143,26 @@ export interface ApiAiProvidersGETResponse {
 
 /**
  * @description 获取可用平台列表
- * @param params ApiAiProvidersGETRequest
- * @returns Promise<ApiAiProvidersGETResponse>
+ * @param params GetAiProvidersRequestType
+ * @returns Promise<GetAiProvidersResponseType>
  */
-export async function apiAiProvidersGET(
-  params: ApiAiProvidersGETRequest
-): Promise<ApiAiProvidersGETResponse> {
+export async function getAiProvidersApi(
+  params: GetAiProvidersRequestType
+): Promise<GetAiProvidersResponseType> {
   const config: RequestConfig = {
     url: '/api/ai/providers',
     method: 'GET',
     params,
   }
-  return request<ApiAiProvidersGETResponse>(config)
+  return request<GetAiProvidersResponseType>(config)
 }
 
 /**
  * @description 获取请求历史
- * @param params ApiAiRequestsGETRequest
- * @returns Promise<ApiAiRequestsGETResponse>
+ * @param params GetAiRequestsRequestType
+ * @returns Promise<GetAiRequestsResponseType>
  */
-export interface ApiAiRequestsGETRequest {
+export interface GetAiRequestsRequestType {
   /** @description  */
   Authorization?: string
 }
@@ -170,7 +170,7 @@ export interface ApiAiRequestsGETRequest {
 /**
  * @description 获取请求历史 的返回数据类型
  */
-export interface ApiAiRequestsGETResponse {
+export interface GetAiRequestsResponseType {
   /** @description  */
   success: boolean
   /** @description  */
@@ -179,16 +179,16 @@ export interface ApiAiRequestsGETResponse {
 
 /**
  * @description 获取请求历史
- * @param params ApiAiRequestsGETRequest
- * @returns Promise<ApiAiRequestsGETResponse>
+ * @param params GetAiRequestsRequestType
+ * @returns Promise<GetAiRequestsResponseType>
  */
-export async function apiAiRequestsGET(
-  params: ApiAiRequestsGETRequest
-): Promise<ApiAiRequestsGETResponse> {
+export async function getAiRequestsApi(
+  params: GetAiRequestsRequestType
+): Promise<GetAiRequestsResponseType> {
   const config: RequestConfig = {
     url: '/api/ai/requests',
     method: 'GET',
     params,
   }
-  return request<ApiAiRequestsGETResponse>(config)
+  return request<GetAiRequestsResponseType>(config)
 }
