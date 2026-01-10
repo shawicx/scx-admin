@@ -189,8 +189,8 @@ export interface PostUsersLogoutRequestType {
  * @description 用户登出 的返回数据类型
  */
 export interface PostUsersLogoutResponseType {
-  /** @description 响应数据 */
-  data: any
+  /** @description  */
+  message: string
 }
 
 /**
@@ -225,8 +225,10 @@ export interface PostUsersRefreshTokenRequestType {
  * @description 刷新访问令牌 的返回数据类型
  */
 export interface PostUsersRefreshTokenResponseType {
-  /** @description 响应数据 */
-  data: any
+  /** @description 新的访问令牌 */
+  accessToken: string
+  /** @description 新的刷新令牌 */
+  refreshToken: string
 }
 
 /**
@@ -259,8 +261,10 @@ export interface GetUsersEncryptionKeyRequestType {
  * @description 获取加密密钥 的返回数据类型
  */
 export interface GetUsersEncryptionKeyResponseType {
-  /** @description 响应数据 */
-  data: any
+  /** @description 加密密钥 */
+  key: string
+  /** @description 密钥ID */
+  keyId: string
 }
 
 /**
@@ -295,8 +299,8 @@ export interface PostUsersSendLoginCodeRequestType {
  * @description 发送登录验证码 的返回数据类型
  */
 export interface PostUsersSendLoginCodeResponseType {
-  /** @description 响应数据 */
-  data: any
+  /** @description  */
+  message: string
 }
 
 /**
@@ -331,8 +335,8 @@ export interface PostUsersSendEmailCodeRequestType {
  * @description 发送邮箱验证码 的返回数据类型
  */
 export interface PostUsersSendEmailCodeResponseType {
-  /** @description 响应数据 */
-  data: any
+  /** @description  */
+  message: string
 }
 
 /**

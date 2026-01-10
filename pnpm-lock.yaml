@@ -44,9 +44,6 @@ importers:
       '@radix-ui/react-toast':
         specifier: ^1.2.15
         version: 1.2.15(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@scxfe/api-tool':
-        specifier: ^0.4.9
-        version: 0.4.9
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -108,6 +105,9 @@ importers:
       '@commitlint/config-conventional':
         specifier: ^18.6.3
         version: 18.6.3
+      '@scxfe/api-tool':
+        specifier: ^0.4.10
+        version: 0.4.10
       '@types/node':
         specifier: ^20.19.27
         version: 20.19.27
@@ -958,8 +958,8 @@ packages:
   '@radix-ui/rect@1.1.1':
     resolution: {integrity: sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==}
 
-  '@scxfe/api-tool@0.4.9':
-    resolution: {integrity: sha512-+nAw55fGAQIi9jK5ARc/lgVnOKpYUhEtKqxg/nrmGbiitrSy52osPjzbyK9wPD2yvmC3ppQDcEbXamkpjEqDig==}
+  '@scxfe/api-tool@0.4.10':
+    resolution: {integrity: sha512-o/YqtXhJC/wNZ3OW7jRYzTMFin5gH8dJAO5dNMap0XnL5IP03vwmr9LloadOT/FoDTF29ihBt2qHuA8ZRBZd2Q==}
     engines: {node: '>=20.0.0'}
     hasBin: true
 
@@ -3195,7 +3195,7 @@ snapshots:
 
   '@radix-ui/rect@1.1.1': {}
 
-  '@scxfe/api-tool@0.4.9':
+  '@scxfe/api-tool@0.4.10':
     dependencies:
       '@clack/prompts': 0.11.0
       axios: 1.13.2
