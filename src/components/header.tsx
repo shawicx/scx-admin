@@ -1,6 +1,6 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Bell, Search, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -40,13 +40,19 @@ const routeMap: Record<string, string> = {
 export function Header() {
   const { user, logout } = useAuth()
   const pathname = usePathname()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    await logout()
+    router.push('/login')
+  }
 
   const generateBreadcrumbs = () => {
     const paths = pathname.split('/').filter(Boolean)
     const breadcrumbs = [{ name: '仪表板', href: '/' }]
 
     let currentPath = ''
-    paths.forEach((path) => {
+    paths.forEach(path => {
       currentPath += `/${path}`
       const name = routeMap[currentPath] || path
       breadcrumbs.push({ name, href: currentPath })
@@ -80,14 +86,14 @@ export function Header() {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        
+
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          
+
           <Button variant="ghost" size="icon">
             <Bell className="h-4 w-4" />
           </Button>
-          
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -95,14 +101,12 @@ export function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>
-                {user?.email || '用户'}
-              </DropdownMenuLabel>
+              <DropdownMenuLabel>{user?.email || '用户'}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>个人资料</DropdownMenuItem>
               <DropdownMenuItem>设置</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout}>
+              <DropdownMenuItem onClick={handleLogout}>
                 退出登录
               </DropdownMenuItem>
             </DropdownMenuContent>

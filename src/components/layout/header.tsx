@@ -1,16 +1,16 @@
-"use client"
+'use client'
 
-import { usePathname } from "next/navigation"
-import { Moon, Sun, User, LogOut } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { usePathname } from 'next/navigation'
+import { Moon, Sun, User, LogOut } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,30 +18,39 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { useTheme } from "@/hooks/use-theme"
+} from '@/components/ui/breadcrumb'
+import { useTheme } from '@/hooks/use-theme'
+import { useAuth } from '@/stores/auth'
+import { useRouter } from 'next/navigation'
 
 const routeMap: Record<string, string> = {
-  "/": "首页",
-  "/users": "用户管理",
-  "/analytics": "数据统计",
-  "/documents": "文档管理",
-  "/permissions": "权限管理",
-  "/settings": "系统设置",
-  "/login": "登录",
-  "/register": "注册",
+  '/': '首页',
+  '/users': '用户管理',
+  '/analytics': '数据统计',
+  '/documents': '文档管理',
+  '/permissions': '权限管理',
+  '/settings': '系统设置',
+  '/login': '登录',
+  '/register': '注册',
 }
 
 export function Header() {
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
+  const { logout } = useAuth()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    await logout()
+    router.push('/login')
+  }
 
   const generateBreadcrumbs = () => {
-    const paths = pathname.split("/").filter(Boolean)
-    const breadcrumbs = [{ name: "首页", href: "/" }]
+    const paths = pathname.split('/').filter(Boolean)
+    const breadcrumbs = [{ name: '首页', href: '/' }]
 
-    let currentPath = ""
-    paths.forEach((path) => {
+    let currentPath = ''
+    paths.forEach(path => {
       currentPath += `/${path}`
       const name = routeMap[currentPath] || path
       breadcrumbs.push({ name, href: currentPath })
@@ -53,7 +62,7 @@ export function Header() {
   const breadcrumbs = generateBreadcrumbs()
 
   const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light")
+    setTheme(theme === 'light' ? 'dark' : 'light')
   }
 
   return (
@@ -86,7 +95,7 @@ export function Header() {
           onClick={toggleTheme}
           className="h-9 w-9"
         >
-          {theme === "light" ? (
+          {theme === 'light' ? (
             <Moon className="h-4 w-4" />
           ) : (
             <Sun className="h-4 w-4" />
@@ -111,7 +120,7 @@ export function Header() {
               <span>个人资料</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>退出登录</span>
             </DropdownMenuItem>

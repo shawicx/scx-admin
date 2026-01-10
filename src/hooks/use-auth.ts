@@ -19,6 +19,20 @@ import type {
 import { FrontendCrypto } from '@/lib/frontend-crypto'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
 
+// 设置 cookie 的辅助函数
+const setAuthCookie = (token: string) => {
+  if (typeof document !== 'undefined') {
+    document.cookie = `accessToken=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=lax`
+  }
+}
+
+// 删除 cookie 的辅助函数
+const removeAuthCookie = () => {
+  if (typeof document !== 'undefined') {
+    document.cookie = 'accessToken=; path=/; max-age=0; SameSite=lax'
+  }
+}
+
 export function useAuth() {
   const indexedDB = IndexedDBManager.getInstance()
 
@@ -44,6 +58,8 @@ export function useAuth() {
       try {
         await indexedDB.setItem('user', user)
         await indexedDB.setItem('accessToken', user.accessToken)
+        // 同时设置 cookie，供 middleware 使用
+        setAuthCookie(user.accessToken)
       } catch (error) {
         console.error('Failed to save user data to IndexedDB:', error)
         throw Error('登录失败')
@@ -64,6 +80,8 @@ export function useAuth() {
       try {
         await indexedDB.setItem('user', user)
         await indexedDB.setItem('accessToken', user.accessToken)
+        // 同时设置 cookie，供 middleware 使用
+        setAuthCookie(user.accessToken)
       } catch (error) {
         console.error('Failed to save user data to IndexedDB:', error)
       }
@@ -88,6 +106,8 @@ export function useAuth() {
       try {
         await indexedDB.setItem('user', user)
         await indexedDB.setItem('accessToken', user.accessToken)
+        // 同时设置 cookie，供 middleware 使用
+        setAuthCookie(user.accessToken)
       } catch (error) {
         console.error('Failed to save user data to IndexedDB:', error)
       }
@@ -110,16 +130,32 @@ export function useAuth() {
   }
 
   const logout = async () => {
-    // 从 IndexDB 中删除用户信息和访问令牌
+    // 先获取用户数据用于调用注销接口
+    let userData: PostUsersLoginPasswordResponseType | null = null
     try {
-      const userData = (await indexedDB.getItem(
+      userData = (await indexedDB.getItem(
         'user'
       )) as PostUsersLoginPasswordResponseType
-      if (userData && userData.id) {
-        await postUsersLogoutApi({ userId: userData.id })
-      }
+    } catch (error) {
+      console.error('Failed to get user data from IndexedDB:', error)
+    }
+
+    // 尝试调用后端注销接口，但不阻塞本地清理
+    if (userData?.id) {
+      postUsersLogoutApi({ userId: userData.id }).catch(error => {
+        console.warn(
+          'Logout API call failed, but continuing with local cleanup:',
+          error
+        )
+      })
+    }
+
+    // 无论后端 API 是否成功，都清除本地凭证
+    try {
       await indexedDB.removeItem('user')
       await indexedDB.removeItem('accessToken')
+      // 同时删除 cookie
+      removeAuthCookie()
     } catch (error) {
       console.error('Failed to remove user data from IndexedDB:', error)
     }
