@@ -1,6 +1,5 @@
-/*
- * @Author: shawicx d35f3153@proton.me
- * @Description: IndexDB 管理类
+/**
+ * @description: IndexDB 管理类
  */
 
 // 定义数据库配置
