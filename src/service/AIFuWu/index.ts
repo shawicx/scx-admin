@@ -49,10 +49,6 @@ export async function postAiCompletionApi(
  * @returns Promise<PutAiConfigResponseType>
  */
 export interface PutAiConfigRequestType {
-  /** @description 默认平台 */
-  defaultProvider?: string
-  /** @description  */
-  providers?: Record<string, any>
   /** @description  */
   Authorization?: string
 }

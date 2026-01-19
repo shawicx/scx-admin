@@ -1,4 +1,12 @@
-import { LucideIcon, Home, Users, Settings, BarChart3, FileText, Shield } from 'lucide-react'
+import {
+  LucideIcon,
+  Home,
+  Users,
+  Settings,
+  BarChart3,
+  FileText,
+  Shield,
+} from 'lucide-react'
 
 export interface MenuItem {
   id: string

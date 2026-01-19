@@ -1,5 +1,9 @@
 import { RequestConfig, request } from '@/service/request'
-import type { UserRoleResponseDto, Role } from '@/service/types'
+import type {
+  UserRoleResponseDto,
+  Role,
+  UserListItemDto,
+} from '@/service/types'
 
 /**
  * @description 用户注册
@@ -623,4 +627,198 @@ export async function getUsersCheckPermissionApi(
     params,
   }
   return request<GetUsersCheckPermissionResponseType>(config)
+}
+
+/**
+ * @description 查询用户列表
+ * @param params GetUsersRequestType
+ * @returns Promise<GetUsersResponseType>
+ */
+export interface GetUsersRequestType {
+  /** @description 页码 */
+  page?: string
+  /** @description 每页数量 */
+  limit?: string
+  /** @description 搜索关键词（邮箱或姓名） */
+  search?: string
+  /** @description 启用状态筛选 */
+  isActive?: string
+  /** @description 排序字段 */
+  sortBy?: string
+  /** @description 排序方向 */
+  sortOrder?: string
+  /** @description  */
+  Authorization?: string
+}
+
+/**
+ * @description 查询用户列表 的返回数据类型
+ */
+export interface GetUsersResponseType {
+  /** @description 用户列表 */
+  users: UserListItemDto[]
+  /** @description 总数 */
+  total: number
+  /** @description 当前页码 */
+  page: number
+  /** @description 每页数量 */
+  limit: number
+}
+
+/**
+ * @description 查询用户列表
+ * @param params GetUsersRequestType
+ * @returns Promise<GetUsersResponseType>
+ */
+export async function getUsersApi(
+  params: GetUsersRequestType
+): Promise<GetUsersResponseType> {
+  const config: RequestConfig = {
+    url: '/api/users',
+    method: 'GET',
+    params,
+  }
+  return request<GetUsersResponseType>(config)
+}
+
+/**
+ * @description 删除用户（支持批量）
+ * @param params DeleteUsersRequestType
+ * @returns Promise<DeleteUsersResponseType>
+ */
+export interface DeleteUsersRequestType {
+  /** @description 要删除的用户ID列表（支持批量） */
+  userIds: string[]
+  /** @description  */
+  Authorization?: string
+}
+
+/**
+ * @description 删除用户（支持批量） 的返回数据类型
+ */
+export interface DeleteUsersResponseType {
+  /** @description 删除的用户数量 */
+  count: number
+  /** @description  */
+  message: string
+}
+
+/**
+ * @description 删除用户（支持批量）
+ * @param params DeleteUsersRequestType
+ * @returns Promise<DeleteUsersResponseType>
+ */
+export async function deleteUsersApi(
+  params: DeleteUsersRequestType
+): Promise<DeleteUsersResponseType> {
+  const config: RequestConfig = {
+    url: '/api/users',
+    method: 'DELETE',
+    data: params,
+  }
+  return request<DeleteUsersResponseType>(config)
+}
+
+/**
+ * @description 管理员创建用户
+ * @param params PostUsersCreateRequestType
+ * @returns Promise<PostUsersCreateResponseType>
+ */
+export interface PostUsersCreateRequestType {
+  /** @description 用户邮箱 */
+  email: string
+  /** @description 用户名称 */
+  name: string
+  /** @description 密码 */
+  password: string
+  /** @description 是否启用 */
+  isActive?: boolean
+  /** @description 初始角色ID列表 */
+  roleIds?: string[]
+  /** @description  */
+  Authorization?: string
+}
+
+/**
+ * @description 管理员创建用户 的返回数据类型
+ */
+export interface PostUsersCreateResponseType {
+  /** @description 用户ID */
+  id: string
+  /** @description 用户邮箱 */
+  email: string
+  /** @description 用户名称 */
+  name: string
+  /** @description 邮箱是否已验证 */
+  emailVerified: boolean
+  /** @description 用户偏好设置 */
+  preferences: Record<string, any>
+  /** @description 最后登录IP */
+  lastLoginIp: string
+  /** @description 最后登录时间 */
+  lastLoginAt: string
+  /** @description 登录次数 */
+  loginCount: number
+  /** @description 账户是否激活 */
+  isActive: boolean
+  /** @description 创建时间 */
+  createdAt: string
+  /** @description 更新时间 */
+  updatedAt: string
+}
+
+/**
+ * @description 管理员创建用户
+ * @param params PostUsersCreateRequestType
+ * @returns Promise<PostUsersCreateResponseType>
+ */
+export async function postUsersCreateApi(
+  params: PostUsersCreateRequestType
+): Promise<PostUsersCreateResponseType> {
+  const config: RequestConfig = {
+    url: '/api/users/create',
+    method: 'POST',
+    data: params,
+  }
+  return request<PostUsersCreateResponseType>(config)
+}
+
+/**
+ * @description 切换用户状态（支持批量）
+ * @param params PatchUsersToggleStatusRequestType
+ * @returns Promise<PatchUsersToggleStatusResponseType>
+ */
+export interface PatchUsersToggleStatusRequestType {
+  /** @description 要切换状态的用户ID列表（支持批量） */
+  userIds: string[]
+  /** @description 目标状态 */
+  isActive: boolean
+  /** @description  */
+  Authorization?: string
+}
+
+/**
+ * @description 切换用户状态（支持批量） 的返回数据类型
+ */
+export interface PatchUsersToggleStatusResponseType {
+  /** @description 更新的用户数量 */
+  count: number
+  /** @description  */
+  message: string
+}
+
+/**
+ * @description 切换用户状态（支持批量）
+ * @param params PatchUsersToggleStatusRequestType
+ * @returns Promise<PatchUsersToggleStatusResponseType>
+ */
+export async function patchUsersToggleStatusApi(
+  params: PatchUsersToggleStatusRequestType
+): Promise<PatchUsersToggleStatusResponseType> {
+  const config: RequestConfig = {
+    url: '/api/users/toggle-status',
+    method: 'PATCH',
+    data: params,
+  }
+  return request<PatchUsersToggleStatusResponseType>(config)
 }

@@ -6,6 +6,23 @@ import { toast } from '@/components/ui/use-toast'
 
 type ValueOf<T> = T[keyof T]
 
+export enum SystemErrorCode {
+  MISSING_TOKEN = 9000,
+  INVALID_PARAMETER = 9001,
+  DATA_NOT_FOUND = 9002,
+  INSUFFICIENT_PERMISSION = 9003,
+  EMAIL_EXISTS = 9004,
+  INVALID_VERIFICATION_CODE = 9005,
+  INVALID_CREDENTIALS = 9006,
+  RESOURCE_EXISTS = 9007,
+  OPERATION_FAILED = 9008,
+  SERVICE_UNAVAILABLE = 9009,
+  KEY_EXPIRED = 9010,
+  DECRYPTION_FAILED = 9011,
+  BUSINESS_RULE_VIOLATION = 9012,
+  ACCOUNT_DISABLED = 9013,
+}
+
 export interface RequestConfig extends AxiosRequestConfig {
   url: string
   method: string
@@ -62,6 +79,24 @@ const HttpStatusMessage = new Map<HttpStatus, string>([
   [HttpStatus.UnKnownError, '未知错误'],
 ])
 
+// 业务错误码提示语
+const SystemErrorCodeMessage = new Map<SystemErrorCode, string>([
+  [SystemErrorCode.MISSING_TOKEN, '缺少token'],
+  [SystemErrorCode.INVALID_PARAMETER, '请求参数错误'],
+  [SystemErrorCode.DATA_NOT_FOUND, '数据未找到'],
+  [SystemErrorCode.INSUFFICIENT_PERMISSION, '权限不足'],
+  [SystemErrorCode.EMAIL_EXISTS, '邮箱已存在'],
+  [SystemErrorCode.INVALID_VERIFICATION_CODE, '验证码无效'],
+  [SystemErrorCode.INVALID_CREDENTIALS, '登录凭据无效'],
+  [SystemErrorCode.RESOURCE_EXISTS, '资源已存在'],
+  [SystemErrorCode.OPERATION_FAILED, '操作失败'],
+  [SystemErrorCode.SERVICE_UNAVAILABLE, '服务不可用'],
+  [SystemErrorCode.KEY_EXPIRED, '密钥过期'],
+  [SystemErrorCode.DECRYPTION_FAILED, '解密失败'],
+  [SystemErrorCode.BUSINESS_RULE_VIOLATION, '业务规则限制'],
+  [SystemErrorCode.ACCOUNT_DISABLED, '账户已禁用'],
+])
+
 const getText = (type: 'error' | 'success' | 'warning' | 'info') => {
   switch (type) {
     case 'error':
@@ -84,7 +119,6 @@ function showMessage(
 ) {
   const text = getText(type)
   const variant = type === 'error' ? 'destructive' : 'default'
-  console.log(`${text}: ${message}`)
   // 使用项目中的 toast 组件显示消息
   toast({
     variant,
@@ -121,7 +155,7 @@ function getRequestKey(
 
 function handleError(error: AxiosError) {
   if (axios.isCancel(error)) {
-    showMessage('请求已被取消: ' + error.message, 'warning')
+    // showMessage('请求已被取消: ' + error.message, 'warning')
   } else {
     const responseError =
       (error as AxiosError<any>).response?.data?.message || ''
@@ -206,15 +240,14 @@ export async function request<D>(config: AxiosRequestConfig): Promise<D> {
   const { headers = {}, params: configParams, ...axiosRequestConfig } = config
 
   // 防止 GET 请求缓存GET
-  const t = new Date().getTime()
+  // const t = new Date().getTime()
   const isGetRequest = config.method === 'GET'
-  const params = isGetRequest ? { ...configParams, t } : { t }
+  const params = isGetRequest ? { ...configParams } : {}
   try {
     const response = await axios(url, {
       headers: {
         ...headers,
         ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-        token: 'secret',
       },
       ...axiosRequestConfig,
       baseURL: BASE_LINE_PROXY_PATH,
@@ -224,15 +257,27 @@ export async function request<D>(config: AxiosRequestConfig): Promise<D> {
     const { status } = response
     const httpStatus = getHttpStatus(status)
     const httpStatusMessage = HttpStatusMessage.get(httpStatus)
-
     if (
       [HttpStatus.OK, HttpStatus.OK_OTHER, HttpStatus.Redirection].includes(
         httpStatus as any
       )
     ) {
       if (response.data?.statusCode >= HttpStatus.Redirection) {
-        const errorMessage = `${response.data?.statusCode} ${response.data.message} ${response.data.status}`
-        showMessage(errorMessage, 'error')
+        const statusCode = response.data?.statusCode
+        const errorMessage = response.data.message
+
+        if (statusCode) {
+          const businessErrorMessage = SystemErrorCodeMessage.get(
+            statusCode as SystemErrorCode
+          )
+          const displayMessage = errorMessage || businessErrorMessage
+          showMessage(`${statusCode} ${displayMessage}`, 'error')
+          throw new Error(displayMessage)
+        } else {
+          const fullErrorMessage = `${statusCode} ${errorMessage} ${response.data.status}`
+          showMessage(fullErrorMessage, 'error')
+          throw new Error(fullErrorMessage)
+        }
       }
       // 从响应中提取 data 字段并返回
       return response.data.data as D

@@ -55,11 +55,13 @@ src/
 ## 快速开始
 
 1. 安装依赖：
+
 ```bash
 pnpm install
 ```
 
 2. 启动开发服务器：
+
 ```bash
 pnpm dev
 ```

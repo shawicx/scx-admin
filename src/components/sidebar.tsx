@@ -17,7 +17,9 @@ function SidebarItem({ item, level = 0 }: SidebarItemProps) {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const hasChildren = item.children && item.children.length > 0
-  const isActive = pathname === item.href || (hasChildren && item.children?.some(child => pathname === child.href))
+  const isActive =
+    pathname === item.href ||
+    (hasChildren && item.children?.some(child => pathname === child.href))
 
   return (
     <div>
@@ -67,7 +69,7 @@ function SidebarItem({ item, level = 0 }: SidebarItemProps) {
       </div>
       {hasChildren && isOpen && (
         <div className="mt-1 space-y-1">
-          {item.children?.map((child) => (
+          {item.children?.map(child => (
             <SidebarItem key={child.id} item={child} level={level + 1} />
           ))}
         </div>
@@ -83,7 +85,7 @@ export function Sidebar() {
         <h2 className="text-lg font-semibold">SCX Admin</h2>
       </div>
       <nav className="space-y-2">
-        {menuItems.map((item) => (
+        {menuItems.map(item => (
           <SidebarItem key={item.id} item={item} />
         ))}
       </nav>
