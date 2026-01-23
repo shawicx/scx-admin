@@ -32,6 +32,12 @@ export const menuItems: MenuItem[] = [
     badge: '新',
   },
   {
+    id: 'permissions',
+    title: '权限管理',
+    icon: Shield,
+    href: '/permissions',
+  },
+  {
     id: 'analytics',
     title: '数据分析',
     icon: BarChart3,
