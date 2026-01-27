@@ -90,18 +90,6 @@ export default function SettingsPage() {
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>数据分析</Label>
-                <p className="text-sm text-muted-foreground">
-                  收集用户行为数据用于分析
-                </p>
-              </div>
-              <Switch />
-            </div>
-
-            <Separator />
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
                 <Label>维护模式</Label>
                 <p className="text-sm text-muted-foreground">
                   启用后普通用户无法访问系统

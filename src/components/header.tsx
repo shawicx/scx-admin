@@ -27,9 +27,6 @@ import { useAuth } from '@/stores/auth'
 const routeMap: Record<string, string> = {
   '/': '仪表板',
   '/users': '用户管理',
-  '/analytics': '数据分析',
-  '/analytics/reports': '报表',
-  '/analytics/charts': '图表',
   '/settings': '系统设置',
   '/settings/general': '常规设置',
   '/settings/security': '安全设置',

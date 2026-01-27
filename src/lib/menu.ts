@@ -45,26 +45,6 @@ export const menuItems: MenuItem[] = [
     href: '/permissions',
   },
   {
-    id: 'analytics',
-    title: '数据分析',
-    icon: BarChart3,
-    href: '/analytics',
-    children: [
-      {
-        id: 'reports',
-        title: '报表',
-        icon: FileText,
-        href: '/analytics/reports',
-      },
-      {
-        id: 'charts',
-        title: '图表',
-        icon: BarChart3,
-        href: '/analytics/charts',
-      },
-    ],
-  },
-  {
     id: 'settings',
     title: '系统设置',
     icon: Settings,
