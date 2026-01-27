@@ -26,6 +26,7 @@ import { useRouter } from 'next/navigation'
 const routeMap: Record<string, string> = {
   '/': '首页',
   '/users': '用户管理',
+  '/roles': '角色管理',
   '/analytics': '数据统计',
   '/documents': '文档管理',
   '/permissions': '权限管理',

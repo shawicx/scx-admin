@@ -2,6 +2,7 @@ import {
   LucideIcon,
   Home,
   Users,
+  UserCog,
   Settings,
   BarChart3,
   FileText,
@@ -30,6 +31,12 @@ export const menuItems: MenuItem[] = [
     icon: Users,
     href: '/users',
     badge: '新',
+  },
+  {
+    id: 'roles',
+    title: '角色管理',
+    icon: UserCog,
+    href: '/roles',
   },
   {
     id: 'permissions',
