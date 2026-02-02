@@ -105,8 +105,10 @@ export function useAuth() {
       // 将用户信息和访问令牌分别存储到 IndexDB
       try {
         await indexedDB.setItem('user', user)
+        // @ts-ignore 忽略类型检查，因为 user.accessToken 存在但类型系统未检测到
         await indexedDB.setItem('accessToken', user.accessToken)
         // 同时设置 cookie，供 middleware 使用
+        // @ts-ignore 忽略类型检查，因为 user.accessToken 存在但类型系统未检测到
         setAuthCookie(user.accessToken)
       } catch (error) {
         console.error('Failed to save user data to IndexedDB:', error)

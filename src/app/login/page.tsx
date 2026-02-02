@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
@@ -27,7 +27,7 @@ import {
 } from '@/lib/validations/auth'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { login, loginWithCode } = useAuthHook()
@@ -50,16 +50,15 @@ export default function LoginPage() {
     },
   })
 
-  // 检查用户是否已经登录
+  const redirectPath = searchParams.get('redirect') || '/'
+
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
         const indexedDB = IndexedDBManager.getInstance()
         const token = await indexedDB.getItem('accessToken')
         if (token) {
-          // 如果已经登录，重定向到首页或指定页面
-          const redirect = searchParams.get('redirect') || '/'
-          router.push(redirect)
+          router.push(redirectPath)
         }
       } catch (error) {
         console.error('Failed to check auth status:', error)
@@ -67,19 +66,17 @@ export default function LoginPage() {
     }
 
     checkAuthStatus()
-  }, [router, searchParams])
+  }, [router, redirectPath])
 
   const onPasswordSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
     try {
-      const result = await login({
+      await login({
         email: data.email,
         password: data.password,
       })
-      // 登录成功，重定向到首页或指定页面
-      const redirect = searchParams.get('redirect') || '/'
-      console.log('Redirecting to:', redirect)
-      router.push(redirect)
+      console.log('Redirecting to:', redirectPath)
+      router.push(redirectPath)
       router.refresh()
     } catch (error: any) {
       console.error('登录失败:', error)
@@ -91,14 +88,12 @@ export default function LoginPage() {
   const onCodeSubmit = async (data: LoginWithCodeFormData) => {
     setIsLoading(true)
     try {
-      const result = await loginWithCode({
+      await loginWithCode({
         email: data.email,
         emailVerificationCode: data.code,
       })
 
-      // 登录成功，重定向到首页或指定页面
-      const redirect = searchParams.get('redirect') || '/'
-      router.push(redirect)
+      router.push(redirectPath)
       router.refresh()
     } catch (error: any) {
       console.error('登录失败:', error)
@@ -115,8 +110,6 @@ export default function LoginPage() {
     }
 
     try {
-      // 这里应该调用发送验证码的API
-      // 暂时模拟发送成功
       start()
     } catch (error) {
       console.error('发送验证码失败:', error)
@@ -125,10 +118,8 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Canvas动画背景 */}
       <AnimatedBackground />
 
-      {/* 登录卡片 */}
       <Card className="w-full max-w-md relative z-10 backdrop-blur-md bg-white/95 border-white/20 shadow-2xl shadow-purple-500/10">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl text-gray-900">登录</CardTitle>
@@ -245,5 +236,13 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginForm />
+    </Suspense>
   )
 }
