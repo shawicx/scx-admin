@@ -44,6 +44,7 @@ jobs:
             --exclude='.git' \
             --exclude='.github' \
             --exclude='.vscode' \
+            --exclude='.opencode' \
             -czf /tmp/scx-admin.tar.gz .
           scp -o StrictHostKeyChecking=no /tmp/scx-admin.tar.gz ${{ secrets.ECS_USER }}@${{ secrets.ECS_HOST }}:/tmp/
 
