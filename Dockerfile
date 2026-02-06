@@ -3,27 +3,22 @@
 FROM node:20-alpine AS base
 WORKDIR /app
 
-# ---------- deps ----------
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 COPY package.json pnpm-lock.yaml* ./
 RUN corepack enable pnpm && pnpm install --frozen-lockfile
 
-# ---------- builder ----------
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN corepack enable pnpm && pnpm run build
 
-# ---------- runner ----------
 FROM node:20-alpine AS runner
 
-RUN apk update && \
-    apk add --no-cache nginx && \
-    rm -rf /var/cache/apk/*
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
+    apk update && apk add --no-cache nginx && rm -rf /var/cache/apk/*
 
-RUN addgroup -S nodejs -g 1001 && \
-    adduser -S nextjs -u 1001 -G nodejs
+RUN addgroup -S nodejs -g 1001 && adduser -S nextjs -u 1001 -G nodejs
 
 WORKDIR /app
 ENV NODE_ENV=production
@@ -68,7 +63,4 @@ EXPOSE 3369
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-COPY docker-entrypoint.sh /app/docker-entrypoint.sh
-RUN chmod +x /app/docker-entrypoint.sh
-
-CMD ["/app/docker-entrypoint.sh"]
+CMD ["sh", "-c", "node server.js & nginx -g 'daemon off;'"]
