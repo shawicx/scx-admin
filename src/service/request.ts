@@ -35,9 +35,6 @@ interface BaseRes<D> {
 
 type Method = ValueOf<typeof RequestMethod>
 
-// 用于转发请求的代理地址
-const BASE_LINE_PROXY_PATH = 'http://127.0.0.1:3000'
-
 // 取消请求白名单
 const CANCEL_WHITE_LIST: Array<{ path: string; method: Method }> = []
 
@@ -250,7 +247,7 @@ export async function request<D>(config: AxiosRequestConfig): Promise<D> {
         ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       },
       ...axiosRequestConfig,
-      baseURL: BASE_LINE_PROXY_PATH,
+      baseURL: process.env.PUBLIC_BASE_PATH,
       timeout: TIMEOUT,
       params: isGetRequest ? params : configParams,
     })
