@@ -1,10 +1,11 @@
 # syntax=docker/dockerfile:1.4
 
 FROM node:20-alpine AS base
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
+    apk update && apk add --no-cache libc6-compat && rm -rf /var/cache/apk/*
 WORKDIR /app
 
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
 COPY package.json pnpm-lock.yaml* ./
 RUN corepack enable pnpm && pnpm install --frozen-lockfile
 
@@ -13,10 +14,8 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN corepack enable pnpm && pnpm run build
 
-FROM node:20-alpine AS runner
-
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
-    apk update && apk add --no-cache nginx && rm -rf /var/cache/apk/*
+FROM base AS runner
+RUN apk add --no-cache nginx && rm -rf /var/cache/apk/*
 
 RUN addgroup -S nodejs -g 1001 && adduser -S nextjs -u 1001 -G nodejs
 
