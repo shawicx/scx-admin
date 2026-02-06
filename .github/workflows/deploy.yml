@@ -35,7 +35,7 @@ jobs:
 
       - name: Generate .env file
         run: |
-          echo "PUBLIC_BASE_PATH=${{ secrets.API_BASE_URL || '' }}" > .env
+          echo "NEXT_PUBLIC_BASE_PATH=${{ secrets.API_BASE_URL || '' }}" > .env
 
       - name: Build project
         run: pnpm run build

@@ -247,7 +247,7 @@ export async function request<D>(config: AxiosRequestConfig): Promise<D> {
         ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       },
       ...axiosRequestConfig,
-      baseURL: process.env.PUBLIC_BASE_PATH,
+      baseURL: process.env.NEXT_PUBLIC_BASE_PATH,
       timeout: TIMEOUT,
       params: isGetRequest ? params : configParams,
     })
