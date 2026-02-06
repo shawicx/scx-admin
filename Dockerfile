@@ -21,9 +21,10 @@ ENV NODE_ENV=production
 RUN mkdir -p /app/.next/standalone
 RUN chown -R nextjs:nodejs /app
 
-COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+RUN mkdir -p /app/public && chown nextjs:nodejs /app/public
 
 USER nextjs
 
