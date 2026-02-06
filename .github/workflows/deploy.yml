@@ -54,9 +54,9 @@ jobs:
             mkdir -p ~/scx-admin
             tar -xzf /tmp/scx-admin.tar.gz -C ~/scx-admin
             cd ~/scx-admin
-            docker-compose down
-            docker-compose build
-            docker-compose up -d
+            docker compose down
+            docker compose build
+            docker compose up -d
             docker system prune -f
             rm -f /tmp/scx-admin.tar.gz
           ENDSSH
