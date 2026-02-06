@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1.4
+
 FROM node:20-alpine AS base
 WORKDIR /app
 
@@ -16,33 +18,29 @@ RUN corepack enable pnpm && pnpm run build
 # ---------- runner ----------
 FROM node:20-alpine AS runner
 
-# 安装 nginx
-RUN apk add --no-cache nginx
+RUN apk update && \
+    apk add --no-cache nginx && \
+    rm -rf /var/cache/apk/*
 
-# 创建用户
-RUN addgroup --system --gid 1001 nodejs \
- && adduser --system --uid 1001 nextjs
+RUN addgroup -S nodejs -g 1001 && \
+    adduser -S nextjs -u 1001 -G nodejs
 
 WORKDIR /app
-
 ENV NODE_ENV=production
 
-# Next.js standalone
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-# nginx 配置
-RUN mkdir -p /run/nginx /var/log/nginx
+RUN mkdir -p /etc/nginx/conf.d /run/nginx /var/log/nginx && \
+    chown -R nextjs:nodejs /var/log/nginx /run/nginx
 
 COPY <<'EOF' /etc/nginx/conf.d/default.conf
 server {
     listen 3369;
     server_name _;
-
     client_max_body_size 10M;
 
-    # 前端页面
     location / {
         proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
@@ -50,9 +48,9 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 60s;
     }
 
-    # 后端 API（指向 NestJS 容器）
     location /api/ {
         proxy_pass http://scx-service-app:3000/;
         proxy_http_version 1.1;
@@ -60,19 +58,17 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 60s;
     }
 }
 EOF
 
-# 权限
-RUN chown -R nextjs:nodejs /app /var/log/nginx /run/nginx
-
 USER nextjs
-
 EXPOSE 3369
-
-# Next.js 内部监听 3000（nginx 不暴露）
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-CMD ["sh", "-c", "node server.js & nginx -g 'daemon off;'"]
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
+CMD ["/app/docker-entrypoint.sh"]
