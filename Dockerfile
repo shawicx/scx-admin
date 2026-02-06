@@ -17,7 +17,8 @@ RUN corepack enable pnpm && pnpm run build
 FROM base AS runner
 RUN apk add --no-cache nginx && rm -rf /var/cache/apk/*
 
-RUN addgroup -S nodejs -g 1001 && adduser -S nextjs -u 1001 -G nodejs
+RUN addgroup -S nodejs -g 1001 && adduser -S nextjs -u 1001 -G nodejs && \
+    adduser nextjs nginx
 
 WORKDIR /app
 ENV NODE_ENV=production
@@ -26,8 +27,35 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-RUN mkdir -p /etc/nginx/conf.d /run/nginx /var/log/nginx && \
+RUN mkdir -p /etc/nginx /etc/nginx/conf.d /run/nginx /var/log/nginx && \
     chown -R nextjs:nodejs /var/log/nginx /run/nginx
+
+COPY <<'EOF' /etc/nginx/nginx.conf
+worker_processes auto;
+error_log /var/log/nginx/error.log warn;
+pid /run/nginx/nginx.pid;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log /var/log/nginx/access.log main;
+
+    sendfile on;
+    tcp_nopush on;
+    keepalive_timeout 65;
+
+    include /etc/nginx/conf.d/*.conf;
+}
+EOF
 
 COPY <<'EOF' /etc/nginx/conf.d/default.conf
 server {
@@ -57,9 +85,9 @@ server {
 }
 EOF
 
-USER nextjs
 EXPOSE 3369
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
+USER nextjs
 CMD ["sh", "-c", "node server.js & nginx -g 'daemon off;'"]
