@@ -38,22 +38,25 @@ jobs:
 
       - name: Upload to ECS
         run: |
-          rsync -avz --delete \
-            --exclude 'node_modules' \
-            --exclude '.next' \
-            --exclude '.git' \
-            --exclude '.github' \
-            --exclude '.vscode' \
-            -e "ssh -o StrictHostKeyChecking=no" \
-            ${{ github.workspace }}/ \
-            ${{ secrets.ECS_USER }}@${{ secrets.ECS_HOST }}:~/scx-admin/
+          cd ${{ github.workspace }}
+          tar --exclude='node_modules' \
+            --exclude='.next' \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.vscode' \
+            -czf /tmp/scx-admin.tar.gz .
+          scp -o StrictHostKeyChecking=no /tmp/scx-admin.tar.gz ${{ secrets.ECS_USER }}@${{ secrets.ECS_HOST }}:/tmp/
 
       - name: Deploy on ECS
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.ECS_USER }}@${{ secrets.ECS_HOST }} << 'ENDSSH'
+            rm -rf ~/scx-admin
+            mkdir -p ~/scx-admin
+            tar -xzf /tmp/scx-admin.tar.gz -C ~/scx-admin
             cd ~/scx-admin
             docker-compose down
             docker-compose build
             docker-compose up -d
             docker system prune -f
+            rm -f /tmp/scx-admin.tar.gz
           ENDSSH
