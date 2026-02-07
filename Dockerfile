@@ -28,7 +28,6 @@ ENV NODE_ENV=production
 
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 RUN mkdir -p /etc/nginx /etc/nginx/conf.d /run/nginx /var/log/nginx && \
     chown -R nextjs:nodejs /var/log/nginx /run/nginx
