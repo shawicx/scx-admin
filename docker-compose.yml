@@ -12,22 +12,9 @@ services:
       - '3369:3369'
     environment:
       - NODE_ENV=production
-    depends_on:
-      - backend
-    networks:
-      - scx-network
-
-  backend:
-    image: scx-service-app
-    container_name: scx-service-app
-    restart: unless-stopped
-    ports:
-      - '3000:3000'
-    environment:
-      - NODE_ENV=production
     networks:
       - scx-network
 
 networks:
   scx-network:
-    driver: bridge
+    external: true
