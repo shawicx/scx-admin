@@ -3,14 +3,14 @@
 FROM node:20-alpine AS base
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
     apk update && apk add --no-cache libc6-compat && rm -rf /var/cache/apk/*
-WORKDIR /app
+WORKDIR /scx-admin
 
 FROM base AS deps
 COPY package.json pnpm-lock.yaml* ./
 RUN corepack enable pnpm && pnpm install --frozen-lockfile
 
 FROM base AS builder
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /scx-admin/node_modules ./node_modules
 COPY . .
 RUN corepack enable pnpm && pnpm run build
 
@@ -23,11 +23,11 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 RUN addgroup -S nodejs -g 1001 && adduser -S nextjs -u 1001 -G nodejs && \
     adduser nextjs nginx
 
-WORKDIR /app
+WORKDIR /scx-admin
 ENV NODE_ENV=production
 
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /scx-admin/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /scx-admin/.next/static ./.next/static
 
 RUN mkdir -p /etc/nginx /etc/nginx/conf.d /run/nginx /var/log/nginx && \
     chown -R nextjs:nodejs /var/log/nginx /run/nginx
