@@ -15,28 +15,16 @@ COPY . .
 RUN corepack enable pnpm && pnpm run build
 
 FROM node:20-alpine AS runner
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
-    apk update && \
-    apk add --no-cache nginx && \
-    rm -rf /var/cache/apk/*
-
-RUN addgroup -S nodejs -g 1001 && adduser -S nextjs -u 1001 -G nodejs && \
-    adduser nextjs nginx
 
 WORKDIR /scx-admin
 ENV NODE_ENV=production
 
+RUN addgroup -S nodejs -g 1001 && adduser -S nextjs -u 1001 -G nodejs
+
 COPY --from=builder --chown=nextjs:nodejs /scx-admin/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /scx-admin/.next/static ./.next/static
 
-RUN mkdir -p /etc/nginx /etc/nginx/conf.d /run/nginx /var/log/nginx && \
-    chown -R nextjs:nodejs /var/log/nginx /run/nginx
-
-COPY nginx.conf /etc/nginx/nginx.conf
-
-EXPOSE 3369
-ENV PORT=3000
-ENV HOSTNAME=0.0.0.0
-
 USER nextjs
-CMD ["sh", "-c", "node server.js & nginx -g 'daemon off;'"]
+EXPOSE 3000
+
+CMD ["node", "server.js"]
