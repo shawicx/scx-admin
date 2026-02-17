@@ -1,56 +1,79 @@
-name: Build and Deploy to ECS
+name: Deploy SCX Admin to ECS
 
 on:
   push:
     branches:
       - main
+      - master
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: scx-admin-app
+  ECS_HOST: ${{ secrets.ECS_HOST }}
+  ECS_USER: ${{ secrets.ECS_USER }}
+  ECS_SSH_KEY: ${{ secrets.ECS_SSH_KEY }}
+  ECS_DEPLOY_PATH: /opt/scx-admin
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # 拉代码
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 设置 Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # 构建镜像
       - name: Build Docker image
         run: |
-          docker build -t scx-admin-app .
+          docker build -t ${{ env.IMAGE_NAME }} .
 
+      # 打包镜像
       - name: Save Docker image
         run: |
-          docker save scx-admin-app | gzip > /tmp/scx-admin-app.tar.gz
+          docker save ${{ env.IMAGE_NAME }} | gzip > /tmp/scx-admin-app.tar.gz
 
+      # SSH 准备
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.ECS_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.ECS_HOST }} >> ~/.ssh/known_hosts
+          echo "${{ secrets.ECS_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ env.ECS_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Upload Docker image to ECS
+      # 上传镜像和 docker-compose
+      - name: Upload Docker image and compose file
         run: |
-          scp -o StrictHostKeyChecking=no /tmp/scx-admin-app.tar.gz ${{ secrets.ECS_USER }}@${{ secrets.ECS_HOST }}:/tmp/
+          scp -i ~/.ssh/deploy_key /tmp/scx-admin-app.tar.gz ${{ env.ECS_USER }}@${{ env.ECS_HOST }}:${{ env.ECS_DEPLOY_PATH }}/
+          scp -i ~/.ssh/deploy_key docker-compose.yml ${{ env.ECS_USER }}@${{ env.ECS_HOST }}:${{ env.ECS_DEPLOY_PATH }}/
+          scp -i ~/.ssh/deploy_key nginx.conf ${{ env.ECS_USER }}@${{ env.ECS_HOST }}:${{ env.ECS_DEPLOY_PATH }}/
 
-      - name: Upload docker-compose.yml to ECS
+      # 部署到 ECS
+      - name: Deploy to ECS
         run: |
-          scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.ECS_USER }}@${{ secrets.ECS_HOST }}:/tmp/
+          ssh -i ~/.ssh/deploy_key ${{ env.ECS_USER }}@${{ env.ECS_HOST }} << 'ENDSSH'
+            set -e
+            mkdir -p $ECS_DEPLOY_PATH
+            cd $ECS_DEPLOY_PATH
 
-      - name: Deploy on ECS
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.ECS_USER }}@${{ secrets.ECS_HOST }} << 'ENDSSH'
-            mkdir -p /opt/scx-admin
-            cd /opt/scx-admin
+            # 1. 加载最新镜像
+            docker load < scx-admin-app.tar.gz
 
-            docker load < /tmp/scx-admin-app.tar.gz
-            cp /tmp/docker-compose.yml .
+            # 2. 停掉旧容器
+            docker compose down || true
 
-            docker compose down
-            docker compose up -d
-            docker system prune -f
+            # 3. 启动最新容器
+            docker compose up -d --force-recreate --build
 
-            rm -f /tmp/scx-admin-app.tar.gz /tmp/docker-compose.yml
-          ENDSSH
+            # 4. 清理
+            rm -f scx-admin-app.tar.gz
+            docker image prune -f
+
+            # 5. 查看状态
+            echo "=== Containers status ==="
+            docker ps -a
+            ENDSSH

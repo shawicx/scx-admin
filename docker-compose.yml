@@ -1,28 +1,35 @@
 version: "3.9"
 
+networks:
+  scx-network:
+    external: true
+
 services:
+  # 1️⃣ Next.js 应用
   scx-admin-app:
     image: scx-admin-app
     container_name: scx-admin-app
     restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
     expose:
-      - "3000"
+      - "3000"        # 仅容器间可访问
     networks:
       - scx-network
 
-  nginx:
+  # 2️⃣ Nginx 代理
+  scx-admin-nginx:
     image: nginx:stable
     container_name: scx-admin-nginx
+    restart: always
     ports:
-      - "3369:3369"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - "3369:3369"   # 公网访问端口
     depends_on:
       - scx-admin-app
-    restart: always
     networks:
       - scx-network
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
 
-networks:
-  scx-network:
-    external: true
