@@ -1,17 +1,28 @@
-version: '3.8'
+version: "3.9"
 
 services:
-  app:
+  scx-admin-app:
+    image: scx-admin-app
     container_name: scx-admin-app
-    image: scx-admin:latest
-    restart: unless-stopped
+    restart: always
+    expose:
+      - "3000"
+    networks:
+      - scx-network
+
+  nginx:
+    image: nginx:stable
+    container_name: scx-admin-nginx
     ports:
-      - '3369:3369'
-    environment:
-      - NODE_ENV=production
+      - "3369:3369"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - scx-admin-app
+    restart: always
     networks:
       - scx-network
 
 networks:
   scx-network:
-    driver: bridge
+    external: true
