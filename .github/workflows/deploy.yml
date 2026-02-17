@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - master
   workflow_dispatch:
 
 env:
@@ -35,7 +34,7 @@ jobs:
       # 打包镜像
       - name: Save Docker image
         run: |
-          docker save ${{ env.IMAGE_NAME }} | gzip > /tmp/scx-admin-app.tar.gz
+          docker save ${{ env.IMAGE_NAME }} | gzip > /tmp/${{ env.IMAGE_NAME }}.tar.gz
 
       # SSH 准备
       - name: Setup SSH
@@ -45,35 +44,45 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ env.ECS_HOST }} >> ~/.ssh/known_hosts
 
-      # 上传镜像和 docker-compose
-      - name: Upload Docker image and compose file
+      # 创建部署目录
+      - name: Create deploy directory on ECS
         run: |
-          scp -i ~/.ssh/deploy_key /tmp/scx-admin-app.tar.gz ${{ env.ECS_USER }}@${{ env.ECS_HOST }}:${{ env.ECS_DEPLOY_PATH }}/
-          scp -i ~/.ssh/deploy_key docker-compose.yml ${{ env.ECS_USER }}@${{ env.ECS_HOST }}:${{ env.ECS_DEPLOY_PATH }}/
-          scp -i ~/.ssh/deploy_key nginx.conf ${{ env.ECS_USER }}@${{ env.ECS_HOST }}:${{ env.ECS_DEPLOY_PATH }}/
+          ssh -i ~/.ssh/deploy_key ${{ env.ECS_USER }}@${{ env.ECS_HOST }} \
+            "mkdir -p ${{ env.ECS_DEPLOY_PATH }} && chmod 755 ${{ env.ECS_DEPLOY_PATH }}"
 
-      # 部署到 ECS
-      - name: Deploy to ECS
+      # 上传文件到 ECS
+      - name: Upload Docker image and configs to ECS
+        run: |
+          scp -i ~/.ssh/deploy_key /tmp/${{ env.IMAGE_NAME }}.tar.gz \
+            ${{ env.ECS_USER }}@${{ env.ECS_HOST }}:${{ env.ECS_DEPLOY_PATH }}/scx-admin-app.tar.gz
+          scp -i ~/.ssh/deploy_key docker-compose.yml \
+            ${{ env.ECS_USER }}@${{ env.ECS_HOST }}:${{ env.ECS_DEPLOY_PATH }}/docker-compose.yml
+          scp -i ~/.ssh/deploy_key nginx.conf \
+            ${{ env.ECS_USER }}@${{ env.ECS_HOST }}:${{ env.ECS_DEPLOY_PATH }}/nginx.conf
+
+      # 部署应用
+      - name: Deploy on ECS
         run: |
           ssh -i ~/.ssh/deploy_key ${{ env.ECS_USER }}@${{ env.ECS_HOST }} << 'ENDSSH'
             set -e
-            mkdir -p $ECS_DEPLOY_PATH
-            cd $ECS_DEPLOY_PATH
+            cd ${{ env.ECS_DEPLOY_PATH }}
 
-            # 1. 加载最新镜像
+            # Load latest Docker image
             docker load < scx-admin-app.tar.gz
 
-            # 2. 停掉旧容器
+            # Start containers
             docker compose down || true
+            docker compose up -d --build
 
-            # 3. 启动最新容器
-            docker compose up -d --force-recreate --build
-
-            # 4. 清理
+            # Cleanup
+            docker system prune -f
             rm -f scx-admin-app.tar.gz
-            docker image prune -f
 
-            # 5. 查看状态
-            echo "=== Containers status ==="
+            # Check status
+            echo "=== Containers ==="
             docker ps -a
-            ENDSSH
+            echo "=== Nginx Logs ==="
+            docker logs scx-admin-nginx --tail 20
+            echo "=== App Logs ==="
+            docker logs scx-admin-app --tail 20
+          ENDSSH
