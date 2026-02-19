@@ -28,11 +28,6 @@ export interface RequestConfig extends AxiosRequestConfig {
   method: string
 }
 
-interface BaseRes<D> {
-  data: D
-  success: boolean
-}
-
 type Method = ValueOf<typeof RequestMethod>
 
 // 取消请求白名单
@@ -60,9 +55,6 @@ const HttpStatus = {
 } as const
 
 type HttpStatus = (typeof HttpStatus)[keyof typeof HttpStatus]
-
-// 扩展 HttpStatus 类型以包含所有可能的值
-type ExtendedHttpStatus = HttpStatus | 200 | 300 | 9200
 
 // https 状态提示语
 const HttpStatusMessage = new Map<HttpStatus, string>([

@@ -4,8 +4,6 @@ import {
   Users,
   UserCog,
   Settings,
-  BarChart3,
-  FileText,
   Shield,
 } from 'lucide-react'
 

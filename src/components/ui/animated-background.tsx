@@ -92,7 +92,7 @@ export default function AnimatedBackground() {
 
     // 绘制粒子
     const drawParticles = () => {
-      particlesRef.current.forEach((particle, index) => {
+      particlesRef.current.forEach(particle => {
         // 更新粒子位置
         particle.x += particle.vx
         particle.y += particle.vy

@@ -1,5 +1,4 @@
 import { ReactNode } from 'react'
-import { DateRange } from 'react-day-picker'
 
 // 搜索表单字段类型
 export type SearchFieldType =

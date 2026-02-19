@@ -22,6 +22,7 @@ import { IndexedDBManager } from '@/lib/indexeddb-manager'
 // 设置 cookie 的辅助函数
 const setAuthCookie = (token: string) => {
   if (typeof document !== 'undefined') {
+    // eslint-disable-next-line unicorn/no-document-cookie
     document.cookie = `accessToken=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=lax`
   }
 }
@@ -29,6 +30,7 @@ const setAuthCookie = (token: string) => {
 // 删除 cookie 的辅助函数
 const removeAuthCookie = () => {
   if (typeof document !== 'undefined') {
+    // eslint-disable-next-line unicorn/no-document-cookie
     document.cookie = 'accessToken=; path=/; max-age=0; SameSite=lax'
   }
 }
@@ -65,7 +67,7 @@ export function useAuth() {
         throw Error('登录失败')
       }
       return user
-    } catch (error) {
+    } catch {
       throw Error('密码登录失败')
     }
   }
@@ -86,7 +88,7 @@ export function useAuth() {
         console.error('Failed to save user data to IndexedDB:', error)
       }
       return user
-    } catch (error) {
+    } catch {
       throw Error('验证码登录失败')
     }
   }

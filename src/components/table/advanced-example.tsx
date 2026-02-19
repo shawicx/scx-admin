@@ -149,7 +149,7 @@ const columns: TableColumn<User>[] = [
     width: 150,
     align: 'center',
     fixed: 'right',
-    render: (_, record) => (
+    render: _ => (
       <div className="flex gap-2">
         <Button size="sm" variant="outline">
           编辑

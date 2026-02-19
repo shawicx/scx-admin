@@ -10,8 +10,7 @@
     "lint:fix": "oxlint src --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky install",
-    "api-power": "./scripts/api-power.js"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

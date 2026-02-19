@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -49,7 +49,6 @@ export function DataTable<T = any>({
   height,
   loadData,
   autoLoad = true,
-  searchFormProps,
   headerConfig,
   className,
   onPaginationChange,

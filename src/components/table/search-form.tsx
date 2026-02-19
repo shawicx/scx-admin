@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { ChevronDown, ChevronUp, Search, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/select'
 import { DatePicker } from '@/components/ui/date-picker'
 import { DateRangePicker } from '@/components/ui/date-range-picker'
-import { cn } from '@/lib/utils'
 import type {
   TableColumn,
   SearchFormValues,
@@ -37,7 +36,7 @@ export function SearchForm({
   loading,
 }: SearchFormProps) {
   const [expanded, setExpanded] = useState(false)
-  const { register, handleSubmit, reset, setValue, watch, control } =
+  const { register, handleSubmit, reset, setValue } =
     useForm<SearchFormValues>()
 
   // 获取可搜索的列
