@@ -15,6 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import MatrixRain from '@/components/ui/matrix-rain'
 import { useAuth } from '@/stores/auth'
 import { useCountdown } from '@/hooks/use-countdown'
 import { registerSchema, type RegisterFormData } from '@/lib/validations/auth'
@@ -63,8 +64,10 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      <MatrixRain />
+
+      <Card className="w-full max-w-md relative z-10 backdrop-blur-md bg-white/95 border-white/20 shadow-2xl shadow-green-500/10">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">注册</CardTitle>
           <CardDescription>创建您的新账号</CardDescription>

@@ -15,7 +15,7 @@ services:
       - PORT=3000
       - HOST=0.0.0.0
     expose:
-      - "3000" # 仅容器间可访问
+      - '3000' # 仅容器间可访问
     networks:
       - scx-network
 
@@ -25,7 +25,7 @@ services:
     container_name: scx-admin-nginx
     restart: always
     ports:
-      - "3369:3369" # 公网访问端口
+      - '3369:3369' # 公网访问端口
     depends_on:
       - scx-admin-app
     networks:

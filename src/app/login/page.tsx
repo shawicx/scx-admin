@@ -16,7 +16,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import AnimatedBackground from '@/components/ui/animated-background'
+import MatrixRain from '@/components/ui/matrix-rain'
 import { useAuth as useAuthHook } from '@/hooks/use-auth'
 import { useCountdown } from '@/hooks/use-countdown'
 import {
@@ -118,7 +118,7 @@ function LoginForm() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      <AnimatedBackground />
+      <MatrixRain />
 
       <Card className="w-full max-w-md relative z-10 backdrop-blur-md bg-white/95 border-white/20 shadow-2xl shadow-purple-500/10">
         <CardHeader className="text-center">
