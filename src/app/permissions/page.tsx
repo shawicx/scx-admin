@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { Plus, MoreVertical, Trash2, Edit } from 'lucide-react'
+import { Plus, MoreVertical, Trash2, Edit, Eye, EyeOff } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -84,36 +84,99 @@ export default function PermissionsPage() {
       key: 'name',
       title: '权限名称',
       dataIndex: 'name',
-      width: 200,
+      width: 180,
       searchable: true,
       searchType: 'input',
+    },
+    {
+      key: 'type',
+      title: '类型',
+      dataIndex: 'type',
+      width: 80,
+      render: value => (
+        <Badge variant={value === 'MENU' ? 'default' : 'secondary'}>
+          {value === 'MENU' ? '菜单' : '按钮'}
+        </Badge>
+      ),
+    },
+    {
+      key: 'level',
+      title: '层级',
+      dataIndex: 'level',
+      width: 80,
+      render: value => <Badge variant="outline">L{value}</Badge>,
+    },
+    {
+      key: 'path',
+      title: '路由路径',
+      dataIndex: 'path',
+      width: 150,
+      render: value => value || '-',
+    },
+    {
+      key: 'icon',
+      title: '图标',
+      dataIndex: 'icon',
+      width: 80,
+      render: value => value || '-',
     },
     {
       key: 'action',
       title: '操作动作',
       dataIndex: 'action',
-      width: 120,
-      render: value => <Badge variant="outline">{value}</Badge>,
+      width: 100,
+      render: value => value || '-',
     },
     {
       key: 'resource',
       title: '资源名称',
       dataIndex: 'resource',
-      width: 120,
-      render: value => <Badge variant="secondary">{value}</Badge>,
+      width: 100,
+      render: value => value || '-',
+    },
+    {
+      key: 'sort',
+      title: '排序',
+      dataIndex: 'sort',
+      width: 80,
+      sortable: true,
+      render: value => value || 0,
+    },
+    {
+      key: 'visible',
+      title: '可见',
+      dataIndex: 'visible',
+      width: 80,
+      render: value => (
+        <div className="flex items-center gap-1">
+          {value ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+          <span>{value ? '可见' : '隐藏'}</span>
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      title: '状态',
+      dataIndex: 'status',
+      width: 80,
+      render: value => (
+        <Badge variant={value ? 'default' : 'destructive'}>
+          {value ? '启用' : '禁用'}
+        </Badge>
+      ),
     },
     {
       key: 'description',
       title: '权限描述',
       dataIndex: 'description',
-      width: 250,
+      width: 200,
       render: value => value || '-',
     },
     {
       key: 'createdAt',
       title: '创建时间',
       dataIndex: 'createdAt',
-      width: 180,
+      width: 160,
       sortable: true,
       render: value => formatDate(value),
     },
@@ -121,7 +184,7 @@ export default function PermissionsPage() {
       key: 'updatedAt',
       title: '更新时间',
       dataIndex: 'updatedAt',
-      width: 180,
+      width: 160,
       sortable: true,
       render: value => formatDate(value),
     },
@@ -130,6 +193,7 @@ export default function PermissionsPage() {
       title: '操作',
       width: 100,
       align: 'center',
+      fixed: 'right',
       render: (_, record) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -215,6 +279,8 @@ export default function PermissionsPage() {
         rowKey="id"
         autoLoad={true}
         key={refreshTrigger}
+        treeData={true}
+        defaultExpandAll={true}
         headerConfig={{
           statistics: selectedPermissionIds.length > 0 && (
             <span className="text-sm text-muted-foreground">

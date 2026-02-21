@@ -1,7 +1,7 @@
 /**
- * @description PermissionResponseDto
+ * @description PermissionTreeResponseDto
  */
-export interface PermissionResponseDto {
+export interface PermissionTreeResponseDto {
   /** @description 权限ID */
   id: string
   /** @description 权限名称 */
@@ -32,4 +32,6 @@ export interface PermissionResponseDto {
   createdAt: string
   /** @description 更新时间 */
   updatedAt: string
+  /** @description 子权限列表 */
+  children: any
 }

@@ -1,5 +1,9 @@
 import { RequestConfig, request } from '@/service/request'
-import type { PermissionResponseDto } from '@/service/types'
+import type {
+  PermissionResponseDto,
+  PermissionTreeResponseDto,
+  PermissionMenuTreeDto,
+} from '@/service/types'
 
 /**
  * @description 创建权限
@@ -9,10 +13,24 @@ import type { PermissionResponseDto } from '@/service/types'
 export interface PostPermissionsRequestType {
   /** @description 权限名称 */
   name: string
+  /** @description 权限类型 */
+  type: string
   /** @description 操作动作 */
-  action: string
+  action?: string
   /** @description 资源名称 */
-  resource: string
+  resource?: string
+  /** @description 父权限ID */
+  parentId?: string
+  /** @description 路由路径（菜单用） */
+  path?: string
+  /** @description 图标（菜单用） */
+  icon?: string
+  /** @description 排序号 */
+  sort?: number
+  /** @description 是否可见 */
+  visible?: number
+  /** @description 状态 */
+  status?: number
   /** @description 权限描述 */
   description?: string
   /** @description  */
@@ -27,10 +45,26 @@ export interface PostPermissionsResponseType {
   id: string
   /** @description 权限名称 */
   name: string
+  /** @description 权限类型 */
+  type: string
   /** @description 操作动作 */
-  action: string
+  action: any
   /** @description 资源名称 */
-  resource: string
+  resource: any
+  /** @description 父权限ID */
+  parentId: any
+  /** @description 层级 */
+  level: number
+  /** @description 路由路径（菜单用） */
+  path: any
+  /** @description 图标（菜单用） */
+  icon: any
+  /** @description 排序号 */
+  sort: number
+  /** @description 是否可见 */
+  visible: number
+  /** @description 状态 */
+  status: number
   /** @description 权限描述 */
   description: any
   /** @description 创建时间 */
@@ -61,16 +95,22 @@ export async function postPermissionsApi(
  * @returns Promise<GetPermissionsResponseType>
  */
 export interface GetPermissionsRequestType {
+  /** @description 页码 */
+  page?: string
+  /** @description 每页数量 */
+  limit?: string
   /** @description 搜索关键词（权限名称、动作或资源） */
   search?: string
   /** @description 按动作筛选 */
   action?: string
   /** @description 按资源筛选 */
   resource?: string
-  /** @description 每页数量 */
-  limit?: string
-  /** @description 页码 */
-  page?: string
+  /** @description 按类型筛选（MENU/BUTTON） */
+  type?: string
+  /** @description 按父权限ID筛选 */
+  parentId?: string
+  /** @description 按层级筛选 */
+  level?: string
   /** @description  */
   Authorization?: string
 }
@@ -111,12 +151,28 @@ export interface PutPermissionsRequestType {
   id: string
   /** @description 权限名称 */
   name?: string
+  /** @description 权限类型 */
+  type?: string
   /** @description 操作动作 */
   action?: string
   /** @description 资源名称 */
   resource?: string
+  /** @description 父权限ID */
+  parentId?: string
+  /** @description 路由路径（菜单用） */
+  path?: string
+  /** @description 图标（菜单用） */
+  icon?: string
+  /** @description 排序号 */
+  sort?: number
+  /** @description 是否可见 */
+  visible?: number
+  /** @description 状态 */
+  status?: number
   /** @description 权限描述 */
   description?: string
+  /** @description 层级（自动计算） */
+  level?: number
   /** @description  */
   Authorization?: string
 }
@@ -129,10 +185,26 @@ export interface PutPermissionsResponseType {
   id: string
   /** @description 权限名称 */
   name: string
+  /** @description 权限类型 */
+  type: string
   /** @description 操作动作 */
-  action: string
+  action: any
   /** @description 资源名称 */
-  resource: string
+  resource: any
+  /** @description 父权限ID */
+  parentId: any
+  /** @description 层级 */
+  level: number
+  /** @description 路由路径（菜单用） */
+  path: any
+  /** @description 图标（菜单用） */
+  icon: any
+  /** @description 排序号 */
+  sort: number
+  /** @description 是否可见 */
+  visible: number
+  /** @description 状态 */
+  status: number
   /** @description 权限描述 */
   description: any
   /** @description 创建时间 */
@@ -391,10 +463,26 @@ export interface GetPermissionsDetailResponseType {
   id: string
   /** @description 权限名称 */
   name: string
+  /** @description 权限类型 */
+  type: string
   /** @description 操作动作 */
-  action: string
+  action: any
   /** @description 资源名称 */
-  resource: string
+  resource: any
+  /** @description 父权限ID */
+  parentId: any
+  /** @description 层级 */
+  level: number
+  /** @description 路由路径（菜单用） */
+  path: any
+  /** @description 图标（菜单用） */
+  icon: any
+  /** @description 排序号 */
+  sort: number
+  /** @description 是否可见 */
+  visible: number
+  /** @description 状态 */
+  status: number
   /** @description 权限描述 */
   description: any
   /** @description 创建时间 */
@@ -417,4 +505,178 @@ export async function getPermissionsDetailApi(
     params,
   }
   return request<GetPermissionsDetailResponseType>(config)
+}
+
+/**
+ * @description 获取权限树
+ * @param params GetPermissionsTreeRequestType
+ * @returns Promise<GetPermissionsTreeResponseType>
+ */
+export interface GetPermissionsTreeRequestType {
+  /** @description  */
+  Authorization?: string
+}
+
+/**
+ * @description 获取权限树 的返回数据类型
+ */
+export interface GetPermissionsTreeResponseType {
+  /** @description 响应数据数组 */
+  data: PermissionTreeResponseDto[]
+}
+
+/**
+ * @description 获取权限树
+ * @param params GetPermissionsTreeRequestType
+ * @returns Promise<GetPermissionsTreeResponseType>
+ */
+export async function getPermissionsTreeApi(
+  params: GetPermissionsTreeRequestType
+): Promise<GetPermissionsTreeResponseType> {
+  const config: RequestConfig = {
+    url: '/api/permissions/tree',
+    method: 'GET',
+    params,
+  }
+  return request<GetPermissionsTreeResponseType>(config)
+}
+
+/**
+ * @description 获取菜单树
+ * @param params GetPermissionsMenuTreeRequestType
+ * @returns Promise<GetPermissionsMenuTreeResponseType>
+ */
+export interface GetPermissionsMenuTreeRequestType {
+  /** @description  */
+  Authorization?: string
+}
+
+/**
+ * @description 获取菜单树 的返回数据类型
+ */
+export interface GetPermissionsMenuTreeResponseType {
+  /** @description 响应数据数组 */
+  data: PermissionMenuTreeDto[]
+}
+
+/**
+ * @description 获取菜单树
+ * @param params GetPermissionsMenuTreeRequestType
+ * @returns Promise<GetPermissionsMenuTreeResponseType>
+ */
+export async function getPermissionsMenuTreeApi(
+  params: GetPermissionsMenuTreeRequestType
+): Promise<GetPermissionsMenuTreeResponseType> {
+  const config: RequestConfig = {
+    url: '/api/permissions/menu-tree',
+    method: 'GET',
+    params,
+  }
+  return request<GetPermissionsMenuTreeResponseType>(config)
+}
+
+/**
+ * @description 获取一级菜单
+ * @param params GetPermissionsLevel1RequestType
+ * @returns Promise<GetPermissionsLevel1ResponseType>
+ */
+export interface GetPermissionsLevel1RequestType {
+  /** @description  */
+  Authorization?: string
+}
+
+/**
+ * @description 获取一级菜单 的返回数据类型
+ */
+export interface GetPermissionsLevel1ResponseType {
+  /** @description 响应数据数组 */
+  data: PermissionResponseDto[]
+}
+
+/**
+ * @description 获取一级菜单
+ * @param params GetPermissionsLevel1RequestType
+ * @returns Promise<GetPermissionsLevel1ResponseType>
+ */
+export async function getPermissionsLevel1Api(
+  params: GetPermissionsLevel1RequestType
+): Promise<GetPermissionsLevel1ResponseType> {
+  const config: RequestConfig = {
+    url: '/api/permissions/level-1',
+    method: 'GET',
+    params,
+  }
+  return request<GetPermissionsLevel1ResponseType>(config)
+}
+
+/**
+ * @description 按层级获取权限
+ * @param params GetPermissionsByLevelRequestType
+ * @returns Promise<GetPermissionsByLevelResponseType>
+ */
+export interface GetPermissionsByLevelRequestType {
+  /** @description 层级（0-3） */
+  level: string
+  /** @description  */
+  Authorization?: string
+}
+
+/**
+ * @description 按层级获取权限 的返回数据类型
+ */
+export interface GetPermissionsByLevelResponseType {
+  /** @description 响应数据数组 */
+  data: PermissionResponseDto[]
+}
+
+/**
+ * @description 按层级获取权限
+ * @param params GetPermissionsByLevelRequestType
+ * @returns Promise<GetPermissionsByLevelResponseType>
+ */
+export async function getPermissionsByLevelApi(
+  params: GetPermissionsByLevelRequestType
+): Promise<GetPermissionsByLevelResponseType> {
+  const config: RequestConfig = {
+    url: '/api/permissions/by-level',
+    method: 'GET',
+    params,
+  }
+  return request<GetPermissionsByLevelResponseType>(config)
+}
+
+/**
+ * @description 获取菜单下的按钮
+ * @param params GetPermissionsButtonsByMenuIdRequestType
+ * @returns Promise<GetPermissionsButtonsByMenuIdResponseType>
+ */
+export interface GetPermissionsButtonsByMenuIdRequestType {
+  /** @description  */
+  menuId: string
+  /** @description  */
+  Authorization?: string
+}
+
+/**
+ * @description 获取菜单下的按钮 的返回数据类型
+ */
+export interface GetPermissionsButtonsByMenuIdResponseType {
+  /** @description 响应数据数组 */
+  data: PermissionResponseDto[]
+}
+
+/**
+ * @description 获取菜单下的按钮
+ * @param params GetPermissionsButtonsByMenuIdRequestType
+ * @returns Promise<GetPermissionsButtonsByMenuIdResponseType>
+ */
+export async function getPermissionsButtonsBy_1Api(
+  params: GetPermissionsButtonsByMenuIdRequestType
+): Promise<GetPermissionsButtonsByMenuIdResponseType> {
+  const config: RequestConfig = {
+    url: '/api/permissions/{menuId}/buttons',
+    method: 'GET',
+    params,
+  }
+  return request<GetPermissionsButtonsByMenuIdResponseType>(config)
 }

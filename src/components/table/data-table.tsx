@@ -1,7 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
+import { useState, useEffect, useMemo } from 'react'
+import {
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  ChevronRight,
+  ChevronDown,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -52,6 +58,11 @@ export function DataTable<T = any>({
   headerConfig,
   className,
   onPaginationChange,
+  treeData = false,
+  parentKey = 'parentId',
+  childrenKey = 'children',
+  defaultExpandAll = false,
+  indentSize = 20,
 }: DataTableProps<T>) {
   const [internalDataSource, setInternalDataSource] = useState<T[]>(dataSource)
   const [internalLoading, setInternalLoading] = useState(loading)
@@ -71,6 +82,9 @@ export function DataTable<T = any>({
   const [sorter, setSorter] = useState<
     { field: string; order: 'asc' | 'desc' } | undefined
   >()
+  const [expandedKeys, setExpandedKeys] = useState<Set<string>>(
+    defaultExpandAll ? new Set() : new Set()
+  )
 
   // 获取行键值
   const getRowKey = (record: T, index: number): string => {
@@ -79,6 +93,170 @@ export function DataTable<T = any>({
     }
     return (record as any)[rowKey] || String(index)
   }
+
+  // 扁平数组转树形结构
+  const arrayToTree = (
+    data: Record<string, any>[],
+    keyField: string = 'id',
+    parentField: string = parentKey,
+    childrenField: string = childrenKey
+  ): Record<string, any>[] => {
+    const map = new Map<string, Record<string, any>>()
+    const tree: Record<string, any>[] = []
+
+    data.forEach(item => {
+      map.set(String(item[keyField]), { ...item, [childrenField]: [] })
+    })
+
+    data.forEach(item => {
+      const record = map.get(String(item[keyField]))
+      if (!record) return
+
+      const parentId = item[parentField]
+      if (parentId && map.has(String(parentId))) {
+        const parent = map.get(String(parentId))
+        if (parent) {
+          ;(parent[childrenField] as Record<string, any>[]).push(record)
+        }
+      } else {
+        tree.push(record)
+      }
+    })
+
+    const cleanTree = (nodes: Record<string, any>[]): Record<string, any>[] => {
+      return nodes.map(node => {
+        if (
+          node[childrenField] &&
+          (node[childrenField] as Record<string, any>[]).length === 0
+        ) {
+          delete node[childrenField]
+        } else if (
+          node[childrenField] &&
+          (node[childrenField] as Record<string, any>[]).length > 0
+        ) {
+          node[childrenField] = cleanTree(
+            node[childrenField] as Record<string, any>[]
+          )
+        }
+        return node
+      })
+    }
+
+    return cleanTree(tree)
+  }
+
+  // 将树形结构扁平化
+  const flattenTree = (
+    data: Record<string, any>[],
+    childrenField: string = childrenKey,
+    level: number = 0
+  ): Array<
+    Record<string, any> & {
+      _level: number
+      _hasChildren: boolean
+      _expanded?: boolean
+    }
+  > => {
+    const result: Array<
+      Record<string, any> & {
+        _level: number
+        _hasChildren: boolean
+        _expanded?: boolean
+      }
+    > = []
+
+    data.forEach(item => {
+      const hasChildren =
+        item[childrenField] &&
+        (item[childrenField] as Record<string, any>[]).length > 0
+      const key = getRowKey(item as T, 0)
+
+      result.push({
+        ...item,
+        _level: level,
+        _hasChildren: hasChildren,
+        _expanded: expandedKeys.has(key),
+      })
+
+      if (hasChildren && expandedKeys.has(key)) {
+        result.push(
+          ...flattenTree(
+            item[childrenField] as Record<string, any>[],
+            childrenField,
+            level + 1
+          )
+        )
+      }
+    })
+
+    return result
+  }
+
+  // 处理展开/折叠
+  const handleExpand = (record: T) => {
+    const key = getRowKey(record, 0)
+    const newExpandedKeys = new Set(expandedKeys)
+
+    if (newExpandedKeys.has(key)) {
+      newExpandedKeys.delete(key)
+    } else {
+      newExpandedKeys.add(key)
+    }
+
+    setExpandedKeys(newExpandedKeys)
+  }
+
+  // 处理全部展开/折叠
+  const handleExpandAll = (expand: boolean) => {
+    if (expand) {
+      const allKeys = new Set<string>()
+      const collectKeys = (
+        data: Record<string, any>[],
+        childrenField: string = childrenKey
+      ) => {
+        data.forEach(item => {
+          const key = getRowKey(item as T, 0)
+          if (
+            item[childrenField] &&
+            (item[childrenField] as Record<string, any>[]).length > 0
+          ) {
+            allKeys.add(key)
+            collectKeys(
+              item[childrenField] as Record<string, any>[],
+              childrenField
+            )
+          }
+        })
+      }
+      const treeData = arrayToTree(internalDataSource as Record<string, any>[])
+      collectKeys(treeData)
+      setExpandedKeys(allKeys)
+    } else {
+      setExpandedKeys(new Set())
+    }
+  }
+
+  // 处理数据转换
+  const processDataSource = useMemo(() => {
+    const displayDataSource = loadData ? internalDataSource : dataSource
+
+    if (treeData) {
+      return flattenTree(
+        arrayToTree(displayDataSource as Record<string, any>[])
+      )
+    }
+
+    return displayDataSource
+  }, [
+    dataSource,
+    internalDataSource,
+    treeData,
+    expandedKeys,
+    parentKey,
+    childrenKey,
+    loadData,
+    rowKey,
+  ])
 
   // 加载数据
   const fetchData = async (params?: Partial<LoadDataParams>) => {
@@ -168,7 +346,6 @@ export function DataTable<T = any>({
     const newPagination = { ...internalPagination, current: page, pageSize }
     setInternalPagination(newPagination)
 
-    // 通知外部分页变化
     onPaginationChange?.(newPagination)
 
     if (loadData) {
@@ -185,14 +362,12 @@ export function DataTable<T = any>({
     let newSorter: { field: string; order: 'asc' | 'desc' } | undefined
 
     if (sorter?.field === field) {
-      // 同一字段：asc -> desc -> undefined
       if (sorter.order === 'asc') {
         newSorter = { field, order: 'desc' }
       } else {
         newSorter = undefined
       }
     } else {
-      // 不同字段：设置为 asc
       newSorter = { field, order: 'asc' }
     }
 
@@ -227,7 +402,6 @@ export function DataTable<T = any>({
     large: 'text-base',
   }[size]
 
-  const displayDataSource = loadData ? internalDataSource : dataSource
   const displayLoading = loadData ? internalLoading : loading
   const displayPagination = pagination === false ? false : internalPagination
 
@@ -240,10 +414,8 @@ export function DataTable<T = any>({
 
   return (
     <div className={cn('space-y-4', className)}>
-      {/* 表格头部 */}
       <CustomTableHeader {...headerConfig} />
 
-      {/* 搜索表单 */}
       <SearchForm
         columns={columns}
         onSearch={handleSearch}
@@ -251,14 +423,12 @@ export function DataTable<T = any>({
         loading={displayLoading}
       />
 
-      {/* 表格 */}
       <div
         className={cn(
           'rounded-md border bg-background relative',
           bordered && 'border-border'
         )}
       >
-        {/* 加载遮罩层 */}
         {displayLoading && (
           <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10 flex items-center justify-center rounded-md">
             <div className="flex items-center gap-2">
@@ -314,7 +484,7 @@ export function DataTable<T = any>({
               </TableHeader>
             )}
             <TableBody>
-              {displayDataSource.length === 0 && !displayLoading ? (
+              {processDataSource.length === 0 && !displayLoading ? (
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
@@ -324,40 +494,87 @@ export function DataTable<T = any>({
                   </TableCell>
                 </TableRow>
               ) : (
-                displayDataSource.map((record, index) => (
-                  <TableRow key={getRowKey(record, index)}>
-                    {columns.map(column => {
-                      const value = column.dataIndex
-                        ? (record as any)[column.dataIndex]
-                        : record
+                processDataSource.map((record, index) => {
+                  const hasChildren = (record as any)._hasChildren
+                  const isExpanded = (record as any)._expanded
+                  const level = (record as any)._level || 0
 
-                      return (
-                        <TableCell
-                          key={column.key}
-                          className={cn(
-                            column.align === 'center' && 'text-center',
-                            column.align === 'right' && 'text-right',
-                            column.fixed === 'left' &&
-                              'sticky left-0 bg-background',
-                            column.fixed === 'right' &&
-                              'sticky right-0 bg-background'
-                          )}
-                        >
-                          {column.render
-                            ? column.render(value, record, index)
-                            : value}
-                        </TableCell>
-                      )
-                    })}
-                  </TableRow>
-                ))
+                  return (
+                    <TableRow key={getRowKey(record as T, index)}>
+                      {columns.map(column => {
+                        const value = column.dataIndex
+                          ? (record as any)[column.dataIndex]
+                          : record
+                        const isFirstColumn = column.key === columns[0].key
+
+                        return (
+                          <TableCell
+                            key={column.key}
+                            className={cn(
+                              column.align === 'center' && 'text-center',
+                              column.align === 'right' && 'text-right',
+                              column.fixed === 'left' &&
+                                'sticky left-0 bg-background',
+                              column.fixed === 'right' &&
+                                'sticky right-0 bg-background'
+                            )}
+                          >
+                            <div
+                              className={cn(
+                                'flex items-center',
+                                isFirstColumn && 'w-full'
+                              )}
+                            >
+                              {isFirstColumn && treeData && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-auto p-0 mr-2 flex-shrink-0"
+                                  onClick={() => handleExpand(record as T)}
+                                  disabled={!hasChildren}
+                                >
+                                  {hasChildren ? (
+                                    isExpanded ? (
+                                      <ChevronDown className="h-4 w-4" />
+                                    ) : (
+                                      <ChevronRight className="h-4 w-4" />
+                                    )
+                                  ) : (
+                                    <span className="w-4 h-4" />
+                                  )}
+                                </Button>
+                              )}
+                              <span
+                                className={cn(
+                                  'flex-1',
+                                  isFirstColumn &&
+                                    treeData &&
+                                    'flex items-center'
+                                )}
+                                style={{
+                                  paddingLeft:
+                                    isFirstColumn && treeData
+                                      ? level * indentSize
+                                      : 0,
+                                }}
+                              >
+                                {column.render
+                                  ? column.render(value, record as T, index)
+                                  : value}
+                              </span>
+                            </div>
+                          </TableCell>
+                        )
+                      })}
+                    </TableRow>
+                  )
+                })
               )}
             </TableBody>
           </Table>
         </div>
       </div>
 
-      {/* 分页 */}
       {shouldShowPagination && (
         <Pagination
           pagination={displayPagination}

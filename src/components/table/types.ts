@@ -57,6 +57,7 @@ export interface TableColumn<T = any> {
   searchType?: SearchFieldType
   searchProps?: SearchProps
   render?: (value: any, record: T, index: number) => ReactNode
+  treeIndent?: number
 }
 
 // 分页配置
@@ -112,6 +113,12 @@ export interface TableConfig<T = any> {
     labelCol?: { span: number }
     wrapperCol?: { span: number }
   }
+  // 树形表格配置
+  treeData?: boolean // 是否启用树形数据
+  parentKey?: string // 父节点字段名，默认 'parentId'
+  childrenKey?: string // 子节点字段名，默认 'children'
+  defaultExpandAll?: boolean // 默认展开所有节点
+  indentSize?: number // 缩进大小，默认 20
 }
 
 // 表格顶部配置
