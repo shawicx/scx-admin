@@ -62,7 +62,7 @@ export function CreateUserDialog({
     setIsLoading(true)
     try {
       const result = await getRolesApi({})
-      setRoles(result.roles)
+      setRoles(result.list || [])
     } catch (error) {
       console.error('Failed to load roles:', error)
       toast({

@@ -51,7 +51,7 @@ export function RoleAssignDialog({
         getRolesApi({}),
         getUsersRolesApi({ id: userId }),
       ])
-      setAllRoles(rolesRes.roles)
+      setAllRoles(rolesRes.list)
       const userRoles = userRolesRes?.data || []
       setAssignedRoles(
         new Set((userRoles as any).map((role: UserRole) => role.roleId))

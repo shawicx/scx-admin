@@ -188,7 +188,7 @@ export default function RolesPage() {
     const result = await getRolesApi(queryParams)
 
     return {
-      data: result.roles,
+      data: result.list,
       total: result.total,
     }
   }

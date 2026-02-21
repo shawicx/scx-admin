@@ -89,7 +89,7 @@ export function CreatePermissionDialog({
       setIsLoadingPermissions(true)
       try {
         const result = await getPermissionsApi({ limit: '1000' })
-        setParentPermissions(result.permissions)
+        setParentPermissions(result.list)
       } catch (error) {
         console.error('Failed to load permissions:', error)
       } finally {

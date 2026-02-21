@@ -239,7 +239,7 @@ export default function PermissionsPage() {
     const result = await getPermissionsApi(queryParams)
 
     return {
-      data: result.permissions,
+      data: result.list,
       total: result.total,
     }
   }

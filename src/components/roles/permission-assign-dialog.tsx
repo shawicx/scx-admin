@@ -61,8 +61,7 @@ export function PermissionAssignDialog({
           const rolePermissionIds = new Set(rolePermissions.map(p => p.id))
 
           const allPermissions =
-            (allPermissionsRes as any).data?.permissions ||
-            allPermissionsRes.permissions
+            (allPermissionsRes as any).data?.list || allPermissionsRes.list
 
           const permissionsWithCheck = allPermissions.map(
             (p: PermissionResponseDto) => ({

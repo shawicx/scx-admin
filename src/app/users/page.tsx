@@ -197,7 +197,7 @@ export default function UsersPage() {
     const result = await getUsersApi(queryParams)
 
     return {
-      data: result.users,
+      data: result.list,
       total: result.total,
     }
   }

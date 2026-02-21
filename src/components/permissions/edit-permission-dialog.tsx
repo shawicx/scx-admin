@@ -95,9 +95,7 @@ export function EditPermissionDialog({
     try {
       const result = await getPermissionsApi({ limit: '1000' })
       setParentPermissions(
-        result.permissions.filter(
-          p => p.id !== permissionId && p.type === 'MENU'
-        )
+        result.list.filter(p => p.id !== permissionId && p.type === 'MENU')
       )
     } catch (error) {
       console.error('Failed to load permissions:', error)
