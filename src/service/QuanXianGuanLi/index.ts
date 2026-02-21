@@ -120,7 +120,7 @@ export interface GetPermissionsRequestType {
  */
 export interface GetPermissionsResponseType {
   /** @description  */
-  permissions: PermissionResponseDto[]
+  list: PermissionResponseDto[]
   /** @description 总数量 */
   total: number
 }

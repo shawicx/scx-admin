@@ -74,7 +74,7 @@ export interface GetRolesRequestType {
  */
 export interface GetRolesResponseType {
   /** @description  */
-  roles: RoleResponseDto[]
+  list: RoleResponseDto[]
   /** @description 总数量 */
   total: number
 }

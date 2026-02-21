@@ -656,7 +656,7 @@ export interface GetUsersRequestType {
  */
 export interface GetUsersResponseType {
   /** @description 用户列表 */
-  users: UserListItemDto[]
+  list: UserListItemDto[]
   /** @description 总数 */
   total: number
   /** @description 当前页码 */
