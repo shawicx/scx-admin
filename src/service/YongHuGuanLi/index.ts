@@ -8,7 +8,7 @@ import type {
 /**
  * @description 用户注册
  * @param params PostUsersRegisterRequestType
- * @returns Promise<PostUsersRegisterResponseType>
+ * @returns Promise<PostUsersRegisterResult>
  */
 export interface PostUsersRegisterRequestType {
   /** @description 用户邮箱 */
@@ -26,7 +26,7 @@ export interface PostUsersRegisterRequestType {
 /**
  * @description 用户注册 的返回数据类型
  */
-export interface PostUsersRegisterResponseType {
+export interface PostUsersRegisterResult {
   /** @description 用户ID */
   id: string
   /** @description 用户邮箱 */
@@ -54,23 +54,23 @@ export interface PostUsersRegisterResponseType {
 /**
  * @description 用户注册
  * @param params PostUsersRegisterRequestType
- * @returns Promise<PostUsersRegisterResponseType>
+ * @returns Promise<PostUsersRegisterResult>
  */
-export async function postUsersRegisterApi(
+export async function postUsersRegisterFunc(
   params: PostUsersRegisterRequestType
-): Promise<PostUsersRegisterResponseType> {
+): Promise<PostUsersRegisterResult> {
   const config: RequestConfig = {
     url: '/api/users/register',
     method: 'POST',
     data: params,
   }
-  return request<PostUsersRegisterResponseType>(config)
+  return request<PostUsersRegisterResult>(config)
 }
 
 /**
  * @description 邮箱验证码登录
  * @param params PostUsersLoginRequestType
- * @returns Promise<PostUsersLoginResponseType>
+ * @returns Promise<PostUsersLoginResult>
  */
 export interface PostUsersLoginRequestType {
   /** @description 邮箱地址 */
@@ -84,7 +84,7 @@ export interface PostUsersLoginRequestType {
 /**
  * @description 邮箱验证码登录 的返回数据类型
  */
-export interface PostUsersLoginResponseType {
+export interface PostUsersLoginResult {
   /** @description 用户ID */
   id: string
   /** @description 邮箱地址 */
@@ -108,23 +108,23 @@ export interface PostUsersLoginResponseType {
 /**
  * @description 邮箱验证码登录
  * @param params PostUsersLoginRequestType
- * @returns Promise<PostUsersLoginResponseType>
+ * @returns Promise<PostUsersLoginResult>
  */
-export async function postUsersLoginApi(
+export async function postUsersLoginFunc(
   params: PostUsersLoginRequestType
-): Promise<PostUsersLoginResponseType> {
+): Promise<PostUsersLoginResult> {
   const config: RequestConfig = {
     url: '/api/users/login',
     method: 'POST',
     data: params,
   }
-  return request<PostUsersLoginResponseType>(config)
+  return request<PostUsersLoginResult>(config)
 }
 
 /**
  * @description 密码登录
  * @param params PostUsersLoginPasswordRequestType
- * @returns Promise<PostUsersLoginPasswordResponseType>
+ * @returns Promise<PostUsersLoginPasswordResult>
  */
 export interface PostUsersLoginPasswordRequestType {
   /** @description 邮箱地址 */
@@ -140,7 +140,7 @@ export interface PostUsersLoginPasswordRequestType {
 /**
  * @description 密码登录 的返回数据类型
  */
-export interface PostUsersLoginPasswordResponseType {
+export interface PostUsersLoginPasswordResult {
   /** @description 用户ID */
   id: string
   /** @description 邮箱地址 */
@@ -164,23 +164,23 @@ export interface PostUsersLoginPasswordResponseType {
 /**
  * @description 密码登录
  * @param params PostUsersLoginPasswordRequestType
- * @returns Promise<PostUsersLoginPasswordResponseType>
+ * @returns Promise<PostUsersLoginPasswordResult>
  */
-export async function postUsersLoginPasswordApi(
+export async function postUsersLoginPasswordFunc(
   params: PostUsersLoginPasswordRequestType
-): Promise<PostUsersLoginPasswordResponseType> {
+): Promise<PostUsersLoginPasswordResult> {
   const config: RequestConfig = {
     url: '/api/users/login-password',
     method: 'POST',
     data: params,
   }
-  return request<PostUsersLoginPasswordResponseType>(config)
+  return request<PostUsersLoginPasswordResult>(config)
 }
 
 /**
  * @description 用户登出
  * @param params PostUsersLogoutRequestType
- * @returns Promise<PostUsersLogoutResponseType>
+ * @returns Promise<PostUsersLogoutResult>
  */
 export interface PostUsersLogoutRequestType {
   /** @description  */
@@ -192,7 +192,7 @@ export interface PostUsersLogoutRequestType {
 /**
  * @description 用户登出 的返回数据类型
  */
-export interface PostUsersLogoutResponseType {
+export interface PostUsersLogoutResult {
   /** @description  */
   message: string
 }
@@ -200,23 +200,23 @@ export interface PostUsersLogoutResponseType {
 /**
  * @description 用户登出
  * @param params PostUsersLogoutRequestType
- * @returns Promise<PostUsersLogoutResponseType>
+ * @returns Promise<PostUsersLogoutResult>
  */
-export async function postUsersLogoutApi(
+export async function postUsersLogoutFunc(
   params: PostUsersLogoutRequestType
-): Promise<PostUsersLogoutResponseType> {
+): Promise<PostUsersLogoutResult> {
   const config: RequestConfig = {
     url: '/api/users/logout',
     method: 'POST',
     params,
   }
-  return request<PostUsersLogoutResponseType>(config)
+  return request<PostUsersLogoutResult>(config)
 }
 
 /**
  * @description 刷新访问令牌
  * @param params PostUsersRefreshTokenRequestType
- * @returns Promise<PostUsersRefreshTokenResponseType>
+ * @returns Promise<PostUsersRefreshTokenResult>
  */
 export interface PostUsersRefreshTokenRequestType {
   /** @description 刷新令牌 */
@@ -228,7 +228,7 @@ export interface PostUsersRefreshTokenRequestType {
 /**
  * @description 刷新访问令牌 的返回数据类型
  */
-export interface PostUsersRefreshTokenResponseType {
+export interface PostUsersRefreshTokenResult {
   /** @description 新的访问令牌 */
   accessToken: string
   /** @description 新的刷新令牌 */
@@ -238,23 +238,23 @@ export interface PostUsersRefreshTokenResponseType {
 /**
  * @description 刷新访问令牌
  * @param params PostUsersRefreshTokenRequestType
- * @returns Promise<PostUsersRefreshTokenResponseType>
+ * @returns Promise<PostUsersRefreshTokenResult>
  */
-export async function postUsersRefreshTokenApi(
+export async function postUsersRefreshTokenFunc(
   params: PostUsersRefreshTokenRequestType
-): Promise<PostUsersRefreshTokenResponseType> {
+): Promise<PostUsersRefreshTokenResult> {
   const config: RequestConfig = {
     url: '/api/users/refresh-token',
     method: 'POST',
     data: params,
   }
-  return request<PostUsersRefreshTokenResponseType>(config)
+  return request<PostUsersRefreshTokenResult>(config)
 }
 
 /**
  * @description 获取加密密钥
  * @param params GetUsersEncryptionKeyRequestType
- * @returns Promise<GetUsersEncryptionKeyResponseType>
+ * @returns Promise<GetUsersEncryptionKeyResult>
  */
 export interface GetUsersEncryptionKeyRequestType {
   /** @description  */
@@ -264,7 +264,7 @@ export interface GetUsersEncryptionKeyRequestType {
 /**
  * @description 获取加密密钥 的返回数据类型
  */
-export interface GetUsersEncryptionKeyResponseType {
+export interface GetUsersEncryptionKeyResult {
   /** @description 加密密钥 */
   key: string
   /** @description 密钥ID */
@@ -274,23 +274,23 @@ export interface GetUsersEncryptionKeyResponseType {
 /**
  * @description 获取加密密钥
  * @param params GetUsersEncryptionKeyRequestType
- * @returns Promise<GetUsersEncryptionKeyResponseType>
+ * @returns Promise<GetUsersEncryptionKeyResult>
  */
-export async function getUsersEncryptionKeyApi(
+export async function getUsersEncryptionKeyFunc(
   params: GetUsersEncryptionKeyRequestType
-): Promise<GetUsersEncryptionKeyResponseType> {
+): Promise<GetUsersEncryptionKeyResult> {
   const config: RequestConfig = {
     url: '/api/users/encryption-key',
     method: 'GET',
     params,
   }
-  return request<GetUsersEncryptionKeyResponseType>(config)
+  return request<GetUsersEncryptionKeyResult>(config)
 }
 
 /**
  * @description 发送登录验证码
  * @param params PostUsersSendLoginCodeRequestType
- * @returns Promise<PostUsersSendLoginCodeResponseType>
+ * @returns Promise<PostUsersSendLoginCodeResult>
  */
 export interface PostUsersSendLoginCodeRequestType {
   /** @description 邮箱地址 */
@@ -302,7 +302,7 @@ export interface PostUsersSendLoginCodeRequestType {
 /**
  * @description 发送登录验证码 的返回数据类型
  */
-export interface PostUsersSendLoginCodeResponseType {
+export interface PostUsersSendLoginCodeResult {
   /** @description  */
   message: string
 }
@@ -310,23 +310,23 @@ export interface PostUsersSendLoginCodeResponseType {
 /**
  * @description 发送登录验证码
  * @param params PostUsersSendLoginCodeRequestType
- * @returns Promise<PostUsersSendLoginCodeResponseType>
+ * @returns Promise<PostUsersSendLoginCodeResult>
  */
-export async function postUsersSendLoginCodeApi(
+export async function postUsersSendLoginCodeFunc(
   params: PostUsersSendLoginCodeRequestType
-): Promise<PostUsersSendLoginCodeResponseType> {
+): Promise<PostUsersSendLoginCodeResult> {
   const config: RequestConfig = {
     url: '/api/users/send-login-code',
     method: 'POST',
     data: params,
   }
-  return request<PostUsersSendLoginCodeResponseType>(config)
+  return request<PostUsersSendLoginCodeResult>(config)
 }
 
 /**
  * @description 发送邮箱验证码
  * @param params PostUsersSendEmailCodeRequestType
- * @returns Promise<PostUsersSendEmailCodeResponseType>
+ * @returns Promise<PostUsersSendEmailCodeResult>
  */
 export interface PostUsersSendEmailCodeRequestType {
   /** @description 邮箱地址 */
@@ -338,7 +338,7 @@ export interface PostUsersSendEmailCodeRequestType {
 /**
  * @description 发送邮箱验证码 的返回数据类型
  */
-export interface PostUsersSendEmailCodeResponseType {
+export interface PostUsersSendEmailCodeResult {
   /** @description  */
   message: string
 }
@@ -346,23 +346,23 @@ export interface PostUsersSendEmailCodeResponseType {
 /**
  * @description 发送邮箱验证码
  * @param params PostUsersSendEmailCodeRequestType
- * @returns Promise<PostUsersSendEmailCodeResponseType>
+ * @returns Promise<PostUsersSendEmailCodeResult>
  */
-export async function postUsersSendEmailCodeApi(
+export async function postUsersSendEmailCodeFunc(
   params: PostUsersSendEmailCodeRequestType
-): Promise<PostUsersSendEmailCodeResponseType> {
+): Promise<PostUsersSendEmailCodeResult> {
   const config: RequestConfig = {
     url: '/api/users/send-email-code',
     method: 'POST',
     data: params,
   }
-  return request<PostUsersSendEmailCodeResponseType>(config)
+  return request<PostUsersSendEmailCodeResult>(config)
 }
 
 /**
  * @description 为用户分配角色
  * @param params PostUsersAssignRoleRequestType
- * @returns Promise<PostUsersAssignRoleResponseType>
+ * @returns Promise<PostUsersAssignRoleResult>
  */
 export interface PostUsersAssignRoleRequestType {
   /** @description 角色ID */
@@ -376,7 +376,7 @@ export interface PostUsersAssignRoleRequestType {
 /**
  * @description 为用户分配角色 的返回数据类型
  */
-export interface PostUsersAssignRoleResponseType {
+export interface PostUsersAssignRoleResult {
   /** @description 用户角色关系ID */
   id: string
   /** @description 用户ID */
@@ -390,23 +390,23 @@ export interface PostUsersAssignRoleResponseType {
 /**
  * @description 为用户分配角色
  * @param params PostUsersAssignRoleRequestType
- * @returns Promise<PostUsersAssignRoleResponseType>
+ * @returns Promise<PostUsersAssignRoleResult>
  */
-export async function postUsersAssignRoleApi(
+export async function postUsersAssignRoleFunc(
   params: PostUsersAssignRoleRequestType
-): Promise<PostUsersAssignRoleResponseType> {
+): Promise<PostUsersAssignRoleResult> {
   const config: RequestConfig = {
     url: '/api/users/assign-role',
     method: 'POST',
     data: params,
   }
-  return request<PostUsersAssignRoleResponseType>(config)
+  return request<PostUsersAssignRoleResult>(config)
 }
 
 /**
  * @description 为用户批量分配角色
  * @param params PostUsersAssignRolesBatchRequestType
- * @returns Promise<PostUsersAssignRolesBatchResponseType>
+ * @returns Promise<PostUsersAssignRolesBatchResult>
  */
 export interface PostUsersAssignRolesBatchRequestType {
   /** @description 角色ID列表 */
@@ -420,7 +420,7 @@ export interface PostUsersAssignRolesBatchRequestType {
 /**
  * @description 为用户批量分配角色 的返回数据类型
  */
-export interface PostUsersAssignRolesBatchResponseType {
+export interface PostUsersAssignRolesBatchResult {
   /** @description 响应数据数组 */
   data: UserRoleResponseDto[]
 }
@@ -428,23 +428,23 @@ export interface PostUsersAssignRolesBatchResponseType {
 /**
  * @description 为用户批量分配角色
  * @param params PostUsersAssignRolesBatchRequestType
- * @returns Promise<PostUsersAssignRolesBatchResponseType>
+ * @returns Promise<PostUsersAssignRolesBatchResult>
  */
-export async function postUsersAssignRolesBatchApi(
+export async function postUsersAssignRolesBatchFunc(
   params: PostUsersAssignRolesBatchRequestType
-): Promise<PostUsersAssignRolesBatchResponseType> {
+): Promise<PostUsersAssignRolesBatchResult> {
   const config: RequestConfig = {
     url: '/api/users/assign-roles-batch',
     method: 'POST',
     data: params,
   }
-  return request<PostUsersAssignRolesBatchResponseType>(config)
+  return request<PostUsersAssignRolesBatchResult>(config)
 }
 
 /**
  * @description 移除用户角色
  * @param params DeleteUsersRemoveRoleRequestType
- * @returns Promise<DeleteUsersRemoveRoleResponseType>
+ * @returns Promise<DeleteUsersRemoveRoleResult>
  */
 export interface DeleteUsersRemoveRoleRequestType {
   /** @description 用户ID */
@@ -458,7 +458,7 @@ export interface DeleteUsersRemoveRoleRequestType {
 /**
  * @description 移除用户角色 的返回数据类型
  */
-export interface DeleteUsersRemoveRoleResponseType {
+export interface DeleteUsersRemoveRoleResult {
   /** @description 响应数据 */
   data: any
 }
@@ -466,23 +466,23 @@ export interface DeleteUsersRemoveRoleResponseType {
 /**
  * @description 移除用户角色
  * @param params DeleteUsersRemoveRoleRequestType
- * @returns Promise<DeleteUsersRemoveRoleResponseType>
+ * @returns Promise<DeleteUsersRemoveRoleResult>
  */
-export async function deleteUsersRemoveRoleApi(
+export async function deleteUsersRemoveRoleFunc(
   params: DeleteUsersRemoveRoleRequestType
-): Promise<DeleteUsersRemoveRoleResponseType> {
+): Promise<DeleteUsersRemoveRoleResult> {
   const config: RequestConfig = {
     url: '/api/users/remove-role',
     method: 'DELETE',
     params,
   }
-  return request<DeleteUsersRemoveRoleResponseType>(config)
+  return request<DeleteUsersRemoveRoleResult>(config)
 }
 
 /**
  * @description 获取用户角色
  * @param params GetUsersRolesRequestType
- * @returns Promise<GetUsersRolesResponseType>
+ * @returns Promise<GetUsersRolesResult>
  */
 export interface GetUsersRolesRequestType {
   /** @description 用户ID */
@@ -494,7 +494,7 @@ export interface GetUsersRolesRequestType {
 /**
  * @description 获取用户角色 的返回数据类型
  */
-export interface GetUsersRolesResponseType {
+export interface GetUsersRolesResult {
   /** @description 响应数据数组 */
   data: Role[]
 }
@@ -502,23 +502,23 @@ export interface GetUsersRolesResponseType {
 /**
  * @description 获取用户角色
  * @param params GetUsersRolesRequestType
- * @returns Promise<GetUsersRolesResponseType>
+ * @returns Promise<GetUsersRolesResult>
  */
-export async function getUsersRolesApi(
+export async function getUsersRolesFunc(
   params: GetUsersRolesRequestType
-): Promise<GetUsersRolesResponseType> {
+): Promise<GetUsersRolesResult> {
   const config: RequestConfig = {
     url: '/api/users/roles',
     method: 'GET',
     params,
   }
-  return request<GetUsersRolesResponseType>(config)
+  return request<GetUsersRolesResult>(config)
 }
 
 /**
  * @description 获取用户权限
  * @param params GetUsersPermissionsRequestType
- * @returns Promise<GetUsersPermissionsResponseType>
+ * @returns Promise<GetUsersPermissionsResult>
  */
 export interface GetUsersPermissionsRequestType {
   /** @description 用户ID */
@@ -530,7 +530,7 @@ export interface GetUsersPermissionsRequestType {
 /**
  * @description 获取用户权限 的返回数据类型
  */
-export interface GetUsersPermissionsResponseType {
+export interface GetUsersPermissionsResult {
   /** @description 响应数据数组 */
   data: Record<string, any>[]
 }
@@ -538,23 +538,23 @@ export interface GetUsersPermissionsResponseType {
 /**
  * @description 获取用户权限
  * @param params GetUsersPermissionsRequestType
- * @returns Promise<GetUsersPermissionsResponseType>
+ * @returns Promise<GetUsersPermissionsResult>
  */
-export async function getUsersPermissionsApi(
+export async function getUsersPermissionsFunc(
   params: GetUsersPermissionsRequestType
-): Promise<GetUsersPermissionsResponseType> {
+): Promise<GetUsersPermissionsResult> {
   const config: RequestConfig = {
     url: '/api/users/permissions',
     method: 'GET',
     params,
   }
-  return request<GetUsersPermissionsResponseType>(config)
+  return request<GetUsersPermissionsResult>(config)
 }
 
 /**
  * @description 检查用户角色
  * @param params GetUsersCheckRoleRequestType
- * @returns Promise<GetUsersCheckRoleResponseType>
+ * @returns Promise<GetUsersCheckRoleResult>
  */
 export interface GetUsersCheckRoleRequestType {
   /** @description 用户ID */
@@ -568,7 +568,7 @@ export interface GetUsersCheckRoleRequestType {
 /**
  * @description 检查用户角色 的返回数据类型
  */
-export interface GetUsersCheckRoleResponseType {
+export interface GetUsersCheckRoleResult {
   /** @description  */
   hasRole: boolean
 }
@@ -576,23 +576,23 @@ export interface GetUsersCheckRoleResponseType {
 /**
  * @description 检查用户角色
  * @param params GetUsersCheckRoleRequestType
- * @returns Promise<GetUsersCheckRoleResponseType>
+ * @returns Promise<GetUsersCheckRoleResult>
  */
-export async function getUsersCheckRoleApi(
+export async function getUsersCheckRoleFunc(
   params: GetUsersCheckRoleRequestType
-): Promise<GetUsersCheckRoleResponseType> {
+): Promise<GetUsersCheckRoleResult> {
   const config: RequestConfig = {
     url: '/api/users/check-role',
     method: 'GET',
     params,
   }
-  return request<GetUsersCheckRoleResponseType>(config)
+  return request<GetUsersCheckRoleResult>(config)
 }
 
 /**
  * @description 检查用户权限
  * @param params GetUsersCheckPermissionRequestType
- * @returns Promise<GetUsersCheckPermissionResponseType>
+ * @returns Promise<GetUsersCheckPermissionResult>
  */
 export interface GetUsersCheckPermissionRequestType {
   /** @description 用户ID */
@@ -608,7 +608,7 @@ export interface GetUsersCheckPermissionRequestType {
 /**
  * @description 检查用户权限 的返回数据类型
  */
-export interface GetUsersCheckPermissionResponseType {
+export interface GetUsersCheckPermissionResult {
   /** @description  */
   hasPermission: boolean
 }
@@ -616,23 +616,23 @@ export interface GetUsersCheckPermissionResponseType {
 /**
  * @description 检查用户权限
  * @param params GetUsersCheckPermissionRequestType
- * @returns Promise<GetUsersCheckPermissionResponseType>
+ * @returns Promise<GetUsersCheckPermissionResult>
  */
-export async function getUsersCheckPermissionApi(
+export async function getUsersCheckPermissionFunc(
   params: GetUsersCheckPermissionRequestType
-): Promise<GetUsersCheckPermissionResponseType> {
+): Promise<GetUsersCheckPermissionResult> {
   const config: RequestConfig = {
     url: '/api/users/check-permission',
     method: 'GET',
     params,
   }
-  return request<GetUsersCheckPermissionResponseType>(config)
+  return request<GetUsersCheckPermissionResult>(config)
 }
 
 /**
  * @description 查询用户列表
  * @param params GetUsersRequestType
- * @returns Promise<GetUsersResponseType>
+ * @returns Promise<GetUsersResult>
  */
 export interface GetUsersRequestType {
   /** @description 页码 */
@@ -654,7 +654,7 @@ export interface GetUsersRequestType {
 /**
  * @description 查询用户列表 的返回数据类型
  */
-export interface GetUsersResponseType {
+export interface GetUsersResult {
   /** @description 用户列表 */
   list: UserListItemDto[]
   /** @description 总数 */
@@ -668,23 +668,23 @@ export interface GetUsersResponseType {
 /**
  * @description 查询用户列表
  * @param params GetUsersRequestType
- * @returns Promise<GetUsersResponseType>
+ * @returns Promise<GetUsersResult>
  */
-export async function getUsersApi(
+export async function getUsersFunc(
   params: GetUsersRequestType
-): Promise<GetUsersResponseType> {
+): Promise<GetUsersResult> {
   const config: RequestConfig = {
     url: '/api/users',
     method: 'GET',
     params,
   }
-  return request<GetUsersResponseType>(config)
+  return request<GetUsersResult>(config)
 }
 
 /**
  * @description 删除用户（支持批量）
  * @param params DeleteUsersRequestType
- * @returns Promise<DeleteUsersResponseType>
+ * @returns Promise<DeleteUsersResult>
  */
 export interface DeleteUsersRequestType {
   /** @description 要删除的用户ID列表（支持批量） */
@@ -696,7 +696,7 @@ export interface DeleteUsersRequestType {
 /**
  * @description 删除用户（支持批量） 的返回数据类型
  */
-export interface DeleteUsersResponseType {
+export interface DeleteUsersResult {
   /** @description 删除的用户数量 */
   count: number
   /** @description  */
@@ -706,23 +706,23 @@ export interface DeleteUsersResponseType {
 /**
  * @description 删除用户（支持批量）
  * @param params DeleteUsersRequestType
- * @returns Promise<DeleteUsersResponseType>
+ * @returns Promise<DeleteUsersResult>
  */
-export async function deleteUsersApi(
+export async function deleteUsersFunc(
   params: DeleteUsersRequestType
-): Promise<DeleteUsersResponseType> {
+): Promise<DeleteUsersResult> {
   const config: RequestConfig = {
     url: '/api/users',
     method: 'DELETE',
     data: params,
   }
-  return request<DeleteUsersResponseType>(config)
+  return request<DeleteUsersResult>(config)
 }
 
 /**
  * @description 管理员创建用户
  * @param params PostUsersCreateRequestType
- * @returns Promise<PostUsersCreateResponseType>
+ * @returns Promise<PostUsersCreateResult>
  */
 export interface PostUsersCreateRequestType {
   /** @description 用户邮箱 */
@@ -742,7 +742,7 @@ export interface PostUsersCreateRequestType {
 /**
  * @description 管理员创建用户 的返回数据类型
  */
-export interface PostUsersCreateResponseType {
+export interface PostUsersCreateResult {
   /** @description 用户ID */
   id: string
   /** @description 用户邮箱 */
@@ -770,23 +770,23 @@ export interface PostUsersCreateResponseType {
 /**
  * @description 管理员创建用户
  * @param params PostUsersCreateRequestType
- * @returns Promise<PostUsersCreateResponseType>
+ * @returns Promise<PostUsersCreateResult>
  */
-export async function postUsersCreateApi(
+export async function postUsersCreateFunc(
   params: PostUsersCreateRequestType
-): Promise<PostUsersCreateResponseType> {
+): Promise<PostUsersCreateResult> {
   const config: RequestConfig = {
     url: '/api/users/create',
     method: 'POST',
     data: params,
   }
-  return request<PostUsersCreateResponseType>(config)
+  return request<PostUsersCreateResult>(config)
 }
 
 /**
  * @description 切换用户状态（支持批量）
  * @param params PatchUsersToggleStatusRequestType
- * @returns Promise<PatchUsersToggleStatusResponseType>
+ * @returns Promise<PatchUsersToggleStatusResult>
  */
 export interface PatchUsersToggleStatusRequestType {
   /** @description 要切换状态的用户ID列表（支持批量） */
@@ -800,7 +800,7 @@ export interface PatchUsersToggleStatusRequestType {
 /**
  * @description 切换用户状态（支持批量） 的返回数据类型
  */
-export interface PatchUsersToggleStatusResponseType {
+export interface PatchUsersToggleStatusResult {
   /** @description 更新的用户数量 */
   count: number
   /** @description  */
@@ -810,15 +810,15 @@ export interface PatchUsersToggleStatusResponseType {
 /**
  * @description 切换用户状态（支持批量）
  * @param params PatchUsersToggleStatusRequestType
- * @returns Promise<PatchUsersToggleStatusResponseType>
+ * @returns Promise<PatchUsersToggleStatusResult>
  */
-export async function patchUsersToggleStatusApi(
+export async function patchUsersToggleStatusFunc(
   params: PatchUsersToggleStatusRequestType
-): Promise<PatchUsersToggleStatusResponseType> {
+): Promise<PatchUsersToggleStatusResult> {
   const config: RequestConfig = {
     url: '/api/users/toggle-status',
     method: 'PATCH',
     data: params,
   }
-  return request<PatchUsersToggleStatusResponseType>(config)
+  return request<PatchUsersToggleStatusResult>(config)
 }

@@ -3,7 +3,7 @@ import { RequestConfig, request } from '@/service/request'
 /**
  * @description 健康检查
  * @param params GetHealthRequestType
- * @returns Promise<GetHealthResponseType>
+ * @returns Promise<GetHealthResult>
  */
 export interface GetHealthRequestType {
   /** @description  */
@@ -13,7 +13,7 @@ export interface GetHealthRequestType {
 /**
  * @description 健康检查 的返回数据类型
  */
-export interface GetHealthResponseType {
+export interface GetHealthResult {
   /** @description 服务名称 */
   service: string
   /** @description 服务状态 */
@@ -31,15 +31,15 @@ export interface GetHealthResponseType {
 /**
  * @description 健康检查
  * @param params GetHealthRequestType
- * @returns Promise<GetHealthResponseType>
+ * @returns Promise<GetHealthResult>
  */
-export async function getHealthApi(
+export async function getHealthFunc(
   params: GetHealthRequestType
-): Promise<GetHealthResponseType> {
+): Promise<GetHealthResult> {
   const config: RequestConfig = {
     url: '/api/health',
     method: 'GET',
     params,
   }
-  return request<GetHealthResponseType>(config)
+  return request<GetHealthResult>(config)
 }

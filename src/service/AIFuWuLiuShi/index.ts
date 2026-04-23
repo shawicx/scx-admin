@@ -4,7 +4,7 @@ import type { AiMessageDto } from '@/service/types'
 /**
  * @description 流式生成 AI 回复
  * @param params GetAiCompletionStreamRequestType
- * @returns Promise<GetAiCompletionStreamResponseType>
+ * @returns Promise<GetAiCompletionStreamResult>
  */
 export interface GetAiCompletionStreamRequestType {
   /** @description 消息列表 */
@@ -20,7 +20,7 @@ export interface GetAiCompletionStreamRequestType {
 /**
  * @description 流式生成 AI 回复 的返回数据类型
  */
-export interface GetAiCompletionStreamResponseType {
+export interface GetAiCompletionStreamResult {
   /** @description 响应数据 */
   data: any
 }
@@ -28,15 +28,15 @@ export interface GetAiCompletionStreamResponseType {
 /**
  * @description 流式生成 AI 回复
  * @param params GetAiCompletionStreamRequestType
- * @returns Promise<GetAiCompletionStreamResponseType>
+ * @returns Promise<GetAiCompletionStreamResult>
  */
-export async function getAiCompletionStreamApi(
+export async function getAiCompletionStreamFunc(
   params: GetAiCompletionStreamRequestType
-): Promise<GetAiCompletionStreamResponseType> {
+): Promise<GetAiCompletionStreamResult> {
   const config: RequestConfig = {
     url: '/api/ai/completion/stream',
     method: 'GET',
     data: params,
   }
-  return request<GetAiCompletionStreamResponseType>(config)
+  return request<GetAiCompletionStreamResult>(config)
 }

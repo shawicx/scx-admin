@@ -8,7 +8,7 @@ import type {
 /**
  * @description 创建权限
  * @param params PostPermissionsRequestType
- * @returns Promise<PostPermissionsResponseType>
+ * @returns Promise<PostPermissionsResult>
  */
 export interface PostPermissionsRequestType {
   /** @description 权限名称 */
@@ -40,7 +40,7 @@ export interface PostPermissionsRequestType {
 /**
  * @description 创建权限 的返回数据类型
  */
-export interface PostPermissionsResponseType {
+export interface PostPermissionsResult {
   /** @description 权限ID */
   id: string
   /** @description 权限名称 */
@@ -76,23 +76,23 @@ export interface PostPermissionsResponseType {
 /**
  * @description 创建权限
  * @param params PostPermissionsRequestType
- * @returns Promise<PostPermissionsResponseType>
+ * @returns Promise<PostPermissionsResult>
  */
-export async function postPermissionsApi(
+export async function postPermissionsFunc(
   params: PostPermissionsRequestType
-): Promise<PostPermissionsResponseType> {
+): Promise<PostPermissionsResult> {
   const config: RequestConfig = {
     url: '/api/permissions',
     method: 'POST',
     data: params,
   }
-  return request<PostPermissionsResponseType>(config)
+  return request<PostPermissionsResult>(config)
 }
 
 /**
  * @description 获取权限列表
  * @param params GetPermissionsRequestType
- * @returns Promise<GetPermissionsResponseType>
+ * @returns Promise<GetPermissionsResult>
  */
 export interface GetPermissionsRequestType {
   /** @description 页码 */
@@ -118,7 +118,7 @@ export interface GetPermissionsRequestType {
 /**
  * @description 获取权限列表 的返回数据类型
  */
-export interface GetPermissionsResponseType {
+export interface GetPermissionsResult {
   /** @description  */
   list: PermissionResponseDto[]
   /** @description 总数量 */
@@ -128,23 +128,23 @@ export interface GetPermissionsResponseType {
 /**
  * @description 获取权限列表
  * @param params GetPermissionsRequestType
- * @returns Promise<GetPermissionsResponseType>
+ * @returns Promise<GetPermissionsResult>
  */
-export async function getPermissionsApi(
+export async function getPermissionsFunc(
   params: GetPermissionsRequestType
-): Promise<GetPermissionsResponseType> {
+): Promise<GetPermissionsResult> {
   const config: RequestConfig = {
     url: '/api/permissions',
     method: 'GET',
     params,
   }
-  return request<GetPermissionsResponseType>(config)
+  return request<GetPermissionsResult>(config)
 }
 
 /**
  * @description 更新权限
  * @param params PutPermissionsRequestType
- * @returns Promise<PutPermissionsResponseType>
+ * @returns Promise<PutPermissionsResult>
  */
 export interface PutPermissionsRequestType {
   /** @description 权限ID */
@@ -180,7 +180,7 @@ export interface PutPermissionsRequestType {
 /**
  * @description 更新权限 的返回数据类型
  */
-export interface PutPermissionsResponseType {
+export interface PutPermissionsResult {
   /** @description 权限ID */
   id: string
   /** @description 权限名称 */
@@ -216,23 +216,23 @@ export interface PutPermissionsResponseType {
 /**
  * @description 更新权限
  * @param params PutPermissionsRequestType
- * @returns Promise<PutPermissionsResponseType>
+ * @returns Promise<PutPermissionsResult>
  */
-export async function putPermissionsApi(
+export async function putPermissionsFunc(
   params: PutPermissionsRequestType
-): Promise<PutPermissionsResponseType> {
+): Promise<PutPermissionsResult> {
   const config: RequestConfig = {
     url: '/api/permissions',
     method: 'PUT',
     data: params,
   }
-  return request<PutPermissionsResponseType>(config)
+  return request<PutPermissionsResult>(config)
 }
 
 /**
  * @description 删除权限
  * @param params DeletePermissionsRequestType
- * @returns Promise<DeletePermissionsResponseType>
+ * @returns Promise<DeletePermissionsResult>
  */
 export interface DeletePermissionsRequestType {
   /** @description 权限ID */
@@ -244,7 +244,7 @@ export interface DeletePermissionsRequestType {
 /**
  * @description 删除权限 的返回数据类型
  */
-export interface DeletePermissionsResponseType {
+export interface DeletePermissionsResult {
   /** @description 响应数据 */
   data: any
 }
@@ -252,23 +252,23 @@ export interface DeletePermissionsResponseType {
 /**
  * @description 删除权限
  * @param params DeletePermissionsRequestType
- * @returns Promise<DeletePermissionsResponseType>
+ * @returns Promise<DeletePermissionsResult>
  */
-export async function deletePermissionsApi(
+export async function deletePermissionsFunc(
   params: DeletePermissionsRequestType
-): Promise<DeletePermissionsResponseType> {
+): Promise<DeletePermissionsResult> {
   const config: RequestConfig = {
     url: '/api/permissions',
     method: 'DELETE',
     params,
   }
-  return request<DeletePermissionsResponseType>(config)
+  return request<DeletePermissionsResult>(config)
 }
 
 /**
  * @description 搜索权限
  * @param params GetPermissionsSearchRequestType
- * @returns Promise<GetPermissionsSearchResponseType>
+ * @returns Promise<GetPermissionsSearchResult>
  */
 export interface GetPermissionsSearchRequestType {
   /** @description 搜索关键词 */
@@ -282,7 +282,7 @@ export interface GetPermissionsSearchRequestType {
 /**
  * @description 搜索权限 的返回数据类型
  */
-export interface GetPermissionsSearchResponseType {
+export interface GetPermissionsSearchResult {
   /** @description 响应数据数组 */
   data: PermissionResponseDto[]
 }
@@ -290,23 +290,23 @@ export interface GetPermissionsSearchResponseType {
 /**
  * @description 搜索权限
  * @param params GetPermissionsSearchRequestType
- * @returns Promise<GetPermissionsSearchResponseType>
+ * @returns Promise<GetPermissionsSearchResult>
  */
-export async function getPermissionsSearchApi(
+export async function getPermissionsSearchFunc(
   params: GetPermissionsSearchRequestType
-): Promise<GetPermissionsSearchResponseType> {
+): Promise<GetPermissionsSearchResult> {
   const config: RequestConfig = {
     url: '/api/permissions/search',
     method: 'GET',
     params,
   }
-  return request<GetPermissionsSearchResponseType>(config)
+  return request<GetPermissionsSearchResult>(config)
 }
 
 /**
  * @description 获取所有动作
  * @param params GetPermissionsActionsRequestType
- * @returns Promise<GetPermissionsActionsResponseType>
+ * @returns Promise<GetPermissionsActionsResult>
  */
 export interface GetPermissionsActionsRequestType {
   /** @description  */
@@ -316,7 +316,7 @@ export interface GetPermissionsActionsRequestType {
 /**
  * @description 获取所有动作 的返回数据类型
  */
-export interface GetPermissionsActionsResponseType {
+export interface GetPermissionsActionsResult {
   /** @description 响应数据数组 */
   data: string[]
 }
@@ -324,23 +324,23 @@ export interface GetPermissionsActionsResponseType {
 /**
  * @description 获取所有动作
  * @param params GetPermissionsActionsRequestType
- * @returns Promise<GetPermissionsActionsResponseType>
+ * @returns Promise<GetPermissionsActionsResult>
  */
-export async function getPermissionsActionsApi(
+export async function getPermissionsActionsFunc(
   params: GetPermissionsActionsRequestType
-): Promise<GetPermissionsActionsResponseType> {
+): Promise<GetPermissionsActionsResult> {
   const config: RequestConfig = {
     url: '/api/permissions/actions',
     method: 'GET',
     params,
   }
-  return request<GetPermissionsActionsResponseType>(config)
+  return request<GetPermissionsActionsResult>(config)
 }
 
 /**
  * @description 获取所有资源
  * @param params GetPermissionsResourcesRequestType
- * @returns Promise<GetPermissionsResourcesResponseType>
+ * @returns Promise<GetPermissionsResourcesResult>
  */
 export interface GetPermissionsResourcesRequestType {
   /** @description  */
@@ -350,7 +350,7 @@ export interface GetPermissionsResourcesRequestType {
 /**
  * @description 获取所有资源 的返回数据类型
  */
-export interface GetPermissionsResourcesResponseType {
+export interface GetPermissionsResourcesResult {
   /** @description 响应数据数组 */
   data: string[]
 }
@@ -358,23 +358,23 @@ export interface GetPermissionsResourcesResponseType {
 /**
  * @description 获取所有资源
  * @param params GetPermissionsResourcesRequestType
- * @returns Promise<GetPermissionsResourcesResponseType>
+ * @returns Promise<GetPermissionsResourcesResult>
  */
-export async function getPermissionsResourcesApi(
+export async function getPermissionsResourcesFunc(
   params: GetPermissionsResourcesRequestType
-): Promise<GetPermissionsResourcesResponseType> {
+): Promise<GetPermissionsResourcesResult> {
   const config: RequestConfig = {
     url: '/api/permissions/resources',
     method: 'GET',
     params,
   }
-  return request<GetPermissionsResourcesResponseType>(config)
+  return request<GetPermissionsResourcesResult>(config)
 }
 
 /**
  * @description 根据动作获取权限
  * @param params GetPermissionsByActionRequestType
- * @returns Promise<GetPermissionsByActionResponseType>
+ * @returns Promise<GetPermissionsByActionResult>
  */
 export interface GetPermissionsByActionRequestType {
   /** @description 动作名称 */
@@ -386,7 +386,7 @@ export interface GetPermissionsByActionRequestType {
 /**
  * @description 根据动作获取权限 的返回数据类型
  */
-export interface GetPermissionsByActionResponseType {
+export interface GetPermissionsByActionResult {
   /** @description 响应数据数组 */
   data: PermissionResponseDto[]
 }
@@ -394,23 +394,23 @@ export interface GetPermissionsByActionResponseType {
 /**
  * @description 根据动作获取权限
  * @param params GetPermissionsByActionRequestType
- * @returns Promise<GetPermissionsByActionResponseType>
+ * @returns Promise<GetPermissionsByActionResult>
  */
-export async function getPermissionsByActionApi(
+export async function getPermissionsByActionFunc(
   params: GetPermissionsByActionRequestType
-): Promise<GetPermissionsByActionResponseType> {
+): Promise<GetPermissionsByActionResult> {
   const config: RequestConfig = {
     url: '/api/permissions/by-action',
     method: 'GET',
     params,
   }
-  return request<GetPermissionsByActionResponseType>(config)
+  return request<GetPermissionsByActionResult>(config)
 }
 
 /**
  * @description 根据资源获取权限
  * @param params GetPermissionsByResourceRequestType
- * @returns Promise<GetPermissionsByResourceResponseType>
+ * @returns Promise<GetPermissionsByResourceResult>
  */
 export interface GetPermissionsByResourceRequestType {
   /** @description 资源名称 */
@@ -422,7 +422,7 @@ export interface GetPermissionsByResourceRequestType {
 /**
  * @description 根据资源获取权限 的返回数据类型
  */
-export interface GetPermissionsByResourceResponseType {
+export interface GetPermissionsByResourceResult {
   /** @description 响应数据数组 */
   data: PermissionResponseDto[]
 }
@@ -430,23 +430,23 @@ export interface GetPermissionsByResourceResponseType {
 /**
  * @description 根据资源获取权限
  * @param params GetPermissionsByResourceRequestType
- * @returns Promise<GetPermissionsByResourceResponseType>
+ * @returns Promise<GetPermissionsByResourceResult>
  */
-export async function getPermissionsByResourceApi(
+export async function getPermissionsByResourceFunc(
   params: GetPermissionsByResourceRequestType
-): Promise<GetPermissionsByResourceResponseType> {
+): Promise<GetPermissionsByResourceResult> {
   const config: RequestConfig = {
     url: '/api/permissions/by-resource',
     method: 'GET',
     params,
   }
-  return request<GetPermissionsByResourceResponseType>(config)
+  return request<GetPermissionsByResourceResult>(config)
 }
 
 /**
  * @description 获取权限详情
  * @param params GetPermissionsDetailRequestType
- * @returns Promise<GetPermissionsDetailResponseType>
+ * @returns Promise<GetPermissionsDetailResult>
  */
 export interface GetPermissionsDetailRequestType {
   /** @description 权限ID */
@@ -458,7 +458,7 @@ export interface GetPermissionsDetailRequestType {
 /**
  * @description 获取权限详情 的返回数据类型
  */
-export interface GetPermissionsDetailResponseType {
+export interface GetPermissionsDetailResult {
   /** @description 权限ID */
   id: string
   /** @description 权限名称 */
@@ -494,23 +494,23 @@ export interface GetPermissionsDetailResponseType {
 /**
  * @description 获取权限详情
  * @param params GetPermissionsDetailRequestType
- * @returns Promise<GetPermissionsDetailResponseType>
+ * @returns Promise<GetPermissionsDetailResult>
  */
-export async function getPermissionsDetailApi(
+export async function getPermissionsDetailFunc(
   params: GetPermissionsDetailRequestType
-): Promise<GetPermissionsDetailResponseType> {
+): Promise<GetPermissionsDetailResult> {
   const config: RequestConfig = {
     url: '/api/permissions/detail',
     method: 'GET',
     params,
   }
-  return request<GetPermissionsDetailResponseType>(config)
+  return request<GetPermissionsDetailResult>(config)
 }
 
 /**
  * @description 获取权限树
  * @param params GetPermissionsTreeRequestType
- * @returns Promise<GetPermissionsTreeResponseType>
+ * @returns Promise<GetPermissionsTreeResult>
  */
 export interface GetPermissionsTreeRequestType {
   /** @description  */
@@ -520,7 +520,7 @@ export interface GetPermissionsTreeRequestType {
 /**
  * @description 获取权限树 的返回数据类型
  */
-export interface GetPermissionsTreeResponseType {
+export interface GetPermissionsTreeResult {
   /** @description 响应数据数组 */
   data: PermissionTreeResponseDto[]
 }
@@ -528,23 +528,23 @@ export interface GetPermissionsTreeResponseType {
 /**
  * @description 获取权限树
  * @param params GetPermissionsTreeRequestType
- * @returns Promise<GetPermissionsTreeResponseType>
+ * @returns Promise<GetPermissionsTreeResult>
  */
-export async function getPermissionsTreeApi(
+export async function getPermissionsTreeFunc(
   params: GetPermissionsTreeRequestType
-): Promise<GetPermissionsTreeResponseType> {
+): Promise<GetPermissionsTreeResult> {
   const config: RequestConfig = {
     url: '/api/permissions/tree',
     method: 'GET',
     params,
   }
-  return request<GetPermissionsTreeResponseType>(config)
+  return request<GetPermissionsTreeResult>(config)
 }
 
 /**
  * @description 获取菜单树
  * @param params GetPermissionsMenuTreeRequestType
- * @returns Promise<GetPermissionsMenuTreeResponseType>
+ * @returns Promise<GetPermissionsMenuTreeResult>
  */
 export interface GetPermissionsMenuTreeRequestType {
   /** @description  */
@@ -554,7 +554,7 @@ export interface GetPermissionsMenuTreeRequestType {
 /**
  * @description 获取菜单树 的返回数据类型
  */
-export interface GetPermissionsMenuTreeResponseType {
+export interface GetPermissionsMenuTreeResult {
   /** @description 响应数据数组 */
   data: PermissionMenuTreeDto[]
 }
@@ -562,23 +562,23 @@ export interface GetPermissionsMenuTreeResponseType {
 /**
  * @description 获取菜单树
  * @param params GetPermissionsMenuTreeRequestType
- * @returns Promise<GetPermissionsMenuTreeResponseType>
+ * @returns Promise<GetPermissionsMenuTreeResult>
  */
-export async function getPermissionsMenuTreeApi(
+export async function getPermissionsMenuTreeFunc(
   params: GetPermissionsMenuTreeRequestType
-): Promise<GetPermissionsMenuTreeResponseType> {
+): Promise<GetPermissionsMenuTreeResult> {
   const config: RequestConfig = {
     url: '/api/permissions/menu-tree',
     method: 'GET',
     params,
   }
-  return request<GetPermissionsMenuTreeResponseType>(config)
+  return request<GetPermissionsMenuTreeResult>(config)
 }
 
 /**
  * @description 获取一级菜单
  * @param params GetPermissionsLevel1RequestType
- * @returns Promise<GetPermissionsLevel1ResponseType>
+ * @returns Promise<GetPermissionsLevel1Result>
  */
 export interface GetPermissionsLevel1RequestType {
   /** @description  */
@@ -588,7 +588,7 @@ export interface GetPermissionsLevel1RequestType {
 /**
  * @description 获取一级菜单 的返回数据类型
  */
-export interface GetPermissionsLevel1ResponseType {
+export interface GetPermissionsLevel1Result {
   /** @description 响应数据数组 */
   data: PermissionResponseDto[]
 }
@@ -596,23 +596,23 @@ export interface GetPermissionsLevel1ResponseType {
 /**
  * @description 获取一级菜单
  * @param params GetPermissionsLevel1RequestType
- * @returns Promise<GetPermissionsLevel1ResponseType>
+ * @returns Promise<GetPermissionsLevel1Result>
  */
-export async function getPermissionsLevel1Api(
+export async function getPermissionsLevel1Func(
   params: GetPermissionsLevel1RequestType
-): Promise<GetPermissionsLevel1ResponseType> {
+): Promise<GetPermissionsLevel1Result> {
   const config: RequestConfig = {
     url: '/api/permissions/level-1',
     method: 'GET',
     params,
   }
-  return request<GetPermissionsLevel1ResponseType>(config)
+  return request<GetPermissionsLevel1Result>(config)
 }
 
 /**
  * @description 按层级获取权限
  * @param params GetPermissionsByLevelRequestType
- * @returns Promise<GetPermissionsByLevelResponseType>
+ * @returns Promise<GetPermissionsByLevelResult>
  */
 export interface GetPermissionsByLevelRequestType {
   /** @description 层级（0-3） */
@@ -624,7 +624,7 @@ export interface GetPermissionsByLevelRequestType {
 /**
  * @description 按层级获取权限 的返回数据类型
  */
-export interface GetPermissionsByLevelResponseType {
+export interface GetPermissionsByLevelResult {
   /** @description 响应数据数组 */
   data: PermissionResponseDto[]
 }
@@ -632,23 +632,23 @@ export interface GetPermissionsByLevelResponseType {
 /**
  * @description 按层级获取权限
  * @param params GetPermissionsByLevelRequestType
- * @returns Promise<GetPermissionsByLevelResponseType>
+ * @returns Promise<GetPermissionsByLevelResult>
  */
-export async function getPermissionsByLevelApi(
+export async function getPermissionsByLevelFunc(
   params: GetPermissionsByLevelRequestType
-): Promise<GetPermissionsByLevelResponseType> {
+): Promise<GetPermissionsByLevelResult> {
   const config: RequestConfig = {
     url: '/api/permissions/by-level',
     method: 'GET',
     params,
   }
-  return request<GetPermissionsByLevelResponseType>(config)
+  return request<GetPermissionsByLevelResult>(config)
 }
 
 /**
  * @description 获取菜单下的按钮
  * @param params GetPermissionsButtonsByMenuIdRequestType
- * @returns Promise<GetPermissionsButtonsByMenuIdResponseType>
+ * @returns Promise<GetPermissionsButtonsByMenuIdResult>
  */
 export interface GetPermissionsButtonsByMenuIdRequestType {
   /** @description  */
@@ -660,7 +660,7 @@ export interface GetPermissionsButtonsByMenuIdRequestType {
 /**
  * @description 获取菜单下的按钮 的返回数据类型
  */
-export interface GetPermissionsButtonsByMenuIdResponseType {
+export interface GetPermissionsButtonsByMenuIdResult {
   /** @description 响应数据数组 */
   data: PermissionResponseDto[]
 }
@@ -668,15 +668,15 @@ export interface GetPermissionsButtonsByMenuIdResponseType {
 /**
  * @description 获取菜单下的按钮
  * @param params GetPermissionsButtonsByMenuIdRequestType
- * @returns Promise<GetPermissionsButtonsByMenuIdResponseType>
+ * @returns Promise<GetPermissionsButtonsByMenuIdResult>
  */
-export async function getPermissionsButtonsBy_1Api(
+export async function getPermissionsButtonsBy_1Func(
   params: GetPermissionsButtonsByMenuIdRequestType
-): Promise<GetPermissionsButtonsByMenuIdResponseType> {
+): Promise<GetPermissionsButtonsByMenuIdResult> {
   const config: RequestConfig = {
     url: '/api/permissions/{menuId}/buttons',
     method: 'GET',
     params,
   }
-  return request<GetPermissionsButtonsByMenuIdResponseType>(config)
+  return request<GetPermissionsButtonsByMenuIdResult>(config)
 }

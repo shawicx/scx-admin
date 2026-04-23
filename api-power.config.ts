@@ -103,15 +103,4 @@ export default defineConfig({
   //     return `${method}${pascalCase}Result`;
   //   },
   // },
-
-  // Schema 验证配置：控制是否生成独立的 Schema 文件
-  // 注意：此配置与 typesFormat 独立，可以单独控制
-  validation: {
-    enabled: false, // 测试场景2：生成独立的 Schema 文件
-    library: 'zod', // 验证库类型（目前仅支持 zod）
-    outputDir: 'src/service/schemas', // Schema 文件输出目录
-    generateRequestSchemas: true, // 是否生成请求参数 Schema
-    generateResponseSchemas: true, // 是否生成响应数据 Schema
-    generateTypeSchemas: true, // 是否生成通用类型 Schema
-  },
 })

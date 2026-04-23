@@ -4,7 +4,7 @@ import type { RoleResponseDto, Permission } from '@/service/types'
 /**
  * @description 创建角色
  * @param params PostRolesRequestType
- * @returns Promise<PostRolesResponseType>
+ * @returns Promise<PostRolesResult>
  */
 export interface PostRolesRequestType {
   /** @description 角色名称 */
@@ -22,7 +22,7 @@ export interface PostRolesRequestType {
 /**
  * @description 创建角色 的返回数据类型
  */
-export interface PostRolesResponseType {
+export interface PostRolesResult {
   /** @description 角色ID */
   id: string
   /** @description 角色名称 */
@@ -42,23 +42,23 @@ export interface PostRolesResponseType {
 /**
  * @description 创建角色
  * @param params PostRolesRequestType
- * @returns Promise<PostRolesResponseType>
+ * @returns Promise<PostRolesResult>
  */
-export async function postRolesApi(
+export async function postRolesFunc(
   params: PostRolesRequestType
-): Promise<PostRolesResponseType> {
+): Promise<PostRolesResult> {
   const config: RequestConfig = {
     url: '/api/roles',
     method: 'POST',
     data: params,
   }
-  return request<PostRolesResponseType>(config)
+  return request<PostRolesResult>(config)
 }
 
 /**
  * @description 获取角色列表
  * @param params GetRolesRequestType
- * @returns Promise<GetRolesResponseType>
+ * @returns Promise<GetRolesResult>
  */
 export interface GetRolesRequestType {
   /** @description 每页数量 */
@@ -72,7 +72,7 @@ export interface GetRolesRequestType {
 /**
  * @description 获取角色列表 的返回数据类型
  */
-export interface GetRolesResponseType {
+export interface GetRolesResult {
   /** @description  */
   list: RoleResponseDto[]
   /** @description 总数量 */
@@ -82,23 +82,23 @@ export interface GetRolesResponseType {
 /**
  * @description 获取角色列表
  * @param params GetRolesRequestType
- * @returns Promise<GetRolesResponseType>
+ * @returns Promise<GetRolesResult>
  */
-export async function getRolesApi(
+export async function getRolesFunc(
   params: GetRolesRequestType
-): Promise<GetRolesResponseType> {
+): Promise<GetRolesResult> {
   const config: RequestConfig = {
     url: '/api/roles',
     method: 'GET',
     params,
   }
-  return request<GetRolesResponseType>(config)
+  return request<GetRolesResult>(config)
 }
 
 /**
  * @description 更新角色
  * @param params PutRolesRequestType
- * @returns Promise<PutRolesResponseType>
+ * @returns Promise<PutRolesResult>
  */
 export interface PutRolesRequestType {
   /** @description 角色ID */
@@ -118,7 +118,7 @@ export interface PutRolesRequestType {
 /**
  * @description 更新角色 的返回数据类型
  */
-export interface PutRolesResponseType {
+export interface PutRolesResult {
   /** @description 角色ID */
   id: string
   /** @description 角色名称 */
@@ -138,23 +138,23 @@ export interface PutRolesResponseType {
 /**
  * @description 更新角色
  * @param params PutRolesRequestType
- * @returns Promise<PutRolesResponseType>
+ * @returns Promise<PutRolesResult>
  */
-export async function putRolesApi(
+export async function putRolesFunc(
   params: PutRolesRequestType
-): Promise<PutRolesResponseType> {
+): Promise<PutRolesResult> {
   const config: RequestConfig = {
     url: '/api/roles',
     method: 'PUT',
     data: params,
   }
-  return request<PutRolesResponseType>(config)
+  return request<PutRolesResult>(config)
 }
 
 /**
  * @description 删除角色
  * @param params DeleteRolesRequestType
- * @returns Promise<DeleteRolesResponseType>
+ * @returns Promise<DeleteRolesResult>
  */
 export interface DeleteRolesRequestType {
   /** @description 角色ID */
@@ -166,7 +166,7 @@ export interface DeleteRolesRequestType {
 /**
  * @description 删除角色 的返回数据类型
  */
-export interface DeleteRolesResponseType {
+export interface DeleteRolesResult {
   /** @description 响应数据 */
   data: any
 }
@@ -174,23 +174,23 @@ export interface DeleteRolesResponseType {
 /**
  * @description 删除角色
  * @param params DeleteRolesRequestType
- * @returns Promise<DeleteRolesResponseType>
+ * @returns Promise<DeleteRolesResult>
  */
-export async function deleteRolesApi(
+export async function deleteRolesFunc(
   params: DeleteRolesRequestType
-): Promise<DeleteRolesResponseType> {
+): Promise<DeleteRolesResult> {
   const config: RequestConfig = {
     url: '/api/roles',
     method: 'DELETE',
     params,
   }
-  return request<DeleteRolesResponseType>(config)
+  return request<DeleteRolesResult>(config)
 }
 
 /**
  * @description 获取角色详情
  * @param params GetRolesDetailRequestType
- * @returns Promise<GetRolesDetailResponseType>
+ * @returns Promise<GetRolesDetailResult>
  */
 export interface GetRolesDetailRequestType {
   /** @description 角色ID */
@@ -202,7 +202,7 @@ export interface GetRolesDetailRequestType {
 /**
  * @description 获取角色详情 的返回数据类型
  */
-export interface GetRolesDetailResponseType {
+export interface GetRolesDetailResult {
   /** @description 角色ID */
   id: string
   /** @description 角色名称 */
@@ -222,23 +222,23 @@ export interface GetRolesDetailResponseType {
 /**
  * @description 获取角色详情
  * @param params GetRolesDetailRequestType
- * @returns Promise<GetRolesDetailResponseType>
+ * @returns Promise<GetRolesDetailResult>
  */
-export async function getRolesDetailApi(
+export async function getRolesDetailFunc(
   params: GetRolesDetailRequestType
-): Promise<GetRolesDetailResponseType> {
+): Promise<GetRolesDetailResult> {
   const config: RequestConfig = {
     url: '/api/roles/detail',
     method: 'GET',
     params,
   }
-  return request<GetRolesDetailResponseType>(config)
+  return request<GetRolesDetailResult>(config)
 }
 
 /**
  * @description 根据代码获取角色
  * @param params GetRolesByCodeRequestType
- * @returns Promise<GetRolesByCodeResponseType>
+ * @returns Promise<GetRolesByCodeResult>
  */
 export interface GetRolesByCodeRequestType {
   /** @description 角色代码 */
@@ -250,7 +250,7 @@ export interface GetRolesByCodeRequestType {
 /**
  * @description 根据代码获取角色 的返回数据类型
  */
-export interface GetRolesByCodeResponseType {
+export interface GetRolesByCodeResult {
   /** @description 角色ID */
   id: string
   /** @description 角色名称 */
@@ -270,23 +270,23 @@ export interface GetRolesByCodeResponseType {
 /**
  * @description 根据代码获取角色
  * @param params GetRolesByCodeRequestType
- * @returns Promise<GetRolesByCodeResponseType>
+ * @returns Promise<GetRolesByCodeResult>
  */
-export async function getRolesByCodeApi(
+export async function getRolesByCodeFunc(
   params: GetRolesByCodeRequestType
-): Promise<GetRolesByCodeResponseType> {
+): Promise<GetRolesByCodeResult> {
   const config: RequestConfig = {
     url: '/api/roles/by-code',
     method: 'GET',
     params,
   }
-  return request<GetRolesByCodeResponseType>(config)
+  return request<GetRolesByCodeResult>(config)
 }
 
 /**
  * @description 为角色分配权限
  * @param params PostRolesAssignPermissionsRequestType
- * @returns Promise<PostRolesAssignPermissionsResponseType>
+ * @returns Promise<PostRolesAssignPermissionsResult>
  */
 export interface PostRolesAssignPermissionsRequestType {
   /** @description 角色ID */
@@ -300,7 +300,7 @@ export interface PostRolesAssignPermissionsRequestType {
 /**
  * @description 为角色分配权限 的返回数据类型
  */
-export interface PostRolesAssignPermissionsResponseType {
+export interface PostRolesAssignPermissionsResult {
   /** @description 响应数据 */
   data: any
 }
@@ -308,23 +308,23 @@ export interface PostRolesAssignPermissionsResponseType {
 /**
  * @description 为角色分配权限
  * @param params PostRolesAssignPermissionsRequestType
- * @returns Promise<PostRolesAssignPermissionsResponseType>
+ * @returns Promise<PostRolesAssignPermissionsResult>
  */
-export async function postRolesAssignPermissionsApi(
+export async function postRolesAssignPermissionsFunc(
   params: PostRolesAssignPermissionsRequestType
-): Promise<PostRolesAssignPermissionsResponseType> {
+): Promise<PostRolesAssignPermissionsResult> {
   const config: RequestConfig = {
     url: '/api/roles/assign-permissions',
     method: 'POST',
     data: params,
   }
-  return request<PostRolesAssignPermissionsResponseType>(config)
+  return request<PostRolesAssignPermissionsResult>(config)
 }
 
 /**
  * @description 获取角色权限
  * @param params GetRolesPermissionsRequestType
- * @returns Promise<GetRolesPermissionsResponseType>
+ * @returns Promise<GetRolesPermissionsResult>
  */
 export interface GetRolesPermissionsRequestType {
   /** @description 角色ID */
@@ -336,7 +336,7 @@ export interface GetRolesPermissionsRequestType {
 /**
  * @description 获取角色权限 的返回数据类型
  */
-export interface GetRolesPermissionsResponseType {
+export interface GetRolesPermissionsResult {
   /** @description 响应数据数组 */
   data: Permission[]
 }
@@ -344,23 +344,23 @@ export interface GetRolesPermissionsResponseType {
 /**
  * @description 获取角色权限
  * @param params GetRolesPermissionsRequestType
- * @returns Promise<GetRolesPermissionsResponseType>
+ * @returns Promise<GetRolesPermissionsResult>
  */
-export async function getRolesPermissionsApi(
+export async function getRolesPermissionsFunc(
   params: GetRolesPermissionsRequestType
-): Promise<GetRolesPermissionsResponseType> {
+): Promise<GetRolesPermissionsResult> {
   const config: RequestConfig = {
     url: '/api/roles/permissions',
     method: 'GET',
     params,
   }
-  return request<GetRolesPermissionsResponseType>(config)
+  return request<GetRolesPermissionsResult>(config)
 }
 
 /**
  * @description 移除角色权限
  * @param params DeleteRolesRemovePermissionRequestType
- * @returns Promise<DeleteRolesRemovePermissionResponseType>
+ * @returns Promise<DeleteRolesRemovePermissionResult>
  */
 export interface DeleteRolesRemovePermissionRequestType {
   /** @description 角色ID */
@@ -374,7 +374,7 @@ export interface DeleteRolesRemovePermissionRequestType {
 /**
  * @description 移除角色权限 的返回数据类型
  */
-export interface DeleteRolesRemovePermissionResponseType {
+export interface DeleteRolesRemovePermissionResult {
   /** @description 响应数据 */
   data: any
 }
@@ -382,15 +382,15 @@ export interface DeleteRolesRemovePermissionResponseType {
 /**
  * @description 移除角色权限
  * @param params DeleteRolesRemovePermissionRequestType
- * @returns Promise<DeleteRolesRemovePermissionResponseType>
+ * @returns Promise<DeleteRolesRemovePermissionResult>
  */
-export async function deleteRolesRemovePermissionApi(
+export async function deleteRolesRemovePermissionFunc(
   params: DeleteRolesRemovePermissionRequestType
-): Promise<DeleteRolesRemovePermissionResponseType> {
+): Promise<DeleteRolesRemovePermissionResult> {
   const config: RequestConfig = {
     url: '/api/roles/remove-permission',
     method: 'DELETE',
     params,
   }
-  return request<DeleteRolesRemovePermissionResponseType>(config)
+  return request<DeleteRolesRemovePermissionResult>(config)
 }

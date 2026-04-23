@@ -4,7 +4,7 @@ import type { AiMessageDto } from '@/service/types'
 /**
  * @description 生成 AI 回复
  * @param params PostAiCompletionRequestType
- * @returns Promise<PostAiCompletionResponseType>
+ * @returns Promise<PostAiCompletionResult>
  */
 export interface PostAiCompletionRequestType {
   /** @description 消息列表 */
@@ -20,7 +20,7 @@ export interface PostAiCompletionRequestType {
 /**
  * @description 生成 AI 回复 的返回数据类型
  */
-export interface PostAiCompletionResponseType {
+export interface PostAiCompletionResult {
   /** @description  */
   success: boolean
   /** @description  */
@@ -30,23 +30,23 @@ export interface PostAiCompletionResponseType {
 /**
  * @description 生成 AI 回复
  * @param params PostAiCompletionRequestType
- * @returns Promise<PostAiCompletionResponseType>
+ * @returns Promise<PostAiCompletionResult>
  */
-export async function postAiCompletionApi(
+export async function postAiCompletionFunc(
   params: PostAiCompletionRequestType
-): Promise<PostAiCompletionResponseType> {
+): Promise<PostAiCompletionResult> {
   const config: RequestConfig = {
     url: '/api/ai/completion',
     method: 'POST',
     data: params,
   }
-  return request<PostAiCompletionResponseType>(config)
+  return request<PostAiCompletionResult>(config)
 }
 
 /**
  * @description 更新用户 AI 配置
  * @param params PutAiConfigRequestType
- * @returns Promise<PutAiConfigResponseType>
+ * @returns Promise<PutAiConfigResult>
  */
 export interface PutAiConfigRequestType {
   /** @description  */
@@ -56,7 +56,7 @@ export interface PutAiConfigRequestType {
 /**
  * @description 更新用户 AI 配置 的返回数据类型
  */
-export interface PutAiConfigResponseType {
+export interface PutAiConfigResult {
   /** @description  */
   success: boolean
   /** @description  */
@@ -66,23 +66,23 @@ export interface PutAiConfigResponseType {
 /**
  * @description 更新用户 AI 配置
  * @param params PutAiConfigRequestType
- * @returns Promise<PutAiConfigResponseType>
+ * @returns Promise<PutAiConfigResult>
  */
-export async function putAiConfigApi(
+export async function putAiConfigFunc(
   params: PutAiConfigRequestType
-): Promise<PutAiConfigResponseType> {
+): Promise<PutAiConfigResult> {
   const config: RequestConfig = {
     url: '/api/ai/config',
     method: 'PUT',
     data: params,
   }
-  return request<PutAiConfigResponseType>(config)
+  return request<PutAiConfigResult>(config)
 }
 
 /**
  * @description 测试平台连接
  * @param params PostAiTestConnectionRequestType
- * @returns Promise<PostAiTestConnectionResponseType>
+ * @returns Promise<PostAiTestConnectionResult>
  */
 export interface PostAiTestConnectionRequestType {
   /** @description 要测试的平台 */
@@ -94,7 +94,7 @@ export interface PostAiTestConnectionRequestType {
 /**
  * @description 测试平台连接 的返回数据类型
  */
-export interface PostAiTestConnectionResponseType {
+export interface PostAiTestConnectionResult {
   /** @description  */
   success: boolean
   /** @description  */
@@ -104,23 +104,23 @@ export interface PostAiTestConnectionResponseType {
 /**
  * @description 测试平台连接
  * @param params PostAiTestConnectionRequestType
- * @returns Promise<PostAiTestConnectionResponseType>
+ * @returns Promise<PostAiTestConnectionResult>
  */
-export async function postAiTestConnectionApi(
+export async function postAiTestConnectionFunc(
   params: PostAiTestConnectionRequestType
-): Promise<PostAiTestConnectionResponseType> {
+): Promise<PostAiTestConnectionResult> {
   const config: RequestConfig = {
     url: '/api/ai/test-connection',
     method: 'POST',
     data: params,
   }
-  return request<PostAiTestConnectionResponseType>(config)
+  return request<PostAiTestConnectionResult>(config)
 }
 
 /**
  * @description 获取可用平台列表
  * @param params GetAiProvidersRequestType
- * @returns Promise<GetAiProvidersResponseType>
+ * @returns Promise<GetAiProvidersResult>
  */
 export interface GetAiProvidersRequestType {
   /** @description  */
@@ -130,7 +130,7 @@ export interface GetAiProvidersRequestType {
 /**
  * @description 获取可用平台列表 的返回数据类型
  */
-export interface GetAiProvidersResponseType {
+export interface GetAiProvidersResult {
   /** @description  */
   success: boolean
   /** @description  */
@@ -140,23 +140,23 @@ export interface GetAiProvidersResponseType {
 /**
  * @description 获取可用平台列表
  * @param params GetAiProvidersRequestType
- * @returns Promise<GetAiProvidersResponseType>
+ * @returns Promise<GetAiProvidersResult>
  */
-export async function getAiProvidersApi(
+export async function getAiProvidersFunc(
   params: GetAiProvidersRequestType
-): Promise<GetAiProvidersResponseType> {
+): Promise<GetAiProvidersResult> {
   const config: RequestConfig = {
     url: '/api/ai/providers',
     method: 'GET',
     params,
   }
-  return request<GetAiProvidersResponseType>(config)
+  return request<GetAiProvidersResult>(config)
 }
 
 /**
  * @description 获取请求历史
  * @param params GetAiRequestsRequestType
- * @returns Promise<GetAiRequestsResponseType>
+ * @returns Promise<GetAiRequestsResult>
  */
 export interface GetAiRequestsRequestType {
   /** @description  */
@@ -166,7 +166,7 @@ export interface GetAiRequestsRequestType {
 /**
  * @description 获取请求历史 的返回数据类型
  */
-export interface GetAiRequestsResponseType {
+export interface GetAiRequestsResult {
   /** @description  */
   success: boolean
   /** @description  */
@@ -176,15 +176,15 @@ export interface GetAiRequestsResponseType {
 /**
  * @description 获取请求历史
  * @param params GetAiRequestsRequestType
- * @returns Promise<GetAiRequestsResponseType>
+ * @returns Promise<GetAiRequestsResult>
  */
-export async function getAiRequestsApi(
+export async function getAiRequestsFunc(
   params: GetAiRequestsRequestType
-): Promise<GetAiRequestsResponseType> {
+): Promise<GetAiRequestsResult> {
   const config: RequestConfig = {
     url: '/api/ai/requests',
     method: 'GET',
     params,
   }
-  return request<GetAiRequestsResponseType>(config)
+  return request<GetAiRequestsResult>(config)
 }
