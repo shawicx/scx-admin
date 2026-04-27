@@ -12,13 +12,13 @@ import {
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import { getPermissionsApi } from '@/service/QuanXianGuanLi'
 import {
-  getRolesPermissionsApi,
-  postRolesAssignPermissionsApi,
-} from '@/service/JueSeGuanLi'
+  getPermissionsFunc,
+  getRolesPermissionsFunc,
+  postRolesAssignPermissionsFunc,
+} from '@/service'
 import { toast } from '@/components/ui/use-toast'
-import type { PermissionResponseDto } from '@/service/types'
+import type { PermissionResponseDto } from '@/service'
 
 interface PermissionAssignDialogProps {
   open: boolean
@@ -52,8 +52,8 @@ export function PermissionAssignDialog({
         setIsLoading(true)
         try {
           const [allPermissionsRes, rolePermissionsRes] = await Promise.all([
-            getPermissionsApi({}),
-            getRolesPermissionsApi({ id: roleId }),
+            getPermissionsFunc({}),
+            getRolesPermissionsFunc({ id: roleId }),
           ])
 
           const rolePermissions =
@@ -102,7 +102,7 @@ export function PermissionAssignDialog({
         .filter(p => p.checked)
         .map(p => p.id)
 
-      await postRolesAssignPermissionsApi({
+      await postRolesAssignPermissionsFunc({
         id: roleId,
         permissionIds: selectedPermissionIds,
       })

@@ -16,8 +16,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import { postUsersCreateApi } from '@/service/YongHuGuanLi'
-import { getRolesApi } from '@/service/JueSeGuanLi'
+import { postUsersCreateFunc } from '@/service'
+import { getRolesFunc } from '@/service'
 import { toast } from '@/components/ui/use-toast'
 
 const createUserSchema = z.object({
@@ -61,7 +61,7 @@ export function CreateUserDialog({
   const loadRoles = async () => {
     setIsLoading(true)
     try {
-      const result = await getRolesApi({})
+      const result = await getRolesFunc({})
       setRoles(result.list || [])
     } catch (error) {
       console.error('Failed to load roles:', error)
@@ -84,7 +84,7 @@ export function CreateUserDialog({
   const handleSubmit = async (data: CreateUserFormValues) => {
     setIsSubmitting(true)
     try {
-      await postUsersCreateApi({
+      await postUsersCreateFunc({
         name: data.name,
         email: data.email,
         password: data.password,

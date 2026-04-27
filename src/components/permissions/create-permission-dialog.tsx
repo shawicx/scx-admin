@@ -23,9 +23,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
-import { postPermissionsApi, getPermissionsApi } from '@/service/QuanXianGuanLi'
+import { postPermissionsFunc, getPermissionsFunc } from '@/service'
 import { toast } from '@/components/ui/use-toast'
-import type { PermissionResponseDto } from '@/service/types'
+import type { PermissionResponseDto } from '@/service'
 
 const createPermissionSchema = z.object({
   name: z
@@ -88,7 +88,7 @@ export function CreatePermissionDialog({
       if (!open) return
       setIsLoadingPermissions(true)
       try {
-        const result = await getPermissionsApi({ limit: '1000' })
+        const result = await getPermissionsFunc({ limit: '1000' })
         setParentPermissions(result.list)
       } catch (error) {
         console.error('Failed to load permissions:', error)
@@ -102,7 +102,7 @@ export function CreatePermissionDialog({
   const handleSubmit = async (data: CreatePermissionFormValues) => {
     setIsSubmitting(true)
     try {
-      await postPermissionsApi({
+      await postPermissionsFunc({
         name: data.name,
         type: data.type,
         action: data.action || undefined,

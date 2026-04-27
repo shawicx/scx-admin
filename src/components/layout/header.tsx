@@ -27,10 +27,7 @@ const routeMap: Record<string, string> = {
   '/': '首页',
   '/users': '用户管理',
   '/roles': '角色管理',
-  '/analytics': '数据统计',
-  '/documents': '文档管理',
   '/permissions': '权限管理',
-  '/settings': '系统设置',
   '/login': '登录',
   '/register': '注册',
 }
@@ -108,7 +105,7 @@ export function Header() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-9 w-9 rounded-full">
               <Avatar className="h-9 w-9">
-                <AvatarImage src="/avatars/01.png" alt="用户头像" />
+                <AvatarImage src={'/assets/avatar.png'} alt="用户头像" />
                 <AvatarFallback>
                   <User className="h-4 w-4" />
                 </AvatarFallback>

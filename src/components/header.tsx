@@ -2,7 +2,8 @@
 
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Bell, User } from 'lucide-react'
+import { Bell } from 'lucide-react'
+import avatarImg from '@/assets/images/avatar.png'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -93,7 +94,11 @@ export function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
-                <User className="h-4 w-4" />
+                <img
+                  src={avatarImg.src}
+                  alt="avatar"
+                  className="h-6 w-6 rounded-full"
+                />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

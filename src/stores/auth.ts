@@ -4,7 +4,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useAuth as useAuthHook } from '@/hooks/use-auth'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
-import type { PostUsersLoginPasswordResponseType } from '@/service'
+import type { PostUsersLoginPasswordResult } from '@/service'
 
 interface User {
   id: string
@@ -88,7 +88,7 @@ export const useAuth = create<AuthState>()(
           const token = await indexedDB.getItem('accessToken')
           const userData = (await indexedDB.getItem(
             'user'
-          )) as PostUsersLoginPasswordResponseType | null
+          )) as PostUsersLoginPasswordResult | null
 
           if (token && userData) {
             set({

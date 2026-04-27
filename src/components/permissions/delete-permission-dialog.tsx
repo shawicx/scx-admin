@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { deletePermissionsApi } from '@/service/QuanXianGuanLi'
+import { deletePermissionsFunc } from '@/service'
 import { toast } from '@/components/ui/use-toast'
 import { AlertCircle } from 'lucide-react'
 
@@ -35,7 +35,7 @@ export function DeletePermissionDialog({
     setIsDeleting(true)
     try {
       for (const id of permissionIds) {
-        await deletePermissionsApi({ id })
+        await deletePermissionsFunc({ id })
       }
       toast({
         title: '成功',

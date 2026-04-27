@@ -23,12 +23,12 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import {
-  putPermissionsApi,
-  getPermissionsDetailApi,
-  getPermissionsApi,
-} from '@/service/QuanXianGuanLi'
+  putPermissionsFunc,
+  getPermissionsDetailFunc,
+  getPermissionsFunc,
+} from '@/service'
 import { toast } from '@/components/ui/use-toast'
-import type { PermissionResponseDto } from '@/service/types'
+import type { PermissionResponseDto } from '@/service'
 
 const editPermissionSchema = z.object({
   name: z
@@ -93,7 +93,7 @@ export function EditPermissionDialog({
     if (!open) return
     setIsLoadingPermissions(true)
     try {
-      const result = await getPermissionsApi({ limit: '1000' })
+      const result = await getPermissionsFunc({ limit: '1000' })
       setParentPermissions(
         result.list.filter(p => p.id !== permissionId && p.type === 'MENU')
       )
@@ -109,7 +109,7 @@ export function EditPermissionDialog({
 
     setIsLoading(true)
     try {
-      const result = await getPermissionsDetailApi({ id: permissionId })
+      const result = await getPermissionsDetailFunc({ id: permissionId })
       form.reset({
         name: result.name,
         type: result.type,
@@ -147,7 +147,7 @@ export function EditPermissionDialog({
 
     setIsSubmitting(true)
     try {
-      await putPermissionsApi({
+      await putPermissionsFunc({
         id: permissionId,
         name: data.name,
         type: data.type,

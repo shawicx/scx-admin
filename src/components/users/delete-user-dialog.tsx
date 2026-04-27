@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { deleteUsersApi } from '@/service/YongHuGuanLi'
+import { deleteUsersFunc } from '@/service'
 import { toast } from '@/components/ui/use-toast'
 
 interface DeleteUserDialogProps {
@@ -31,7 +31,7 @@ export function DeleteUserDialog({
   const handleDelete = async () => {
     setIsDeleting(true)
     try {
-      await deleteUsersApi({ userIds })
+      await deleteUsersFunc({ userIds })
       toast({
         title: '成功',
         description: `已成功删除 ${userIds.length} 个用户`,

@@ -3,16 +3,16 @@
  * @description: 登录相关
  */
 import {
-  postUsersLoginPasswordApi,
-  getUsersEncryptionKeyApi,
-  postUsersLogoutApi,
-  postUsersLoginApi,
-  postUsersRegisterApi,
-  postUsersSendEmailCodeApi,
+  postUsersLoginPasswordFunc,
+  getUsersEncryptionKeyFunc,
+  postUsersLogoutFunc,
+  postUsersLoginFunc,
+  postUsersRegisterFunc,
+  postUsersSendEmailCodeFunc,
 } from '@/service'
 import type {
   PostUsersLoginPasswordRequestType,
-  PostUsersLoginPasswordResponseType,
+  PostUsersLoginPasswordResult,
   PostUsersLoginRequestType,
   PostUsersRegisterRequestType,
 } from '@/service'
@@ -44,13 +44,13 @@ export function useAuth() {
   ) => {
     try {
       // 获取加密密钥
-      const keyResponse = await getUsersEncryptionKeyApi({})
+      const keyResponse = await getUsersEncryptionKeyFunc({})
       const { key, keyId } = keyResponse || {}
       // 加密密码
       const encryptedPassword = FrontendCrypto.encrypt(params.password, key)
 
       // 调用登录接口，直接返回用户数据
-      const user = await postUsersLoginPasswordApi({
+      const user = await postUsersLoginPasswordFunc({
         ...params,
         password: encryptedPassword,
         keyId,
@@ -76,7 +76,7 @@ export function useAuth() {
   const loginWithCode = async (params: PostUsersLoginRequestType) => {
     try {
       // 调用登录接口，直接返回用户数据
-      const user = await postUsersLoginApi(params)
+      const user = await postUsersLoginFunc(params)
 
       // 将用户信息和访问令牌分别存储到 IndexDB
       try {
@@ -99,7 +99,7 @@ export function useAuth() {
   ) => {
     try {
       // 调用注册接口，直接返回用户数据
-      const user = await postUsersRegisterApi({
+      const user = await postUsersRegisterFunc({
         ...params,
         name: params.email, // 使用邮箱作为用户名
       })
@@ -126,7 +126,7 @@ export function useAuth() {
   const sendVerificationCode = async (email: string) => {
     try {
       // 调用发送验证码接口
-      return await postUsersSendEmailCodeApi({ email })
+      return await postUsersSendEmailCodeFunc({ email })
     } catch (error) {
       console.error('Failed to send verification code:', error)
       throw Error('发送验证码失败')
@@ -135,18 +135,18 @@ export function useAuth() {
 
   const logout = async () => {
     // 先获取用户数据用于调用注销接口
-    let userData: PostUsersLoginPasswordResponseType | null = null
+    let userData: PostUsersLoginPasswordResult | null = null
     try {
       userData = (await indexedDB.getItem(
         'user'
-      )) as PostUsersLoginPasswordResponseType
+      )) as PostUsersLoginPasswordResult
     } catch (error) {
       console.error('Failed to get user data from IndexedDB:', error)
     }
 
     // 尝试调用后端注销接口，但不阻塞本地清理
     if (userData?.id) {
-      postUsersLogoutApi({ userId: userData.id }).catch(error => {
+      postUsersLogoutFunc({ userId: userData.id }).catch(error => {
         console.warn(
           'Logout API call failed, but continuing with local cleanup:',
           error
