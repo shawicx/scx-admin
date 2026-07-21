@@ -1,7 +1,7 @@
 import type { UserListItemDto } from '@/service/types/index'
 
 /**
- * @description UserListResponseDto
+ * @description 用户列表响应
  */
 export interface UserListResponseDto {
   /** @description 用户列表 */
@@ -10,6 +10,6 @@ export interface UserListResponseDto {
   total: number
   /** @description 当前页码 */
   page: number
-  /** @description 每页数量 */
+  /** @description 每页条数 */
   limit: number
 }

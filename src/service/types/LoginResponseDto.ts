@@ -1,23 +1,19 @@
 /**
- * @description LoginResponseDto
+ * @description 登录响应
  */
 export interface LoginResponseDto {
-  /** @description 用户ID */
+  /** @description 用户 ID */
   id: string
-  /** @description 邮箱地址 */
+  /** @description 邮箱 */
   email: string
-  /** @description 用户名 */
+  /** @description 用户名称 */
   name: string
   /** @description 邮箱是否已验证 */
   emailVerified: boolean
-  /** @description 用户偏好设置 */
-  preferences: Record<string, any>
-  /** @description 上次登录时间 */
-  lastLoginAt: string
-  /** @description 登录次数 */
-  loginCount: number
-  /** @description 访问令牌 */
+  /** @description  */
+  preferences?: JsonNode | null
+  /** @description 访问令牌（2 小时有效） */
   accessToken: string
-  /** @description 刷新令牌 */
+  /** @description 刷新令牌（7 天有效） */
   refreshToken: string
 }

@@ -16,7 +16,7 @@ import { CreateUserDialog } from '@/components/users/create-user-dialog'
 import { DeleteUserDialog } from '@/components/users/delete-user-dialog'
 import { RoleAssignDialog } from '@/components/users/role-assign-dialog'
 import { UserStatusSwitch } from '@/components/users/user-status-switch'
-import { getUsersFunc } from '@/service'
+import { getApiUsersListFunc } from '@/service'
 import type { UserListItemDto } from '@/service'
 import type { TableColumn } from '@/components/table/types'
 import { formatDate } from '@/lib/utils'
@@ -194,7 +194,7 @@ export default function UsersPage() {
       queryParams.sortOrder = sorter.order
     }
 
-    const result = await getUsersFunc(queryParams)
+    const result = await getApiUsersListFunc(queryParams)
 
     return {
       data: result.list,

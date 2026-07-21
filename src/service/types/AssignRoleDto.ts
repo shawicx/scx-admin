@@ -1,9 +1,9 @@
 /**
- * @description AssignRoleDto
+ * @description 分配单个角色请求
  */
 export interface AssignRoleDto {
-  /** @description 角色ID */
+  /** @description 角色 ID */
   roleId: string
-  /** @description 用户ID */
+  /** @description 用户 ID */
   userId: string
 }

@@ -23,9 +23,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import {
-  putPermissionsFunc,
-  getPermissionsDetailFunc,
-  getPermissionsFunc,
+  putApiPermissionsUpdateFunc,
+  getApiPermissionsDetailFunc,
+  getApiPermissionsListFunc,
 } from '@/service'
 import { toast } from '@/components/ui/use-toast'
 import type { PermissionResponseDto } from '@/service'
@@ -93,7 +93,7 @@ export function EditPermissionDialog({
     if (!open) return
     setIsLoadingPermissions(true)
     try {
-      const result = await getPermissionsFunc({ limit: '1000' })
+      const result = await getApiPermissionsListFunc({ limit: '1000' })
       setParentPermissions(
         result.list.filter(p => p.id !== permissionId && p.type === 'MENU')
       )
@@ -109,7 +109,7 @@ export function EditPermissionDialog({
 
     setIsLoading(true)
     try {
-      const result = await getPermissionsDetailFunc({ id: permissionId })
+      const result = await getApiPermissionsDetailFunc({ id: permissionId })
       form.reset({
         name: result.name,
         type: result.type,
@@ -147,7 +147,7 @@ export function EditPermissionDialog({
 
     setIsSubmitting(true)
     try {
-      await putPermissionsFunc({
+      await putApiPermissionsUpdateFunc({
         id: permissionId,
         name: data.name,
         type: data.type,

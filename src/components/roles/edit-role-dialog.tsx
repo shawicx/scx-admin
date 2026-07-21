@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import { putRolesFunc, getRolesDetailFunc } from '@/service'
+import { putApiRolesUpdateFunc, getApiRolesDetailFunc } from '@/service'
 import { toast } from '@/components/ui/use-toast'
 
 const editRoleSchema = z.object({
@@ -66,7 +66,7 @@ export function EditRoleDialog({
       if (open && roleId) {
         setIsLoading(true)
         try {
-          const role = await getRolesDetailFunc({ id: roleId })
+          const role = await getApiRolesDetailFunc({ id: roleId })
           form.reset({
             name: role.name,
             code: role.code,
@@ -94,7 +94,7 @@ export function EditRoleDialog({
 
     setIsSubmitting(true)
     try {
-      await putRolesFunc({
+      await putApiRolesUpdateFunc({
         id: roleId,
         name: data.name,
         code: data.code,

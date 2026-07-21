@@ -199,7 +199,7 @@ function getHttpStatus(statusCode: number): HttpStatus {
 }
 
 export async function request<D>(config: AxiosRequestConfig): Promise<D> {
-  const url = config.url as string
+  const url = `${config.url as string}`
   const controller = new AbortController()
   // 生成请求键值
   const requestKey = getRequestKey(url, config)

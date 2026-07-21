@@ -15,7 +15,7 @@ import { DataTable } from '@/components/table/data-table'
 import { CreatePermissionDialog } from '@/components/permissions/create-permission-dialog'
 import { EditPermissionDialog } from '@/components/permissions/edit-permission-dialog'
 import { DeletePermissionDialog } from '@/components/permissions/delete-permission-dialog'
-import { getPermissionsFunc } from '@/service'
+import { getApiPermissionsListFunc } from '@/service'
 import type { PermissionResponseDto } from '@/service'
 import type { TableColumn } from '@/components/table/types'
 import { formatDate } from '@/lib/utils'
@@ -236,7 +236,7 @@ export default function PermissionsPage() {
       queryParams.sortOrder = sorter.order
     }
 
-    const result = await getPermissionsFunc(queryParams)
+    const result = await getApiPermissionsListFunc(queryParams)
 
     return {
       data: result.list,

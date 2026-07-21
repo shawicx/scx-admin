@@ -1,25 +1,21 @@
 /**
- * @description UserListItemDto
+ * @description 用户列表项
  */
 export interface UserListItemDto {
-  /** @description 用户ID */
+  /** @description 用户 ID */
   id: string
-  /** @description 用户邮箱 */
+  /** @description 邮箱 */
   email: string
   /** @description 用户名称 */
   name: string
   /** @description 邮箱是否已验证 */
   emailVerified: boolean
-  /** @description 最后登录IP */
-  lastLoginIp: string
+  /** @description 是否启用 */
+  isActive: boolean
   /** @description 最后登录时间 */
-  lastLoginAt: string
+  lastLoginAt?: string | null
   /** @description 登录次数 */
   loginCount: number
-  /** @description 账户是否激活 */
-  isActive: boolean
   /** @description 创建时间 */
   createdAt: string
-  /** @description 更新时间 */
-  updatedAt: string
 }

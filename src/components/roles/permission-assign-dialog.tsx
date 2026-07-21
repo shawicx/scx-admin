@@ -13,9 +13,9 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import {
-  getPermissionsFunc,
-  getRolesPermissionsFunc,
-  postRolesAssignPermissionsFunc,
+  getApiPermissionsListFunc,
+  getApiRolesPermissionsFunc,
+  postApiRolesAssignPermissionsFunc,
 } from '@/service'
 import { toast } from '@/components/ui/use-toast'
 import type { PermissionResponseDto } from '@/service'
@@ -52,12 +52,14 @@ export function PermissionAssignDialog({
         setIsLoading(true)
         try {
           const [allPermissionsRes, rolePermissionsRes] = await Promise.all([
-            getPermissionsFunc({}),
-            getRolesPermissionsFunc({ id: roleId }),
+            getApiPermissionsListFunc({}),
+            getApiRolesPermissionsFunc({ id: roleId }),
           ])
 
           const rolePermissions =
-            rolePermissionsRes.data as PermissionResponseDto[]
+            (rolePermissionsRes.data as PermissionResponseDto[]) || []
+          console.debug(rolePermissions, 'rolePermissions')
+
           const rolePermissionIds = new Set(rolePermissions.map(p => p.id))
 
           const allPermissions =
@@ -102,7 +104,7 @@ export function PermissionAssignDialog({
         .filter(p => p.checked)
         .map(p => p.id)
 
-      await postRolesAssignPermissionsFunc({
+      await postApiRolesAssignPermissionsFunc({
         id: roleId,
         permissionIds: selectedPermissionIds,
       })

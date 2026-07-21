@@ -1,37 +1,37 @@
 /**
- * @description PermissionTreeResponseDto
+ * @description 权限树节点响应
  */
 export interface PermissionTreeResponseDto {
-  /** @description 权限ID */
+  /** @description 权限 ID */
   id: string
   /** @description 权限名称 */
   name: string
-  /** @description 权限类型 */
+  /** @description 权限类型（MENU / BUTTON） */
   type: string
   /** @description 操作动作 */
-  action: any
+  action?: string | null
   /** @description 资源名称 */
-  resource: any
-  /** @description 父权限ID */
-  parentId: any
+  resource?: string | null
+  /** @description 父权限 ID */
+  parentId?: string | null
   /** @description 层级 */
   level: number
-  /** @description 路由路径（菜单用） */
-  path: any
-  /** @description 图标（菜单用） */
-  icon: any
+  /** @description 路由路径 */
+  path?: string | null
+  /** @description 图标 */
+  icon?: string | null
   /** @description 排序号 */
   sort: number
-  /** @description 是否可见 */
+  /** @description 是否可见（0 / 1） */
   visible: number
-  /** @description 状态 */
+  /** @description 状态（0 / 1） */
   status: number
   /** @description 权限描述 */
-  description: any
+  description?: string | null
   /** @description 创建时间 */
   createdAt: string
   /** @description 更新时间 */
   updatedAt: string
-  /** @description 子权限列表 */
-  children: any
+  /** @description 子节点列表 */
+  children?: any
 }

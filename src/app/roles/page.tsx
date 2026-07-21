@@ -16,7 +16,7 @@ import { CreateRoleDialog } from '@/components/roles/create-role-dialog'
 import { EditRoleDialog } from '@/components/roles/edit-role-dialog'
 import { DeleteRoleDialog } from '@/components/roles/delete-role-dialog'
 import { PermissionAssignDialog } from '@/components/roles/permission-assign-dialog'
-import { getRolesFunc } from '@/service'
+import { getApiRolesListFunc } from '@/service'
 import type { RoleResponseDto } from '@/service'
 import type { TableColumn } from '@/components/table/types'
 import { formatDate } from '@/lib/utils'
@@ -185,7 +185,7 @@ export default function RolesPage() {
       queryParams.sortOrder = sorter.order
     }
 
-    const result = await getRolesFunc(queryParams)
+    const result = await getApiRolesListFunc(queryParams)
 
     return {
       data: result.list,

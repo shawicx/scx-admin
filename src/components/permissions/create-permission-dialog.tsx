@@ -23,7 +23,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
-import { postPermissionsFunc, getPermissionsFunc } from '@/service'
+import {
+  postApiPermissionsCreateFunc,
+  getApiPermissionsListFunc,
+} from '@/service'
 import { toast } from '@/components/ui/use-toast'
 import type { PermissionResponseDto } from '@/service'
 
@@ -88,7 +91,7 @@ export function CreatePermissionDialog({
       if (!open) return
       setIsLoadingPermissions(true)
       try {
-        const result = await getPermissionsFunc({ limit: '1000' })
+        const result = await getApiPermissionsListFunc({ limit: '1000' })
         setParentPermissions(result.list)
       } catch (error) {
         console.error('Failed to load permissions:', error)
@@ -102,7 +105,7 @@ export function CreatePermissionDialog({
   const handleSubmit = async (data: CreatePermissionFormValues) => {
     setIsSubmitting(true)
     try {
-      await postPermissionsFunc({
+      await postApiPermissionsCreateFunc({
         name: data.name,
         type: data.type,
         action: data.action || undefined,

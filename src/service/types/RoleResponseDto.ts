@@ -1,16 +1,16 @@
 /**
- * @description RoleResponseDto
+ * @description 角色信息响应
  */
 export interface RoleResponseDto {
-  /** @description 角色ID */
+  /** @description 角色 ID */
   id: string
   /** @description 角色名称 */
   name: string
-  /** @description 角色代码 */
+  /** @description 角色编码 */
   code: string
   /** @description 角色描述 */
-  description: any
-  /** @description 是否为系统内置角色 */
+  description?: string | null
+  /** @description 是否系统内置角色 */
   isSystem: boolean
   /** @description 创建时间 */
   createdAt: string

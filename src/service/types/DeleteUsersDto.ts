@@ -1,7 +1,7 @@
 /**
- * @description DeleteUsersDto
+ * @description 批量删除用户请求
  */
 export interface DeleteUsersDto {
-  /** @description 要删除的用户ID列表（支持批量） */
+  /** @description 用户 ID 列表（ULID，最多 50 个） */
   userIds: string[]
 }

@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
-import { patchUsersToggleStatusFunc } from '@/service'
+import { patchApiUsersToggleStatusFunc } from '@/service'
 import { toast } from '@/components/ui/use-toast'
 
 interface UserStatusSwitchProps {
@@ -40,7 +40,7 @@ export function UserStatusSwitch({
   const performToggle = async (status: boolean) => {
     setIsToggling(true)
     try {
-      await patchUsersToggleStatusFunc({
+      await patchApiUsersToggleStatusFunc({
         userIds,
         isActive: status,
       })

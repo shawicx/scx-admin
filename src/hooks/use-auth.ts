@@ -3,18 +3,18 @@
  * @description: 登录相关
  */
 import {
-  postUsersLoginPasswordFunc,
-  getUsersEncryptionKeyFunc,
-  postUsersLogoutFunc,
-  postUsersLoginFunc,
-  postUsersRegisterFunc,
-  postUsersSendEmailCodeFunc,
+  postApiUsersLoginPasswordFunc,
+  getApiUsersEncryptionKeyFunc,
+  postApiUsersLogoutFunc,
+  postApiUsersLoginFunc,
+  postApiUsersRegisterFunc,
+  postApiUsersSendEmailCodeFunc,
 } from '@/service'
 import type {
-  PostUsersLoginPasswordRequestType,
-  PostUsersLoginPasswordResult,
-  PostUsersLoginRequestType,
-  PostUsersRegisterRequestType,
+  PostApiUsersLoginPasswordRequestType,
+  PostApiUsersLoginPasswordResultType,
+  PostApiUsersLoginRequestType,
+  PostApiUsersRegisterRequestType,
 } from '@/service'
 import { FrontendCrypto } from '@/lib/frontend-crypto'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
@@ -40,17 +40,17 @@ export function useAuth() {
 
   // 密码登录
   const login = async (
-    params: Omit<PostUsersLoginPasswordRequestType, 'keyId'>
+    params: Omit<PostApiUsersLoginPasswordRequestType, 'keyId'>
   ) => {
     try {
       // 获取加密密钥
-      const keyResponse = await getUsersEncryptionKeyFunc({})
+      const keyResponse = await getApiUsersEncryptionKeyFunc({})
       const { key, keyId } = keyResponse || {}
       // 加密密码
       const encryptedPassword = FrontendCrypto.encrypt(params.password, key)
 
       // 调用登录接口，直接返回用户数据
-      const user = await postUsersLoginPasswordFunc({
+      const user = await postApiUsersLoginPasswordFunc({
         ...params,
         password: encryptedPassword,
         keyId,
@@ -73,10 +73,10 @@ export function useAuth() {
   }
 
   // 验证码登录
-  const loginWithCode = async (params: PostUsersLoginRequestType) => {
+  const loginWithCode = async (params: PostApiUsersLoginRequestType) => {
     try {
       // 调用登录接口，直接返回用户数据
-      const user = await postUsersLoginFunc(params)
+      const user = await postApiUsersLoginFunc(params)
 
       // 将用户信息和访问令牌分别存储到 IndexDB
       try {
@@ -95,11 +95,11 @@ export function useAuth() {
 
   // 注册
   const register = async (
-    params: Omit<PostUsersRegisterRequestType, 'name'>
+    params: Omit<PostApiUsersRegisterRequestType, 'name'>
   ) => {
     try {
       // 调用注册接口，直接返回用户数据
-      const user = await postUsersRegisterFunc({
+      const user = await postApiUsersRegisterFunc({
         ...params,
         name: params.email, // 使用邮箱作为用户名
       })
@@ -126,7 +126,7 @@ export function useAuth() {
   const sendVerificationCode = async (email: string) => {
     try {
       // 调用发送验证码接口
-      return await postUsersSendEmailCodeFunc({ email })
+      return await postApiUsersSendEmailCodeFunc({ email })
     } catch (error) {
       console.error('Failed to send verification code:', error)
       throw Error('发送验证码失败')
@@ -135,18 +135,18 @@ export function useAuth() {
 
   const logout = async () => {
     // 先获取用户数据用于调用注销接口
-    let userData: PostUsersLoginPasswordResult | null = null
+    let userData: PostApiUsersLoginPasswordResultType | null = null
     try {
       userData = (await indexedDB.getItem(
         'user'
-      )) as PostUsersLoginPasswordResult
+      )) as PostApiUsersLoginPasswordResultType
     } catch (error) {
       console.error('Failed to get user data from IndexedDB:', error)
     }
 
     // 尝试调用后端注销接口，但不阻塞本地清理
     if (userData?.id) {
-      postUsersLogoutFunc({ userId: userData.id }).catch(error => {
+      postApiUsersLogoutFunc({ userId: userData.id }).catch(error => {
         console.warn(
           'Logout API call failed, but continuing with local cleanup:',
           error

@@ -1,15 +1,15 @@
 /**
- * @description PermissionMenuTreeDto
+ * @description 菜单树节点响应
  */
 export interface PermissionMenuTreeDto {
-  /** @description 权限ID */
+  /** @description 菜单 ID */
   id: string
-  /** @description 权限名称 */
+  /** @description 菜单名称 */
   name: string
   /** @description 路由路径 */
-  path: any
+  path?: string | null
   /** @description 图标 */
-  icon: any
+  icon?: string | null
   /** @description 子菜单列表 */
-  children: any
+  children?: any
 }

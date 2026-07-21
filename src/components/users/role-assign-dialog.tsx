@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
-import { getUsersRolesFunc, getRolesFunc } from '@/service'
+import { getApiUsersRolesFunc, getApiRolesListFunc } from '@/service'
 import { toast } from '@/components/ui/use-toast'
 
 interface Role {
@@ -47,8 +47,8 @@ export function RoleAssignDialog({
     setIsLoading(true)
     try {
       const [rolesRes, userRolesRes] = await Promise.all([
-        getRolesFunc({}),
-        getUsersRolesFunc({ id: userId }),
+        getApiRolesListFunc({}),
+        getApiUsersRolesFunc({ id: userId }),
       ])
       setAllRoles(rolesRes.list)
       const userRoles = userRolesRes?.data || []

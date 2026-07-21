@@ -1,9 +1,9 @@
 /**
- * @description AssignRolesDto
+ * @description 批量分配角色请求
  */
 export interface AssignRolesDto {
-  /** @description 角色ID列表 */
+  /** @description 角色 ID 列表 */
   roleIds: string[]
-  /** @description 用户ID */
+  /** @description 用户 ID */
   userId: string
 }

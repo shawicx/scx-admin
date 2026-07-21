@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { deleteRolesFunc } from '@/service'
+import { deleteApiRolesDeleteFunc } from '@/service'
 import { toast } from '@/components/ui/use-toast'
 import { AlertCircle } from 'lucide-react'
 
@@ -34,7 +34,7 @@ export function DeleteRoleDialog({
   const handleDelete = async () => {
     setIsSubmitting(true)
     try {
-      const deletePromises = roleIds.map(id => deleteRolesFunc({ id }))
+      const deletePromises = roleIds.map(id => deleteApiRolesDeleteFunc({ id }))
       await Promise.all(deletePromises)
       toast({
         title: '成功',
