@@ -236,7 +236,10 @@ export default function PermissionsPage() {
       queryParams.sortOrder = sorter.order
     }
 
-    const result = await getApiPermissionsListFunc(queryParams)
+    const result = (await getApiPermissionsListFunc(queryParams)) as {
+      list: PermissionResponseDto[]
+      total: number
+    }
 
     return {
       data: result.list,

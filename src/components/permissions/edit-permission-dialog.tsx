@@ -93,7 +93,9 @@ export function EditPermissionDialog({
     if (!open) return
     setIsLoadingPermissions(true)
     try {
-      const result = await getApiPermissionsListFunc({ limit: '1000' })
+      const result = (await getApiPermissionsListFunc({
+        limit: '1000',
+      })) as { list: PermissionResponseDto[] }
       setParentPermissions(
         result.list.filter(p => p.id !== permissionId && p.type === 'MENU')
       )

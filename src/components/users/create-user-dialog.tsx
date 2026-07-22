@@ -61,7 +61,9 @@ export function CreateUserDialog({
   const loadRoles = async () => {
     setIsLoading(true)
     try {
-      const result = await getApiRolesListFunc({})
+      const result = (await getApiRolesListFunc({})) as {
+        list?: Array<{ id: string; name: string; code: string }>
+      }
       setRoles(result.list || [])
     } catch (error) {
       console.error('Failed to load roles:', error)

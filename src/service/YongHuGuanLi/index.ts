@@ -1,5 +1,9 @@
 import { RequestConfig, request } from '@/service/request'
-import type { UserRoleResponseDto, UserListItemDto } from '@/service/types'
+import type {
+  JsonNode,
+  UserRoleResponseDto,
+  UserListItemDto,
+} from '@/service/types'
 
 /**
  * @description 发送登录验证码

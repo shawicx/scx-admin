@@ -2,11 +2,7 @@ import { ReactNode } from 'react'
 
 // 搜索表单字段类型
 export type SearchFieldType =
-  | 'input'
-  | 'select'
-  | 'number'
-  | 'date'
-  | 'dateRange'
+  'input' | 'select' | 'number' | 'date' | 'dateRange'
 
 // 基础搜索配置
 export interface BaseSearchProps {

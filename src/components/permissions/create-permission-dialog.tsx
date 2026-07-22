@@ -91,7 +91,9 @@ export function CreatePermissionDialog({
       if (!open) return
       setIsLoadingPermissions(true)
       try {
-        const result = await getApiPermissionsListFunc({ limit: '1000' })
+        const result = (await getApiPermissionsListFunc({
+          limit: '1000',
+        })) as { list: PermissionResponseDto[] }
         setParentPermissions(result.list)
       } catch (error) {
         console.error('Failed to load permissions:', error)

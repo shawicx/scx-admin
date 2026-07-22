@@ -62,17 +62,18 @@ export function PermissionAssignDialog({
 
           const rolePermissionIds = new Set(rolePermissions.map(p => p.id))
 
-          const allPermissions =
-            (allPermissionsRes as any).data?.list || allPermissionsRes.list
+          const allPermissions = (
+            (allPermissionsRes as { list?: PermissionResponseDto[] }).list || []
+          ).map(p => ({
+            id: p.id,
+            name: p.name,
+            action: p.action ?? '',
+            resource: p.resource ?? '',
+            description: p.description ?? undefined,
+            checked: rolePermissionIds.has(p.id),
+          }))
 
-          const permissionsWithCheck = allPermissions.map(
-            (p: PermissionResponseDto) => ({
-              ...p,
-              checked: rolePermissionIds.has(p.id),
-            })
-          )
-
-          setPermissions(permissionsWithCheck)
+          setPermissions(allPermissions)
         } catch (error) {
           console.error('Failed to load permissions:', error)
           toast({

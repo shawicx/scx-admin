@@ -185,7 +185,10 @@ export default function RolesPage() {
       queryParams.sortOrder = sorter.order
     }
 
-    const result = await getApiRolesListFunc(queryParams)
+    const result = (await getApiRolesListFunc(queryParams)) as {
+      list: RoleResponseDto[]
+      total: number
+    }
 
     return {
       data: result.list,

@@ -1,3 +1,5 @@
+import type { JsonNode } from '@/service/types/index'
+
 /**
  * @description 用户信息响应
  */
