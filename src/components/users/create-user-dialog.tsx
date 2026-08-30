@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { postApiUsersCreateFunc } from '@/service'
@@ -165,11 +166,10 @@ export function CreateUserDialog({
             <Label htmlFor="password">
               密码 <span className="text-red-500">*</span>
             </Label>
-            <Input
+            <PasswordInput
               id="password"
               {...form.register('password')}
               placeholder="请输入密码（至少6个字符）"
-              type="password"
             />
             {form.formState.errors.password && (
               <p className="text-sm text-red-500">
