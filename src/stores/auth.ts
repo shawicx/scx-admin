@@ -4,7 +4,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useAuth as useAuthHook } from '@/hooks/use-auth'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
-import type { PostApiUsersLoginPasswordResultType } from '@/service'
+import type { PostApiUsersLoginPasswordResultType } from '@/service/identity'
 
 interface User {
   id: string

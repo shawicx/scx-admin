@@ -1,5 +1,8 @@
 allowBuilds:
   sharp: true
 
+minimumReleaseAgeExclude:
+  - '@scxfe/api-tool@0.6.3'
+
 packages:
   - .

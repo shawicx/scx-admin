@@ -26,9 +26,9 @@ import { Switch } from '@/components/ui/switch'
 import {
   postApiPermissionsCreateFunc,
   getApiPermissionsListFunc,
-} from '@/service'
+} from '@/service/rbac'
 import { toast } from '@/components/ui/use-toast'
-import type { PermissionResponseDto } from '@/service'
+import type { PermissionResponseDto } from '@/service/rbac'
 
 const createPermissionSchema = z.object({
   name: z

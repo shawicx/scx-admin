@@ -17,8 +17,8 @@ import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import { postApiUsersCreateFunc } from '@/service'
-import { getApiRolesListFunc } from '@/service'
+import { postApiUsersCreateFunc } from '@/service/identity'
+import { getApiRolesListFunc } from '@/service/rbac'
 import { toast } from '@/components/ui/use-toast'
 
 const createUserSchema = z.object({

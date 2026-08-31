@@ -1,107 +1,55 @@
 import { defineConfig } from '@scxfe/api-tool'
 
 export default defineConfig({
-  source: 'https://api.apifox.com/v1/projects/6997172/export-openapi',
-  token: 'APS-bEl8yPD58wfRzsXXkx4psEekqm4k2YhD',
-  transformPath: path => `/api${path}`,
-
-  // 是否生成 API 请求方法
-  generateApi: true,
-
-  // 是否生成类型定义（在接口文件中）
-  generateTypes: true,
-
-  // 类型生成格式：控制接口文件中的类型定义格式
+  // ========== 公共配置（所有服务默认继承）==========
+  // 公共根输出目录（所有服务的输出都位于其下的子文件夹中）
+  baseOutputDir: 'src/service',
+  // 类型生成格式：'typescript' | 'zod'
   // - 'typescript': 生成 TypeScript 类型定义（编译时类型检查）
   // - 'zod': 生成 Zod Schema（运行时验证）
-  // 注意：此选项仅控制接口文件中的类型格式，不影响独立的 Schema 文件生成
   typesFormat: 'typescript',
-  // 自定义命名策略示例（完全覆盖默认的命名生成逻辑）
-  // namingStrategy: {
-  //   // 自定义接口名称生成
-  //   // 例如：POST /api/ai/completion → PostAiCompletion
-  //   interfaceName: (info) => {
-  //     const method = info.method.charAt(0).toUpperCase() + info.method.slice(1).toLowerCase();
-  //     // 移除路径参数，清理路径
-  //     const pathName = info.path
-  //       .replace(/\{[^}]+\}/g, '')
-  //       .replace(/^\//, '')
-  //       .replace(/^api-?/i, '')
-  //       .replace(/\//g, '-')
-  //       .replace(/^-+|-+$/g, '');
+  // 是否生成 API 请求方法
+  generateApi: true,
+  // 是否生成类型定义（在接口文件中）
+  generateTypes: true,
+  // 目标语言
+  target: 'typescript',
+  // 缩进大小
+  indentSize: 2,
+  // 是否生成注释
+  comment: true,
+  // 并发写入数量（用于文件生成的并发控制）
+  concurrency: 5,
+  transformPath: path => `/api${path}`,
 
-  //     // 转换为 PascalCase
-  //     const words = pathName.split('-');
-  //     const pascalCase = words
-  //       .map((word) =>
-  //         /[A-Z0-9]/.test(word.charAt(0)) ? word : word.charAt(0).toUpperCase() + word.slice(1),
-  //       )
-  //       .join('');
-
-  //     return `${method}${pascalCase}`;
-  //   },
-
-  //   // 自定义函数名称生成
-  //   // 例如：POST /api/ai/completion → postAiCompletionApi
-  //   functionName: (info) => {
-  //     const method = info.method.toLowerCase();
-  //     const pathName = info.path
-  //       .replace(/\{[^}]+\}/g, '')
-  //       .replace(/^\//, '')
-  //       .replace(/^api-?/i, '')
-  //       .replace(/\//g, '-')
-  //       .replace(/^-+|-+$/g, '');
-
-  //     const words = pathName.split('-');
-  //     const pascalCase = words
-  //       .map((word) =>
-  //         /[A-Z0-9]/.test(word.charAt(0)) ? word : word.charAt(0).toUpperCase() + word.slice(1),
-  //       )
-  //       .join('');
-
-  //     return `${method}${pascalCase}Func`;
-  //   },
-
-  //   // 自定义请求类型名称生成
-  //   // 例如：POST /api/ai/completion → PostAiCompletionRequestType
-  //   requestTypeName: (info) => {
-  //     const method = info.method.charAt(0).toUpperCase() + info.method.slice(1).toLowerCase();
-  //     const pathName = info.path
-  //       .replace(/\{[^}]+\}/g, '')
-  //       .replace(/^\//, '')
-  //       .replace(/^api-?/i, '')
-  //       .replace(/\//g, '-')
-  //       .replace(/^-+|-+$/g, '');
-
-  //     const words = pathName.split('-');
-  //     const pascalCase = words
-  //       .map((word) =>
-  //         /[A-Z0-9]/.test(word.charAt(0)) ? word : word.charAt(0).toUpperCase() + word.slice(1),
-  //       )
-  //       .join('');
-
-  //     return `${method}${pascalCase}RequestType`;
-  //   },
-
-  //   // 自定义响应类型名称生成
-  //   // 例如：POST /api/ai/completion → PostAiCompletionResult
-  //   responseTypeName: (info) => {
-  //     const method = info.method.charAt(0).toUpperCase() + info.method.slice(1).toLowerCase();
-  //     const pathName = info.path
-  //       .replace(/\{[^}]+\}/g, '')
-  //       .replace(/^\//, '')
-  //       .replace(/^api-?/i, '')
-  //       .replace(/\//g, '-')
-  //       .replace(/^-+|-+$/g, '');
-
-  //     const words = pathName.split('-');
-  //     const pascalCase = words
-  //       .map((word) =>
-  //         /[A-Z0-9]/.test(word.charAt(0)) ? word : word.charAt(0).toUpperCase() + word.slice(1),
-  //       )
-  //       .join('');
-
-  //     return `${method}${pascalCase}Result`;
-  //   },
-  // },
+  // ========== 服务列表 ==========
+  // 每个服务独立生成到各自的子文件夹（默认 folder = name），互不干扰
+  // source/token 下沉到服务级；其余字段可在此覆盖公共配置
+  services: [
+    {
+      name: 'notification',
+      // folder 省略时默认取 name（输出到 src/service/apifox-demo）
+      source: 'https://api.apifox.com/v1/projects/8779774/export-openapi',
+      token: 'APS-bEl8yPD58wfRzsXXkx4psEekqm4k2YhD',
+    },
+    // 多服务示例：微服务场景
+    {
+      name: 'rbac',
+      // folder 省略时默认取 name（输出到 src/service/apifox-demo）
+      source: 'https://api.apifox.com/v1/projects/8779779/export-openapi',
+      token: 'APS-bEl8yPD58wfRzsXXkx4psEekqm4k2YhD',
+    },
+    {
+      name: 'identity',
+      // folder 省略时默认取 name（输出到 src/service/apifox-demo）
+      source: 'https://api.apifox.com/v1/projects/8779801/export-openapi',
+      token: 'APS-bEl8yPD58wfRzsXXkx4psEekqm4k2YhD',
+    },
+    {
+      name: 'file',
+      // folder 省略时默认取 name（输出到 src/service/apifox-demo）
+      source: 'https://api.apifox.com/v1/projects/8779787/export-openapi',
+      token: 'APS-bEl8yPD58wfRzsXXkx4psEekqm4k2YhD',
+    },
+  ],
 })

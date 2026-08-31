@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { deleteApiPermissionsDeleteFunc } from '@/service'
+import { deleteApiPermissionsDeleteFunc } from '@/service/rbac'
 import { toast } from '@/components/ui/use-toast'
 import { AlertCircle } from 'lucide-react'
 

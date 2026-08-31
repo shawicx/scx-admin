@@ -13,7 +13,8 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
-import { getApiUsersRolesFunc, getApiRolesListFunc } from '@/service'
+import { getApiUsersRolesFunc } from '@/service/identity'
+import { getApiRolesListFunc } from '@/service/rbac'
 import { toast } from '@/components/ui/use-toast'
 
 interface Role {

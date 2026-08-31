@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
-import { patchApiUsersToggleStatusFunc } from '@/service'
+import { patchApiUsersToggleStatusFunc } from '@/service/identity'
 import { toast } from '@/components/ui/use-toast'
 
 interface UserStatusSwitchProps {

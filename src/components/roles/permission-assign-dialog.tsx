@@ -16,9 +16,9 @@ import {
   getApiPermissionsListFunc,
   getApiRolesPermissionsFunc,
   postApiRolesAssignPermissionsFunc,
-} from '@/service'
+} from '@/service/rbac'
 import { toast } from '@/components/ui/use-toast'
-import type { PermissionResponseDto } from '@/service'
+import type { PermissionResponseDto } from '@/service/rbac'
 
 interface PermissionAssignDialogProps {
   open: boolean
@@ -57,7 +57,8 @@ export function PermissionAssignDialog({
           ])
 
           const rolePermissions =
-            (rolePermissionsRes.data as PermissionResponseDto[]) || []
+            (rolePermissionsRes.data as unknown as PermissionResponseDto[]) ||
+            []
           console.debug(rolePermissions, 'rolePermissions')
 
           const rolePermissionIds = new Set(rolePermissions.map(p => p.id))

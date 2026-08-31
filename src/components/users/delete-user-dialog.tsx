@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { deleteApiUsersBatchDeleteFunc } from '@/service'
+import { deleteApiUsersBatchDeleteFunc } from '@/service/identity'
 import { toast } from '@/components/ui/use-toast'
 
 interface DeleteUserDialogProps {

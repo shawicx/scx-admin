@@ -9,13 +9,13 @@ import {
   postApiUsersLoginFunc,
   postApiUsersRegisterFunc,
   postApiUsersSendEmailCodeFunc,
-} from '@/service'
+} from '@/service/identity'
 import type {
   PostApiUsersLoginPasswordRequestType,
   PostApiUsersLoginPasswordResultType,
   PostApiUsersLoginRequestType,
   PostApiUsersRegisterRequestType,
-} from '@/service'
+} from '@/service/identity'
 import { FrontendCrypto } from '@/lib/frontend-crypto'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
 

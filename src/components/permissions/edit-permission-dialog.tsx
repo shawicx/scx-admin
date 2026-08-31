@@ -26,9 +26,9 @@ import {
   putApiPermissionsUpdateFunc,
   getApiPermissionsDetailFunc,
   getApiPermissionsListFunc,
-} from '@/service'
+} from '@/service/rbac'
 import { toast } from '@/components/ui/use-toast'
-import type { PermissionResponseDto } from '@/service'
+import type { PermissionResponseDto } from '@/service/rbac'
 
 const editPermissionSchema = z.object({
   name: z
