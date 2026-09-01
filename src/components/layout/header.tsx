@@ -28,6 +28,7 @@ const routeMap: Record<string, string> = {
   '/users': '用户管理',
   '/roles': '角色管理',
   '/permissions': '权限管理',
+  '/files': '文件管理',
   '/login': '登录',
   '/register': '注册',
 }

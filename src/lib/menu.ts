@@ -1,4 +1,11 @@
-import { LucideIcon, Home, Users, UserCog, Shield } from 'lucide-react'
+import {
+  LucideIcon,
+  Home,
+  Users,
+  UserCog,
+  Shield,
+  FolderOpen,
+} from 'lucide-react'
 
 export interface MenuItem {
   id: string
@@ -34,5 +41,11 @@ export const menuItems: MenuItem[] = [
     title: '权限管理',
     icon: Shield,
     href: '/permissions',
+  },
+  {
+    id: 'files',
+    title: '文件管理',
+    icon: FolderOpen,
+    href: '/files',
   },
 ]
