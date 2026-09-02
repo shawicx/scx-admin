@@ -5,6 +5,8 @@ import {
   UserCog,
   Shield,
   FolderOpen,
+  ClipboardList,
+  LogIn,
 } from 'lucide-react'
 
 export interface MenuItem {
@@ -47,5 +49,17 @@ export const menuItems: MenuItem[] = [
     title: '文件管理',
     icon: FolderOpen,
     href: '/files',
+  },
+  {
+    id: 'operation-logs',
+    title: '操作日志',
+    icon: ClipboardList,
+    href: '/logs/operations',
+  },
+  {
+    id: 'login-logs',
+    title: '登录日志',
+    icon: LogIn,
+    href: '/logs/logins',
   },
 ]
