@@ -9,6 +9,7 @@ import {
   postApiUsersLoginFunc,
   postApiUsersRegisterFunc,
   postApiUsersSendEmailCodeFunc,
+  postApiUsersSendLoginCodeFunc,
 } from '@/service/identity'
 import type {
   PostApiUsersLoginPasswordRequestType,
@@ -32,6 +33,18 @@ const removeAuthCookie = () => {
   if (typeof document !== 'undefined') {
     // eslint-disable-next-line unicorn/no-document-cookie
     document.cookie = 'accessToken=; path=/; max-age=0; SameSite=lax'
+  }
+}
+
+// 清除本地登录凭证（IndexedDB + Cookie），供登出与 token 失效拦截器共用
+export const clearLocalAuth = async () => {
+  try {
+    const indexedDB = IndexedDBManager.getInstance()
+    await indexedDB.removeItem('user')
+    await indexedDB.removeItem('accessToken')
+    removeAuthCookie()
+  } catch (error) {
+    console.error('Failed to clear local auth data:', error)
   }
 }
 
@@ -122,7 +135,7 @@ export function useAuth() {
     }
   }
 
-  // 发送验证码
+  // 发送验证码（注册用）
   const sendVerificationCode = async (email: string) => {
     try {
       // 调用发送验证码接口
@@ -130,6 +143,16 @@ export function useAuth() {
     } catch (error) {
       console.error('Failed to send verification code:', error)
       throw Error('发送验证码失败')
+    }
+  }
+
+  // 发送登录验证码
+  const sendLoginCode = async (email: string) => {
+    try {
+      return await postApiUsersSendLoginCodeFunc({ email })
+    } catch (error) {
+      console.error('Failed to send login code:', error)
+      throw Error('发送登录验证码失败')
     }
   }
 
@@ -155,14 +178,7 @@ export function useAuth() {
     }
 
     // 无论后端 API 是否成功，都清除本地凭证
-    try {
-      await indexedDB.removeItem('user')
-      await indexedDB.removeItem('accessToken')
-      // 同时删除 cookie
-      removeAuthCookie()
-    } catch (error) {
-      console.error('Failed to remove user data from IndexedDB:', error)
-    }
+    await clearLocalAuth()
   }
 
   // 获取访问令牌
@@ -191,6 +207,7 @@ export function useAuth() {
     loginWithCode,
     register,
     sendVerificationCode,
+    sendLoginCode,
     logout,
     getAccessToken,
     isAuthenticated,

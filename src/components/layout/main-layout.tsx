@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { Sidebar } from './sidebar'
 import { Header } from './header'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
+import '@/lib/auth-interceptor'
 
 interface MainLayoutProps {
   children: React.ReactNode

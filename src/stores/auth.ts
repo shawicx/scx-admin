@@ -19,6 +19,7 @@ interface AuthState {
   loginWithCode: (email: string, code: string) => Promise<void>
   register: (email: string, password: string, code: string) => Promise<void>
   sendVerificationCode: (email: string) => Promise<void>
+  sendLoginCode: (email: string) => Promise<void>
   logout: () => Promise<void>
   checkAuthStatus: () => Promise<void>
 }
@@ -74,6 +75,11 @@ export const useAuth = create<AuthState>()(
       sendVerificationCode: async (email: string) => {
         const { sendVerificationCode: sendCodeHook } = useAuthHook()
         await sendCodeHook(email)
+      },
+
+      sendLoginCode: async (email: string) => {
+        const { sendLoginCode: sendLoginCodeHook } = useAuthHook()
+        await sendLoginCodeHook(email)
       },
 
       logout: async () => {

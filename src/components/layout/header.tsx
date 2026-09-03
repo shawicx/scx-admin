@@ -32,6 +32,7 @@ const routeMap: Record<string, string> = {
   '/logs': '日志管理',
   '/logs/operations': '操作日志',
   '/logs/logins': '登录日志',
+  '/profile': '个人资料',
   '/login': '登录',
   '/register': '注册',
 }
@@ -117,7 +118,7 @@ export function Header() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push('/profile')}>
               <User className="mr-2 h-4 w-4" />
               <span>个人资料</span>
             </DropdownMenuItem>

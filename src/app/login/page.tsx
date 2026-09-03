@@ -31,9 +31,10 @@ import { IndexedDBManager } from '@/lib/indexeddb-manager'
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { login, loginWithCode } = useAuthHook()
+  const { login, loginWithCode, sendLoginCode } = useAuthHook()
   const { count, isActive, start } = useCountdown(60)
   const [isLoading, setIsLoading] = useState(false)
+  const [isSending, setIsSending] = useState(false)
 
   const passwordForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -110,10 +111,14 @@ function LoginForm() {
       return
     }
 
+    setIsSending(true)
     try {
+      await sendLoginCode(email)
       start()
     } catch (error) {
       console.error('发送验证码失败:', error)
+    } finally {
+      setIsSending(false)
     }
   }
 
@@ -207,10 +212,14 @@ function LoginForm() {
                       type="button"
                       variant="outline"
                       onClick={handleSendCode}
-                      disabled={isActive}
+                      disabled={isActive || isSending}
                       className="whitespace-nowrap"
                     >
-                      {isActive ? `${count}s` : '发送验证码'}
+                      {isSending
+                        ? '发送中...'
+                        : isActive
+                          ? `${count}s`
+                          : '发送验证码'}
                     </Button>
                   </div>
                   {codeForm.formState.errors.code && (
