@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { RefreshCw } from 'lucide-react'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -120,6 +120,7 @@ export default function ProfilePage() {
           <CardContent className="space-y-6">
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16">
+                <AvatarImage src="/assets/avatar.png" alt="默认头像" />
                 <AvatarFallback className="text-xl">
                   {displayName.slice(0, 1).toUpperCase()}
                 </AvatarFallback>

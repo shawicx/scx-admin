@@ -4,4 +4,3 @@
  */
 export * from './use-auth'
 export * from './use-countdown'
-export * from './use-theme'

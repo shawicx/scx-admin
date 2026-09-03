@@ -19,7 +19,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { useTheme } from '@/hooks/use-theme'
+import { useTheme } from '@/stores/theme'
 import { useAuth } from '@/stores/auth'
 import { useRouter } from 'next/navigation'
 
@@ -39,7 +39,7 @@ const routeMap: Record<string, string> = {
 
 export function Header() {
   const pathname = usePathname()
-  const { theme, setTheme } = useTheme()
+  const { setTheme } = useTheme()
   const { logout } = useAuth()
   const router = useRouter()
 
@@ -65,7 +65,8 @@ export function Header() {
   const breadcrumbs = generateBreadcrumbs()
 
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light')
+    const isDark = document.documentElement.classList.contains('dark')
+    setTheme(isDark ? 'light' : 'dark')
   }
 
   return (
@@ -98,11 +99,8 @@ export function Header() {
           onClick={toggleTheme}
           className="h-9 w-9"
         >
-          {theme === 'light' ? (
-            <Moon className="h-4 w-4" />
-          ) : (
-            <Sun className="h-4 w-4" />
-          )}
+          <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">切换主题</span>
         </Button>
 
