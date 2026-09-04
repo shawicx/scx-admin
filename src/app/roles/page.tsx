@@ -198,25 +198,6 @@ export default function RolesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">角色管理</h1>
-          <p className="text-muted-foreground">管理系统中的所有角色</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {selectedRoleIds.length > 0 && (
-            <Button variant="destructive" onClick={handleBulkDelete}>
-              <Trash2 className="mr-2 h-4 w-4" />
-              删除选中 ({selectedRoleIds.length})
-            </Button>
-          )}
-          <Button onClick={() => setCreateDialogOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            添加角色
-          </Button>
-        </div>
-      </div>
-
       <DataTable
         columns={columns}
         loadData={loadData}
@@ -236,6 +217,20 @@ export default function RolesPage() {
             <span className="text-sm text-muted-foreground">
               已选择 {selectedRoleIds.length} 项
             </span>
+          ),
+          actions: (
+            <div className="flex items-center gap-2">
+              {selectedRoleIds.length > 0 && (
+                <Button variant="destructive" onClick={handleBulkDelete}>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  删除选中 ({selectedRoleIds.length})
+                </Button>
+              )}
+              <Button onClick={() => setCreateDialogOpen(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                添加角色
+              </Button>
+            </div>
           ),
         }}
       />

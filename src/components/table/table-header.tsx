@@ -22,7 +22,7 @@ export function TableHeader({
   }
 
   return (
-    <div className={cn('flex items-center justify-between mb-4', className)}>
+    <div className={cn('flex items-center justify-between', className)}>
       {/* 左侧：统计信息 */}
       <div className="flex-1">{statistics}</div>
 

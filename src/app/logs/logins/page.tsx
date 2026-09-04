@@ -179,13 +179,6 @@ export default function LoginLogsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">登录日志</h1>
-        <p className="text-muted-foreground">
-          查看系统中的所有登录记录，包含登录类型与失败原因
-        </p>
-      </div>
-
       <DataTable
         columns={columns}
         loadData={loadData}

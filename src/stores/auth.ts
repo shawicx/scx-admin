@@ -10,6 +10,11 @@ interface User {
   id: string
   email: string
   name?: string
+  avatar?: string | null
+}
+
+interface StoredUser extends PostApiUsersLoginPasswordResultType {
+  avatar?: string | null
 }
 
 interface AuthState {
@@ -94,7 +99,7 @@ export const useAuth = create<AuthState>()(
           const token = await indexedDB.getItem('accessToken')
           const userData = (await indexedDB.getItem(
             'user'
-          )) as PostApiUsersLoginPasswordResultType | null
+          )) as StoredUser | null
 
           if (token && userData) {
             set({
@@ -102,6 +107,7 @@ export const useAuth = create<AuthState>()(
                 id: userData.id,
                 email: userData.email,
                 name: userData.name,
+                avatar: userData.avatar,
               },
               isAuthenticated: true,
             })

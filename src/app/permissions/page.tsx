@@ -249,25 +249,6 @@ export default function PermissionsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">权限管理</h1>
-          <p className="text-muted-foreground">管理系统中的所有权限</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {selectedPermissionIds.length > 0 && (
-            <Button variant="destructive" onClick={handleBulkDelete}>
-              <Trash2 className="mr-2 h-4 w-4" />
-              删除选中 ({selectedPermissionIds.length})
-            </Button>
-          )}
-          <Button onClick={() => setCreateDialogOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            添加权限
-          </Button>
-        </div>
-      </div>
-
       <DataTable
         columns={columns}
         loadData={loadData}
@@ -289,6 +270,20 @@ export default function PermissionsPage() {
             <span className="text-sm text-muted-foreground">
               已选择 {selectedPermissionIds.length} 项
             </span>
+          ),
+          actions: (
+            <div className="flex items-center gap-2">
+              {selectedPermissionIds.length > 0 && (
+                <Button variant="destructive" onClick={handleBulkDelete}>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  删除选中 ({selectedPermissionIds.length})
+                </Button>
+              )}
+              <Button onClick={() => setCreateDialogOpen(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                添加权限
+              </Button>
+            </div>
           ),
         }}
       />

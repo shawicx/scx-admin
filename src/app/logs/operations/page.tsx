@@ -199,13 +199,6 @@ export default function OperationLogsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">操作日志</h1>
-        <p className="text-muted-foreground">
-          查看系统中的所有操作记录，包含请求参数与耗时信息
-        </p>
-      </div>
-
       <DataTable
         columns={columns}
         loadData={loadData}

@@ -265,25 +265,6 @@ export default function FilesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">文件管理</h1>
-          <p className="text-muted-foreground">管理系统中的所有上传文件</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {selectedFileIds.length > 0 && (
-            <Button variant="destructive" onClick={handleBulkDelete}>
-              <Trash2 className="mr-2 h-4 w-4" />
-              删除选中 ({selectedFileIds.length})
-            </Button>
-          )}
-          <Button onClick={() => setUploadDialogOpen(true)}>
-            <Upload className="mr-2 h-4 w-4" />
-            上传文件
-          </Button>
-        </div>
-      </div>
-
       <DataTable
         columns={columns}
         loadData={loadData}
@@ -303,6 +284,20 @@ export default function FilesPage() {
             <span className="text-sm text-muted-foreground">
               已选择 {selectedFileIds.length} 项
             </span>
+          ),
+          actions: (
+            <div className="flex items-center gap-2">
+              {selectedFileIds.length > 0 && (
+                <Button variant="destructive" onClick={handleBulkDelete}>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  删除选中 ({selectedFileIds.length})
+                </Button>
+              )}
+              <Button onClick={() => setUploadDialogOpen(true)}>
+                <Upload className="mr-2 h-4 w-4" />
+                上传文件
+              </Button>
+            </div>
           ),
         }}
       />

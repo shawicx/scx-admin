@@ -40,7 +40,7 @@ const routeMap: Record<string, string> = {
 export function Header() {
   const pathname = usePathname()
   const { setTheme } = useTheme()
-  const { logout } = useAuth()
+  const { logout, user } = useAuth()
   const router = useRouter()
 
   const handleLogout = async () => {
@@ -108,7 +108,10 @@ export function Header() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-9 w-9 rounded-full">
               <Avatar className="h-9 w-9">
-                <AvatarImage src={'/assets/avatar.png'} alt="用户头像" />
+                <AvatarImage
+                  src={user?.avatar || '/assets/avatar.png'}
+                  alt="用户头像"
+                />
                 <AvatarFallback>
                   <User className="h-4 w-4" />
                 </AvatarFallback>
