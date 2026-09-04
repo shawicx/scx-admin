@@ -33,5 +33,5 @@ export interface PermissionTreeResponseDto {
   /** @description 更新时间 */
   updatedAt: string
   /** @description 子节点列表 */
-  children?: any
+  children?: PermissionTreeResponseDto[] | null
 }

@@ -11,5 +11,5 @@ export interface PermissionMenuTreeDto {
   /** @description 图标 */
   icon?: string | null
   /** @description 子菜单列表 */
-  children?: any
+  children?: PermissionMenuTreeDto[] | null
 }

@@ -1,4 +1,4 @@
-import type { OperationLogResponseDto } from '@/service/identity/types/index'
+import type { OperationLogResponseDto } from '@/service/identity/types/OperationLogResponseDto'
 
 /**
  * @description 操作日志列表响应

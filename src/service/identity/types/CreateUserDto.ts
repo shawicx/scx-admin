@@ -11,5 +11,5 @@ export interface CreateUserDto {
   /** @description 是否启用 */
   isActive?: boolean
   /** @description 初始分配的角色 ID 列表（最多 10 个） */
-  roleIds?: any
+  roleIds?: string[] | null
 }

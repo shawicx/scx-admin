@@ -1,4 +1,4 @@
-import type { UserListItemDto } from '@/service/identity/types/index'
+import type { UserListItemDto } from '@/service/identity/types/UserListItemDto'
 
 /**
  * @description 用户列表响应

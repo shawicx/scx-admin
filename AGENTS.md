@@ -6,16 +6,16 @@
 
 ### 开发
 
-- `npm run dev` - 启动开发服务器（端口 3369）
-- `npm run build` - 构建生产版本
-- `npm run start` - 启动生产服务器
+- `bun run dev` - 启动开发服务器（端口 3369）
+- `bun run build` - 构建生产版本
+- `bun run start` - 启动生产服务器
 
 ### Lint 和格式化
 
-- `npm run lint` - 使用 oxlint 检查代码
-- `npm run lint:fix` - 自动修复 oxlint 问题
-- `npm run format` - 使用 prettier 格式化代码
-- `npm run format:check` - 检查代码格式
+- `bun run lint` - 使用 oxlint 检查代码
+- `bun run lint:fix` - 自动修复 oxlint 问题
+- `bun run format` - 使用 prettier 格式化代码
+- `bun run format:check` - 检查代码格式
 
 ### 测试
 

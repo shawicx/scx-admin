@@ -1,4 +1,5 @@
 import { RequestConfig, request } from '@/service/request'
+import type { JsonValue } from '@/service/identity/types'
 
 /**
  * @description 健康检查
@@ -10,7 +11,10 @@ export interface GetApiHealthRequestType {}
 /**
  * @description 健康检查 的返回数据类型
  */
-export interface GetApiHealthResultType {}
+export interface GetApiHealthResultType {
+  /** @description 响应数据 */
+  data: JsonValue
+}
 
 /**
  * @description 健康检查

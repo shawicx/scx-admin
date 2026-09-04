@@ -1,4 +1,4 @@
-import type { UserPreferences } from '@/service/identity/types'
+import type { UserPreferences } from '@/service/identity/types/UserPreferences'
 
 /**
  * @description 用户信息响应

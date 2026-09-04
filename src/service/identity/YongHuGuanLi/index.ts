@@ -1,9 +1,9 @@
 import { RequestConfig, request } from '@/service/request'
 import type {
+  UserPreferences,
   UserRoleResponseDto,
   JsonValue,
   UserListItemDto,
-  UserPreferences,
 } from '@/service/identity/types'
 
 /**
@@ -147,7 +147,10 @@ export interface PostApiUsersRefreshTokenRequestType {
 /**
  * @description 刷新令牌 的返回数据类型
  */
-export interface PostApiUsersRefreshTokenResultType {}
+export interface PostApiUsersRefreshTokenResultType {
+  /** @description 响应数据 */
+  data: Record<string, any>
+}
 
 /**
  * @description 刷新令牌
@@ -312,7 +315,7 @@ export interface PostApiUsersCreateRequestType {
   /** @description 是否启用 */
   isActive?: boolean
   /** @description 初始分配的角色 ID 列表（最多 10 个） */
-  roleIds?: any
+  roleIds?: string[] | null
 }
 
 /**
@@ -641,7 +644,10 @@ export interface GetApiUsersCheckRoleRequestType {
 /**
  * @description 检查用户角色 的返回数据类型
  */
-export interface GetApiUsersCheckRoleResultType {}
+export interface GetApiUsersCheckRoleResultType {
+  /** @description 响应数据 */
+  data: Record<string, boolean>
+}
 
 /**
  * @description 检查用户角色
@@ -676,7 +682,10 @@ export interface GetApiUsersCheckPermissionRequestType {
 /**
  * @description 检查用户权限 的返回数据类型
  */
-export interface GetApiUsersCheckPermissionResultType {}
+export interface GetApiUsersCheckPermissionResultType {
+  /** @description 响应数据 */
+  data: Record<string, boolean>
+}
 
 /**
  * @description 检查用户权限

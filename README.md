@@ -11,7 +11,7 @@
 - **图标**: Lucide React
 - **代码规范**: Prettier + Oxlint
 - **Git 钩子**: Husky + Commitlint
-- **包管理**: pnpm
+- **包管理**: bun
 
 ## 功能特性
 
@@ -57,24 +57,24 @@ src/
 1. 安装依赖：
 
 ```bash
-pnpm install
+bun install
 ```
 
 2. 启动开发服务器：
 
 ```bash
-pnpm dev
+bun run dev
 ```
 
 3. 打开浏览器访问 [http://localhost:3000](http://localhost:3000)
 
 ## 可用脚本
 
-- `pnpm dev` - 启动开发服务器
-- `pnpm build` - 构建生产版本
-- `pnpm start` - 启动生产服务器
-- `pnpm lint` - 运行代码检查
-- `pnpm format` - 格式化代码
+- `bun run dev` - 启动开发服务器
+- `bun run build` - 构建生产版本
+- `bun run start` - 启动生产服务器
+- `bun run lint` - 运行代码检查
+- `bun run format` - 格式化代码
 
 ## 登录信息
 

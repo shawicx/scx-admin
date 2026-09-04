@@ -361,7 +361,16 @@ export interface GetApiPermissionsListRequestType {
 /**
  * @description 权限分页列表 的返回数据类型
  */
-export interface GetApiPermissionsListResultType {}
+export interface GetApiPermissionsListResultType {
+  /** @description 权限列表 */
+  list: PermissionResponseDto[]
+  /** @description 总数 */
+  total: number
+  /** @description 当前页码 */
+  page: number
+  /** @description 每页条数 */
+  limit: number
+}
 
 /**
  * @description 权限分页列表

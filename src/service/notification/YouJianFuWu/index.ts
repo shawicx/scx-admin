@@ -100,8 +100,8 @@ export interface PostApiMailSendPasswordResetRequestType {
  * @description 发送密码重置邮件 的返回数据类型
  */
 export interface PostApiMailSendPasswordResetResultType {
-  /** @description 响应数据 */
-  data: any
+  /** @description 响应数据（文档未定义响应结构） */
+  data: unknown
 }
 
 /**
@@ -138,8 +138,8 @@ export interface PostApiMailSendHtmlEmailRequestType {
  * @description 发送自定义 HTML 邮件 的返回数据类型
  */
 export interface PostApiMailSendHtmlEmailResultType {
-  /** @description 响应数据 */
-  data: any
+  /** @description 响应数据（文档未定义响应结构） */
+  data: unknown
 }
 
 /**

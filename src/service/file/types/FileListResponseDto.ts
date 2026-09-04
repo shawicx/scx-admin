@@ -1,4 +1,4 @@
-import type { FileResponseDto } from '@/service/file/types/index'
+import type { FileResponseDto } from '@/service/file/types/FileResponseDto'
 
 /**
  * @description 文件列表响应

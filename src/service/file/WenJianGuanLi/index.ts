@@ -49,7 +49,18 @@ export async function postApiFilesUploadFunc(
     data: (() => {
       const fd = new FormData()
       Object.entries(params).forEach(([k, v]) => {
-        fd.append(k, v instanceof File || v instanceof Blob ? v : String(v))
+        if (v === null || v === undefined) return
+        if (Array.isArray(v)) {
+          v.forEach(item =>
+            fd.append(k, item instanceof Blob ? item : String(item))
+          )
+        } else if (v instanceof Blob) {
+          fd.append(k, v)
+        } else if (typeof v === 'object') {
+          fd.append(k, JSON.stringify(v))
+        } else {
+          fd.append(k, String(v))
+        }
       })
       return fd
     })(),
@@ -89,7 +100,18 @@ export async function postApiFilesBatchUploadFunc(
     data: (() => {
       const fd = new FormData()
       Object.entries(params).forEach(([k, v]) => {
-        fd.append(k, v instanceof File || v instanceof Blob ? v : String(v))
+        if (v === null || v === undefined) return
+        if (Array.isArray(v)) {
+          v.forEach(item =>
+            fd.append(k, item instanceof Blob ? item : String(item))
+          )
+        } else if (v instanceof Blob) {
+          fd.append(k, v)
+        } else if (typeof v === 'object') {
+          fd.append(k, JSON.stringify(v))
+        } else {
+          fd.append(k, String(v))
+        }
       })
       return fd
     })(),

@@ -1,4 +1,4 @@
-import type { LoginLogResponseDto } from '@/service/identity/types/index'
+import type { LoginLogResponseDto } from '@/service/identity/types/LoginLogResponseDto'
 
 /**
  * @description 登录日志列表响应

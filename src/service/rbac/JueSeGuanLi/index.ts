@@ -1,5 +1,5 @@
 import { RequestConfig, request } from '@/service/request'
-import type { JsonValue } from '@/service/rbac/types'
+import type { JsonValue, RoleResponseDto } from '@/service/rbac/types'
 
 /**
  * @description 更新角色
@@ -192,7 +192,16 @@ export interface GetApiRolesListRequestType {
 /**
  * @description 角色分页列表 的返回数据类型
  */
-export interface GetApiRolesListResultType {}
+export interface GetApiRolesListResultType {
+  /** @description 角色列表 */
+  list: RoleResponseDto[]
+  /** @description 总数 */
+  total: number
+  /** @description 当前页码 */
+  page: number
+  /** @description 每页条数 */
+  limit: number
+}
 
 /**
  * @description 角色分页列表

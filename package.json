@@ -2,6 +2,7 @@
   "name": "scx-admin",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "bun@1.3.14",
   "scripts": {
     "dev": "next dev -p 3369",
     "build": "next build",
@@ -47,7 +48,7 @@
   "devDependencies": {
     "@commitlint/cli": "^18.6.1",
     "@commitlint/config-conventional": "^18.6.3",
-    "@scxfe/api-tool": "^0.6.3",
+    "@scxfe/api-tool": "^0.6.4",
     "@types/node": "^20.19.27",
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
@@ -68,5 +69,8 @@
     "*.{json,css,md}": [
       "prettier --write"
     ]
+  },
+  "overrides": {
+    "@scxfe/api-tool": "$@scxfe/api-tool"
   }
 }

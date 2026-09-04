@@ -1,4 +1,5 @@
-import type { NotificationPrefs, PrivacyPrefs } from '@/service/identity/types'
+import type { NotificationPrefs } from '@/service/identity/types/NotificationPrefs'
+import type { PrivacyPrefs } from '@/service/identity/types/PrivacyPrefs'
 
 /**
  * @description 用户偏好设置
