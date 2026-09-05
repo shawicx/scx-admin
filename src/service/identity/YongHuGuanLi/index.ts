@@ -2,8 +2,11 @@ import { RequestConfig, request } from '@/service/request'
 import type {
   UserPreferences,
   UserRoleResponseDto,
-  JsonValue,
+  UserRoleSummaryDto,
   UserListItemDto,
+  UserPermissionSummaryDto,
+  NotificationPrefs,
+  PrivacyPrefs,
 } from '@/service/identity/types'
 
 /**
@@ -100,6 +103,8 @@ export interface PostApiUsersRegisterResultType {
   email: string
   /** @description 用户名称 */
   name: string
+  /** @description 头像文件 ID（展示直链经 /files/info 换取预签名 URL） */
+  avatar: string | null
   /** @description 邮箱是否已验证 */
   emailVerified: boolean
   /** @description  */
@@ -132,40 +137,6 @@ export async function postApiUsersRegisterFunc(
     data: params,
   }
   return request<PostApiUsersRegisterResultType>(config)
-}
-
-/**
- * @description 刷新令牌
- * @param params PostApiUsersRefreshTokenRequestType
- * @returns Promise<PostApiUsersRefreshTokenResultType>
- */
-export interface PostApiUsersRefreshTokenRequestType {
-  /** @description 刷新令牌 */
-  refreshToken: string
-}
-
-/**
- * @description 刷新令牌 的返回数据类型
- */
-export interface PostApiUsersRefreshTokenResultType {
-  /** @description 响应数据 */
-  data: Record<string, any>
-}
-
-/**
- * @description 刷新令牌
- * @param params PostApiUsersRefreshTokenRequestType
- * @returns Promise<PostApiUsersRefreshTokenResultType>
- */
-export async function postApiUsersRefreshTokenFunc(
-  params: PostApiUsersRefreshTokenRequestType
-): Promise<PostApiUsersRefreshTokenResultType> {
-  const config: RequestConfig = {
-    url: '/api/users/refresh-token',
-    method: 'POST',
-    data: params,
-  }
-  return request<PostApiUsersRefreshTokenResultType>(config)
 }
 
 /**
@@ -203,6 +174,42 @@ export async function postApiUsersLogoutFunc(
 }
 
 /**
+ * @description 刷新令牌
+ * @param params PostApiUsersRefreshTokenRequestType
+ * @returns Promise<PostApiUsersRefreshTokenResultType>
+ */
+export interface PostApiUsersRefreshTokenRequestType {
+  /** @description 刷新令牌 */
+  refreshToken: string
+}
+
+/**
+ * @description 刷新令牌 的返回数据类型
+ */
+export interface PostApiUsersRefreshTokenResultType {
+  /** @description  */
+  accessToken: string
+  /** @description  */
+  refreshToken: string
+}
+
+/**
+ * @description 刷新令牌
+ * @param params PostApiUsersRefreshTokenRequestType
+ * @returns Promise<PostApiUsersRefreshTokenResultType>
+ */
+export async function postApiUsersRefreshTokenFunc(
+  params: PostApiUsersRefreshTokenRequestType
+): Promise<PostApiUsersRefreshTokenResultType> {
+  const config: RequestConfig = {
+    url: '/api/users/refresh-token',
+    method: 'POST',
+    data: params,
+  }
+  return request<PostApiUsersRefreshTokenResultType>(config)
+}
+
+/**
  * @description 邮箱验证码登录
  * @param params PostApiUsersLoginRequestType
  * @returns Promise<PostApiUsersLoginResultType>
@@ -224,6 +231,8 @@ export interface PostApiUsersLoginResultType {
   email: string
   /** @description 用户名称 */
   name: string
+  /** @description 头像文件 ID（展示直链经 /files/info 换取预签名 URL） */
+  avatar: string | null
   /** @description 邮箱是否已验证 */
   emailVerified: boolean
   /** @description  */
@@ -274,6 +283,8 @@ export interface PostApiUsersLoginPasswordResultType {
   email: string
   /** @description 用户名称 */
   name: string
+  /** @description 头像文件 ID（展示直链经 /files/info 换取预签名 URL） */
+  avatar: string | null
   /** @description 邮箱是否已验证 */
   emailVerified: boolean
   /** @description  */
@@ -328,6 +339,8 @@ export interface PostApiUsersCreateResultType {
   email: string
   /** @description 用户名称 */
   name: string
+  /** @description 头像文件 ID（展示直链经 /files/info 换取预签名 URL） */
+  avatar: string | null
   /** @description 邮箱是否已验证 */
   emailVerified: boolean
   /** @description  */
@@ -493,7 +506,7 @@ export interface GetApiUsersRolesRequestType {
  */
 export interface GetApiUsersRolesResultType {
   /** @description 响应数据数组 */
-  data: JsonValue[]
+  data: UserRoleSummaryDto[]
 }
 
 /**
@@ -510,40 +523,6 @@ export async function getApiUsersRolesFunc(
     params,
   }
   return request<GetApiUsersRolesResultType>(config)
-}
-
-/**
- * @description 查询用户权限
- * @param params GetApiUsersPermissionsRequestType
- * @returns Promise<GetApiUsersPermissionsResultType>
- */
-export interface GetApiUsersPermissionsRequestType {
-  /** @description 用户 ID */
-  id: string
-}
-
-/**
- * @description 查询用户权限 的返回数据类型
- */
-export interface GetApiUsersPermissionsResultType {
-  /** @description 响应数据数组 */
-  data: JsonValue[]
-}
-
-/**
- * @description 查询用户权限
- * @param params GetApiUsersPermissionsRequestType
- * @returns Promise<GetApiUsersPermissionsResultType>
- */
-export async function getApiUsersPermissionsFunc(
-  params: GetApiUsersPermissionsRequestType
-): Promise<GetApiUsersPermissionsResultType> {
-  const config: RequestConfig = {
-    url: '/api/users/permissions',
-    method: 'GET',
-    params,
-  }
-  return request<GetApiUsersPermissionsResultType>(config)
 }
 
 /**
@@ -594,6 +573,40 @@ export async function getApiUsersListFunc(
     params,
   }
   return request<GetApiUsersListResultType>(config)
+}
+
+/**
+ * @description 查询用户权限
+ * @param params GetApiUsersPermissionsRequestType
+ * @returns Promise<GetApiUsersPermissionsResultType>
+ */
+export interface GetApiUsersPermissionsRequestType {
+  /** @description 用户 ID */
+  id: string
+}
+
+/**
+ * @description 查询用户权限 的返回数据类型
+ */
+export interface GetApiUsersPermissionsResultType {
+  /** @description 响应数据数组 */
+  data: UserPermissionSummaryDto[]
+}
+
+/**
+ * @description 查询用户权限
+ * @param params GetApiUsersPermissionsRequestType
+ * @returns Promise<GetApiUsersPermissionsResultType>
+ */
+export async function getApiUsersPermissionsFunc(
+  params: GetApiUsersPermissionsRequestType
+): Promise<GetApiUsersPermissionsResultType> {
+  const config: RequestConfig = {
+    url: '/api/users/permissions',
+    method: 'GET',
+    params,
+  }
+  return request<GetApiUsersPermissionsResultType>(config)
 }
 
 /**
@@ -773,4 +786,179 @@ export async function deleteApiUsersBatchDeleteFunc(
     data: params,
   }
   return request<DeleteApiUsersBatchDeleteResultType>(config)
+}
+
+/**
+ * @description 查询个人资料
+ * @param params GetApiUsersMeRequestType
+ * @returns Promise<GetApiUsersMeResultType>
+ */
+export interface GetApiUsersMeRequestType {}
+
+/**
+ * @description 查询个人资料 的返回数据类型
+ */
+export interface GetApiUsersMeResultType {
+  /** @description 用户 ID */
+  id: string
+  /** @description 邮箱 */
+  email: string
+  /** @description 用户名称 */
+  name: string
+  /** @description 头像文件 ID（展示直链经 /files/info 换取预签名 URL） */
+  avatar: string | null
+  /** @description 邮箱是否已验证 */
+  emailVerified: boolean
+  /** @description  */
+  preferences: UserPreferences | null
+  /** @description 最后登录 IP */
+  lastLoginIp: string | null
+  /** @description 最后登录时间 */
+  lastLoginAt: string | null
+  /** @description 登录次数 */
+  loginCount: number
+  /** @description 是否启用 */
+  isActive: boolean
+  /** @description 创建时间 */
+  createdAt: string
+  /** @description 更新时间 */
+  updatedAt: string
+}
+
+/**
+ * @description 查询个人资料
+ * @param params GetApiUsersMeRequestType
+ * @returns Promise<GetApiUsersMeResultType>
+ */
+export async function getApiUsersMeFunc(
+  params: GetApiUsersMeRequestType
+): Promise<GetApiUsersMeResultType> {
+  const config: RequestConfig = {
+    url: '/api/users/me',
+    method: 'GET',
+    params,
+  }
+  return request<GetApiUsersMeResultType>(config)
+}
+
+/**
+ * @description 更新个人资料
+ * @param params PutApiUsersMeRequestType
+ * @returns Promise<PutApiUsersMeResultType>
+ */
+export interface PutApiUsersMeRequestType {
+  /** @description 用户名称（2-50 字符） */
+  name: string
+  /** @description 头像文件 ID（来自文件服务上传接口；空字符串表示清除头像，不传表示不修改） */
+  avatar?: string | null
+}
+
+/**
+ * @description 更新个人资料 的返回数据类型
+ */
+export interface PutApiUsersMeResultType {
+  /** @description 用户 ID */
+  id: string
+  /** @description 邮箱 */
+  email: string
+  /** @description 用户名称 */
+  name: string
+  /** @description 头像文件 ID（展示直链经 /files/info 换取预签名 URL） */
+  avatar: string | null
+  /** @description 邮箱是否已验证 */
+  emailVerified: boolean
+  /** @description  */
+  preferences: UserPreferences | null
+  /** @description 最后登录 IP */
+  lastLoginIp: string | null
+  /** @description 最后登录时间 */
+  lastLoginAt: string | null
+  /** @description 登录次数 */
+  loginCount: number
+  /** @description 是否启用 */
+  isActive: boolean
+  /** @description 创建时间 */
+  createdAt: string
+  /** @description 更新时间 */
+  updatedAt: string
+}
+
+/**
+ * @description 更新个人资料
+ * @param params PutApiUsersMeRequestType
+ * @returns Promise<PutApiUsersMeResultType>
+ */
+export async function putApiUsersMeFunc(
+  params: PutApiUsersMeRequestType
+): Promise<PutApiUsersMeResultType> {
+  const config: RequestConfig = {
+    url: '/api/users/me',
+    method: 'PUT',
+    data: params,
+  }
+  return request<PutApiUsersMeResultType>(config)
+}
+
+/**
+ * @description 更新偏好设置
+ * @param params PutApiUsersMePreferencesRequestType
+ * @returns Promise<PutApiUsersMePreferencesResultType>
+ */
+export interface PutApiUsersMePreferencesRequestType {
+  /** @description 主题，如 light / dark */
+  theme?: string | null
+  /** @description 语言，如 zh-CN / en-US */
+  language?: string | null
+  /** @description 时区，如 Asia/Shanghai */
+  timezone?: string | null
+  /** @description  */
+  notifications?: NotificationPrefs | null
+  /** @description  */
+  privacy?: PrivacyPrefs | null
+}
+
+/**
+ * @description 更新偏好设置 的返回数据类型
+ */
+export interface PutApiUsersMePreferencesResultType {
+  /** @description 用户 ID */
+  id: string
+  /** @description 邮箱 */
+  email: string
+  /** @description 用户名称 */
+  name: string
+  /** @description 头像文件 ID（展示直链经 /files/info 换取预签名 URL） */
+  avatar: string | null
+  /** @description 邮箱是否已验证 */
+  emailVerified: boolean
+  /** @description  */
+  preferences: UserPreferences | null
+  /** @description 最后登录 IP */
+  lastLoginIp: string | null
+  /** @description 最后登录时间 */
+  lastLoginAt: string | null
+  /** @description 登录次数 */
+  loginCount: number
+  /** @description 是否启用 */
+  isActive: boolean
+  /** @description 创建时间 */
+  createdAt: string
+  /** @description 更新时间 */
+  updatedAt: string
+}
+
+/**
+ * @description 更新偏好设置
+ * @param params PutApiUsersMePreferencesRequestType
+ * @returns Promise<PutApiUsersMePreferencesResultType>
+ */
+export async function putApiUsersMePreferencesFunc(
+  params: PutApiUsersMePreferencesRequestType
+): Promise<PutApiUsersMePreferencesResultType> {
+  const config: RequestConfig = {
+    url: '/api/users/me/preferences',
+    method: 'PUT',
+    data: params,
+  }
+  return request<PutApiUsersMePreferencesResultType>(config)
 }

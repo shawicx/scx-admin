@@ -1,5 +1,8 @@
 import { RequestConfig, request } from '@/service/request'
-import type { JsonValue, RoleResponseDto } from '@/service/rbac/types'
+import type {
+  PermissionSummaryDto,
+  RoleResponseDto,
+} from '@/service/rbac/types'
 
 /**
  * @description 更新角色
@@ -15,8 +18,6 @@ export interface PutApiRolesUpdateRequestType {
   code?: string | null
   /** @description 角色描述（最长 255 字符） */
   description?: string | null
-  /** @description 是否系统内置角色 */
-  isSystem?: boolean | null
 }
 
 /**
@@ -67,8 +68,6 @@ export interface PostApiRolesCreateRequestType {
   code: string
   /** @description 角色描述（最长 255 字符） */
   description?: string | null
-  /** @description 是否系统内置角色（系统角色不可删除） */
-  isSystem?: boolean | null
 }
 
 /**
@@ -158,7 +157,7 @@ export interface GetApiRolesPermissionsRequestType {
  */
 export interface GetApiRolesPermissionsResultType {
   /** @description 响应数据数组 */
-  data: JsonValue[]
+  data: PermissionSummaryDto[]
 }
 
 /**

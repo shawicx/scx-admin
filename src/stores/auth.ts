@@ -4,6 +4,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useAuth as useAuthHook } from '@/hooks/use-auth'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
+import { applyUserAvatar } from '@/lib/avatar'
 import type { PostApiUsersLoginPasswordResultType } from '@/service/identity'
 
 interface User {
@@ -14,7 +15,7 @@ interface User {
 }
 
 interface StoredUser extends PostApiUsersLoginPasswordResultType {
-  avatar?: string | null
+  avatarUrl?: string | null
 }
 
 interface AuthState {
@@ -44,6 +45,7 @@ export const useAuth = create<AuthState>()(
           name: userData.name,
         }
         set({ user, isAuthenticated: true })
+        void applyUserAvatar(userData.avatar)
       },
 
       loginWithCode: async (email: string, code: string) => {
@@ -59,6 +61,7 @@ export const useAuth = create<AuthState>()(
           name: userData.name,
         }
         set({ user, isAuthenticated: true })
+        void applyUserAvatar(userData.avatar)
       },
 
       register: async (email: string, password: string, code: string) => {
@@ -75,6 +78,7 @@ export const useAuth = create<AuthState>()(
           name: userData.name,
         }
         set({ user, isAuthenticated: true })
+        void applyUserAvatar(userData.avatar)
       },
 
       sendVerificationCode: async (email: string) => {
@@ -107,7 +111,7 @@ export const useAuth = create<AuthState>()(
                 id: userData.id,
                 email: userData.email,
                 name: userData.name,
-                avatar: userData.avatar,
+                avatar: userData.avatarUrl,
               },
               isAuthenticated: true,
             })

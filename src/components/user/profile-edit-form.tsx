@@ -10,8 +10,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from '@/components/ui/use-toast'
 import { AvatarUpload } from '@/components/user/avatar-upload'
-import { patchUsersProfileApi } from '@/lib/profile-api'
+import { resolveAvatarUrl } from '@/lib/avatar'
 import { postApiFilesUploadFunc } from '@/service/file'
+import { putApiUsersMeFunc } from '@/service/identity'
 
 const profileSchema = z.object({
   name: z
@@ -22,15 +23,16 @@ const profileSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileSchema>
 
-interface SavedProfile {
+export interface SavedProfile {
   name: string
-  avatar: string | null
+  avatarFileId: string | null
+  avatarUrl: string | null
 }
 
 interface ProfileEditFormProps {
   defaultName: string
   email: string
-  currentAvatar?: string | null
+  currentAvatarUrl?: string | null
   onCancel: () => void
   onSaved: (profile: SavedProfile) => void
 }
@@ -38,7 +40,7 @@ interface ProfileEditFormProps {
 export function ProfileEditForm({
   defaultName,
   email,
-  currentAvatar,
+  currentAvatarUrl,
   onCancel,
   onSaved,
 }: ProfileEditFormProps) {
@@ -54,20 +56,25 @@ export function ProfileEditForm({
     if (isSubmitting) return
     setIsSubmitting(true)
     try {
-      let avatarUrl: string | undefined
+      let avatarFileId: string | undefined
       if (avatarFile) {
         const uploaded = await postApiFilesUploadFunc({ file: avatarFile })
-        avatarUrl = uploaded.url
+        avatarFileId = uploaded.id
       }
-      await patchUsersProfileApi({
+      const result = await putApiUsersMeFunc({
         name: data.name,
-        ...(avatarUrl ? { avatar: avatarUrl } : {}),
+        ...(avatarFileId ? { avatar: avatarFileId } : {}),
       })
+      const avatarUrl = await resolveAvatarUrl(result.avatar)
       toast({
         title: '成功',
         description: '个人资料已更新',
       })
-      onSaved({ name: data.name, avatar: avatarUrl ?? currentAvatar ?? null })
+      onSaved({
+        name: result.name,
+        avatarFileId: result.avatar,
+        avatarUrl,
+      })
     } catch (error) {
       console.error('更新个人资料失败:', error)
     } finally {
@@ -79,7 +86,7 @@ export function ProfileEditForm({
     <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
       <div className="flex flex-col gap-6 sm:flex-row">
         <AvatarUpload
-          currentUrl={currentAvatar}
+          currentUrl={currentAvatarUrl}
           value={avatarFile}
           onChange={setAvatarFile}
           fallbackText={defaultName}

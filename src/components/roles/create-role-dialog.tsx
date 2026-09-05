@@ -15,7 +15,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
 import { postApiRolesCreateFunc } from '@/service/rbac'
 import { toast } from '@/components/ui/use-toast'
 
@@ -30,7 +29,6 @@ const createRoleSchema = z.object({
     .max(50, '角色代码不能超过50个字符')
     .regex(/^[a-zA-Z0-9_-]+$/, '角色代码只能包含字母、数字、下划线和连字符'),
   description: z.string().max(500, '角色描述不能超过500个字符').optional(),
-  isSystem: z.boolean().optional(),
 })
 
 type CreateRoleFormValues = z.infer<typeof createRoleSchema>
@@ -54,7 +52,6 @@ export function CreateRoleDialog({
       name: '',
       code: '',
       description: '',
-      isSystem: false,
     },
   })
 
@@ -65,7 +62,6 @@ export function CreateRoleDialog({
         name: data.name,
         code: data.code,
         description: data.description,
-        isSystem: data.isSystem,
       })
       toast({
         title: '成功',
@@ -140,17 +136,6 @@ export function CreateRoleDialog({
                 {form.formState.errors.description.message}
               </p>
             )}
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="isSystem"
-              {...form.register('isSystem')}
-              onChange={e => form.setValue('isSystem', e.target.checked)}
-            />
-            <Label htmlFor="isSystem" className="cursor-pointer">
-              系统内置角色
-            </Label>
           </div>
 
           <DialogFooter>

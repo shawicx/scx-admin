@@ -10,6 +10,8 @@ export interface UserResponseDto {
   email: string
   /** @description 用户名称 */
   name: string
+  /** @description 头像文件 ID（展示直链经 /files/info 换取预签名 URL） */
+  avatar?: string | null
   /** @description 邮箱是否已验证 */
   emailVerified: boolean
   /** @description  */

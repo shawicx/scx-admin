@@ -10,6 +10,4 @@ export interface UpdateRoleDto {
   code?: string | null
   /** @description 角色描述（最长 255 字符） */
   description?: string | null
-  /** @description 是否系统内置角色 */
-  isSystem?: boolean | null
 }

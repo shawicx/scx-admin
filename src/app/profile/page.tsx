@@ -14,17 +14,19 @@ import {
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { ProfileEditForm } from '@/components/user/profile-edit-form'
+import type { SavedProfile } from '@/components/user/profile-edit-form'
 import { useAuth } from '@/stores/auth'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
-import { getApiUsersListFunc } from '@/service/identity'
+import { resolveAvatarUrl } from '@/lib/avatar'
+import { getApiUsersMeFunc } from '@/service/identity'
 import type {
+  GetApiUsersMeResultType,
   PostApiUsersLoginPasswordResultType,
-  UserListItemDto,
 } from '@/service/identity'
 import { formatDate } from '@/lib/utils'
 
 interface LocalAccount extends PostApiUsersLoginPasswordResultType {
-  avatar?: string | null
+  avatarUrl?: string | null
 }
 
 function InfoItem({ label, value }: { label: string; value: string }) {
@@ -58,7 +60,7 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
   const [account, setAccount] = useState<LocalAccount | null>(null)
-  const [detail, setDetail] = useState<UserListItemDto | null>(null)
+  const [detail, setDetail] = useState<GetApiUsersMeResultType | null>(null)
 
   const loadProfile = useCallback(async () => {
     setIsLoading(true)
@@ -67,31 +69,44 @@ export default function ProfilePage() {
       const localUser = await indexedDB.getItem<LocalAccount>('user')
       setAccount(localUser)
 
-      const email = localUser?.email || user?.email
-      if (email) {
-        const result = await getApiUsersListFunc({ search: email })
-        const matched = result.list.find(item => item.email === email) ?? null
-        setDetail(matched)
+      const me = await getApiUsersMeFunc({})
+      setDetail(me)
+
+      const avatarUrl = await resolveAvatarUrl(me.avatar)
+      if (localUser && localUser.avatarUrl !== avatarUrl) {
+        const updated: LocalAccount = { ...localUser, avatarUrl }
+        await indexedDB.setItem('user', updated)
+        setAccount(updated)
       }
+      useAuth.setState(state => ({
+        user: state.user
+          ? { ...state.user, avatar: avatarUrl || undefined }
+          : state.user,
+      }))
     } catch (error) {
       console.error('加载个人资料失败:', error)
     } finally {
       setIsLoading(false)
     }
-  }, [user?.email])
+  }, [])
 
   useEffect(() => {
     loadProfile()
   }, [loadProfile])
 
   const handleProfileSaved = useCallback(
-    async (profile: { name: string; avatar: string | null }) => {
+    async (profile: SavedProfile) => {
       setIsEditing(false)
       try {
         const indexedDB = IndexedDBManager.getInstance()
         const localUser = await indexedDB.getItem<LocalAccount>('user')
         if (localUser) {
-          const updated: LocalAccount = { ...localUser, ...profile }
+          const updated: LocalAccount = {
+            ...localUser,
+            name: profile.name,
+            avatar: profile.avatarFileId,
+            avatarUrl: profile.avatarUrl,
+          }
           await indexedDB.setItem('user', updated)
           setAccount(updated)
         }
@@ -100,7 +115,7 @@ export default function ProfilePage() {
             id: state.user?.id ?? localUser?.id ?? '',
             email: state.user?.email ?? localUser?.email ?? '',
             name: profile.name,
-            avatar: profile.avatar || undefined,
+            avatar: profile.avatarUrl || undefined,
           },
         }))
         await loadProfile()
@@ -124,7 +139,7 @@ export default function ProfilePage() {
 
   const displayName = account?.name || user?.name || '未知用户'
   const email = account?.email || user?.email || '-'
-  const avatarUrl = account?.avatar || user?.avatar || null
+  const avatarUrl = account?.avatarUrl || user?.avatar || null
   const preferences = account?.preferences ?? null
 
   return (
@@ -140,7 +155,7 @@ export default function ProfilePage() {
               <ProfileEditForm
                 defaultName={account?.name || user?.name || ''}
                 email={email}
-                currentAvatar={avatarUrl}
+                currentAvatarUrl={avatarUrl}
                 onCancel={() => setIsEditing(false)}
                 onSaved={handleProfileSaved}
               />
