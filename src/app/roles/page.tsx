@@ -16,6 +16,7 @@ import { CreateRoleDialog } from '@/components/roles/create-role-dialog'
 import { EditRoleDialog } from '@/components/roles/edit-role-dialog'
 import { DeleteRoleDialog } from '@/components/roles/delete-role-dialog'
 import { PermissionAssignDialog } from '@/components/roles/permission-assign-dialog'
+import { HasPermission } from '@/components/has-permission'
 import { getApiRolesListFunc } from '@/service/rbac'
 import type { RoleResponseDto } from '@/service/rbac'
 import type { TableColumn } from '@/components/table/types'
@@ -147,21 +148,27 @@ export default function RolesPage() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => handleAssignPermission(record)}>
-              <Shield className="mr-2 h-4 w-4" />
-              分配权限
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleEdit(record)}>
-              <Edit className="mr-2 h-4 w-4" />
-              编辑
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => handleDelete(record)}
-              className="text-destructive"
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              删除
-            </DropdownMenuItem>
+            <HasPermission resource="role" action="assign-permissions">
+              <DropdownMenuItem onClick={() => handleAssignPermission(record)}>
+                <Shield className="mr-2 h-4 w-4" />
+                分配权限
+              </DropdownMenuItem>
+            </HasPermission>
+            <HasPermission resource="role" action="update">
+              <DropdownMenuItem onClick={() => handleEdit(record)}>
+                <Edit className="mr-2 h-4 w-4" />
+                编辑
+              </DropdownMenuItem>
+            </HasPermission>
+            <HasPermission resource="role" action="delete">
+              <DropdownMenuItem
+                onClick={() => handleDelete(record)}
+                className="text-destructive"
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                删除
+              </DropdownMenuItem>
+            </HasPermission>
           </DropdownMenuContent>
         </DropdownMenu>
       ),
@@ -221,15 +228,19 @@ export default function RolesPage() {
           actions: (
             <div className="flex items-center gap-2">
               {selectedRoleIds.length > 0 && (
-                <Button variant="destructive" onClick={handleBulkDelete}>
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  删除选中 ({selectedRoleIds.length})
-                </Button>
+                <HasPermission resource="role" action="delete">
+                  <Button variant="destructive" onClick={handleBulkDelete}>
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    删除选中 ({selectedRoleIds.length})
+                  </Button>
+                </HasPermission>
               )}
-              <Button onClick={() => setCreateDialogOpen(true)}>
-                <Plus className="mr-2 h-4 w-4" />
-                添加角色
-              </Button>
+              <HasPermission resource="role" action="create">
+                <Button onClick={() => setCreateDialogOpen(true)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  添加角色
+                </Button>
+              </HasPermission>
             </div>
           ),
         }}

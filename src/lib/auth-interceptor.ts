@@ -5,6 +5,7 @@ import axios from 'axios'
 import { toast } from '@/components/ui/use-toast'
 import { clearLocalAuth } from '@/hooks/use-auth'
 import { useAuth as useAuthStore } from '@/stores/auth'
+import { usePermissionStore } from '@/stores/permission'
 
 const MISSING_TOKEN_CODE = 9000
 
@@ -22,6 +23,8 @@ const forceLogout = () => {
 
   clearLocalAuth()
   useAuthStore.setState({ user: null, isAuthenticated: false })
+  // 凭证失效时同步清空权限快照，避免残留上一账号的菜单/按钮权限
+  usePermissionStore.getState().clear()
 
   toast({
     variant: 'destructive',

@@ -1,39 +1,54 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// 需要保护的路径前缀
-const protectedPaths = ['/dashboard', '/settings', '/users', '/table-demo']
+/**
+ * @description 路由级认证守卫：除登录/注册/403 外全部路径要求 accessToken cookie
+ */
 
-// 不需要重定向的路径
-const publicPaths = ['/login', '/register']
+// 无需登录即可访问的路径前缀
+const publicPaths = ['/login', '/register', '/403']
+
+// Next 内部/静态资源路径前缀（与 proxyConfig.matcher 的排除意图一致）
+const bypassPrefixes = ['/_next', '/_proxy', '/api', '/static', '/favicon.ico']
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // 如果是公共路径，直接放行
+  // 实测（Next 16 proxy 机制）：proxyConfig.matcher 的负向前瞻排除未可靠生效，
+  // /_next/static/chunks/*.js 会被本守卫 307 到 /login，登录页 HTML 被当作 JS 执行，
+  // 导致 hydration 失败。因此在函数内显式 bypass 作为权威防线（matcher 保留原样仅作参考）。
+  // chunk 路径含 %5B 等编码字符，需先解码再判断；解码失败（非法编码序列）时使用原始 pathname。
+  let decodedPathname = pathname
+  try {
+    decodedPathname = decodeURIComponent(pathname)
+  } catch {
+    // 解码失败时保留原始 pathname
+    decodedPathname = pathname
+  }
+
+  // Next 内部路径 / 静态资源（路径含 '.'）直接放行，不做认证判断
+  if (
+    bypassPrefixes.some(prefix => pathname.startsWith(prefix)) ||
+    decodedPathname.includes('.')
+  ) {
+    return NextResponse.next()
+  }
+
   if (publicPaths.some(path => pathname.startsWith(path))) {
     return NextResponse.next()
   }
 
-  // 检查是否需要保护
-  const isProtected = protectedPaths.some(path => pathname.startsWith(path))
-
-  if (isProtected) {
-    // 检查是否有认证 cookie
-    const token = request.cookies.get('accessToken')
-
-    if (!token) {
-      // 重定向到登录页面
-      const loginUrl = new URL('/login', request.url)
-      loginUrl.searchParams.set('redirect', pathname)
-      return NextResponse.redirect(loginUrl)
-    }
+  const token = request.cookies.get('accessToken')
+  if (!token) {
+    const loginUrl = new URL('/login', request.url)
+    loginUrl.searchParams.set('redirect', pathname)
+    return NextResponse.redirect(loginUrl)
   }
 
   return NextResponse.next()
 }
 
-// 配置 proxy 匹配的路径
+// 注：matcher 的排除规则在 Next 16 proxy 下未可靠生效（见上方函数内注释），函数内 bypass 为权威防线
 export const proxyConfig = {
   matcher: [
     /*

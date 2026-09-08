@@ -19,6 +19,7 @@ import type {
 } from '@/service/identity'
 import { FrontendCrypto } from '@/lib/frontend-crypto'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
+import { usePermissionStore } from '@/stores/permission'
 
 // 设置 cookie 的辅助函数
 const setAuthCookie = (token: string) => {
@@ -69,6 +70,8 @@ export function useAuth() {
         keyId,
       })
       console.log(user, 'user')
+      // 防御性清除上一账号的权限快照，与注册入口保持一致
+      usePermissionStore.getState().clear()
       // 将用户信息和访问令牌分别存储到 IndexDB
       try {
         await indexedDB.setItem('user', user)
@@ -90,6 +93,8 @@ export function useAuth() {
     try {
       // 调用登录接口，直接返回用户数据
       const user = await postApiUsersLoginFunc(params)
+      // 防御性清除上一账号的权限快照，与注册入口保持一致
+      usePermissionStore.getState().clear()
 
       // 将用户信息和访问令牌分别存储到 IndexDB
       try {
@@ -116,6 +121,9 @@ export function useAuth() {
         ...params,
         name: params.email, // 使用邮箱作为用户名
       })
+
+      // 注册成功即登录：清除上一账号残留的权限快照（main-layout 仅在 idle 时重新拉取）
+      usePermissionStore.getState().clear()
 
       // 将用户信息和访问令牌分别存储到 IndexDB
       try {

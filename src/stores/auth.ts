@@ -5,6 +5,7 @@ import { persist } from 'zustand/middleware'
 import { useAuth as useAuthHook } from '@/hooks/use-auth'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
 import { applyUserAvatar } from '@/lib/avatar'
+import { usePermissionStore } from '@/stores/permission'
 import type { PostApiUsersLoginPasswordResultType } from '@/service/identity'
 
 interface User {
@@ -95,6 +96,8 @@ export const useAuth = create<AuthState>()(
         const { logout: logoutHook } = useAuthHook()
         await logoutHook()
         set({ user: null, isAuthenticated: false })
+        // 主动登出时同步清空权限快照，避免残留上一账号的菜单/按钮权限
+        usePermissionStore.getState().clear()
       },
 
       checkAuthStatus: async () => {

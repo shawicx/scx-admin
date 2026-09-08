@@ -7,6 +7,7 @@ import type {
   UserPermissionSummaryDto,
   NotificationPrefs,
   PrivacyPrefs,
+  MeMenuNodeDto,
 } from '@/service/identity/types'
 
 /**
@@ -961,4 +962,37 @@ export async function putApiUsersMePreferencesFunc(
     data: params,
   }
   return request<PutApiUsersMePreferencesResultType>(config)
+}
+
+/**
+ * @description 查询当前用户菜单与权限
+ * @param params GetApiUsersMeMenusRequestType
+ * @returns Promise<GetApiUsersMeMenusResultType>
+ */
+export interface GetApiUsersMeMenusRequestType {}
+
+/**
+ * @description 查询当前用户菜单与权限 的返回数据类型
+ */
+export interface GetApiUsersMeMenusResultType {
+  /** @description  */
+  menus: MeMenuNodeDto[]
+  /** @description  */
+  permissions: string[]
+}
+
+/**
+ * @description 查询当前用户菜单与权限
+ * @param params GetApiUsersMeMenusRequestType
+ * @returns Promise<GetApiUsersMeMenusResultType>
+ */
+export async function getApiUsersMeMenusFunc(
+  params: GetApiUsersMeMenusRequestType
+): Promise<GetApiUsersMeMenusResultType> {
+  const config: RequestConfig = {
+    url: '/api/users/me/menus',
+    method: 'GET',
+    params,
+  }
+  return request<GetApiUsersMeMenusResultType>(config)
 }

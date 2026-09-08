@@ -1,6 +1,10 @@
 'use client'
 
+/**
+ * @description 顶部栏：面包屑（由后端菜单树推导）、主题切换与用户下拉菜单
+ */
 import { usePathname } from 'next/navigation'
+import { useMemo } from 'react'
 import { Moon, Sun, User, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -21,27 +25,35 @@ import {
 } from '@/components/ui/breadcrumb'
 import { useTheme } from '@/stores/theme'
 import { useAuth } from '@/stores/auth'
+import { usePermissionStore } from '@/stores/permission'
+import type { MeMenuNodeDto } from '@/service/identity'
 import { useRouter } from 'next/navigation'
-
-const routeMap: Record<string, string> = {
-  '/': '首页',
-  '/users': '用户管理',
-  '/roles': '角色管理',
-  '/permissions': '权限管理',
-  '/files': '文件管理',
-  '/logs': '日志管理',
-  '/logs/operations': '操作日志',
-  '/logs/logins': '登录日志',
-  '/profile': '个人资料',
-  '/login': '登录',
-  '/register': '注册',
-}
 
 export function Header() {
   const pathname = usePathname()
   const { setTheme } = useTheme()
   const { logout, user } = useAuth()
+  const { menus } = usePermissionStore()
   const router = useRouter()
+
+  const routeMap = useMemo(() => {
+    const map: Record<string, string> = {
+      '/': '首页',
+      '/profile': '个人资料',
+      '/403': '无权限',
+      // 日志容器段中文名：后端菜单树只 seed 了两个日志叶子，无 /logs 容器行
+      '/logs': '日志管理',
+    }
+    /** @description 深度优先遍历菜单树，将 path → name 写入面包屑映射 */
+    const walk = (nodes: MeMenuNodeDto[]) => {
+      nodes.forEach(node => {
+        if (node.path) map[node.path] = node.name
+        walk(node.children ?? [])
+      })
+    }
+    walk(menus)
+    return map
+  }, [menus])
 
   const handleLogout = async () => {
     await logout()

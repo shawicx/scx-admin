@@ -16,6 +16,7 @@ import { CreateUserDialog } from '@/components/users/create-user-dialog'
 import { DeleteUserDialog } from '@/components/users/delete-user-dialog'
 import { RoleAssignDialog } from '@/components/users/role-assign-dialog'
 import { UserStatusSwitch } from '@/components/users/user-status-switch'
+import { HasPermission } from '@/components/has-permission'
 import { getApiUsersListFunc } from '@/service/identity'
 import type { UserListItemDto } from '@/service/identity'
 import type { TableColumn } from '@/components/table/types'
@@ -124,11 +125,13 @@ export default function UsersPage() {
         ],
       },
       render: (_, record) => (
-        <UserStatusSwitch
-          userIds={[record.id]}
-          currentStatus={record.isActive}
-          onSuccess={handleRefresh}
-        />
+        <HasPermission resource="user" action="update">
+          <UserStatusSwitch
+            userIds={[record.id]}
+            currentStatus={record.isActive}
+            onSuccess={handleRefresh}
+          />
+        </HasPermission>
       ),
     },
     {
@@ -152,17 +155,21 @@ export default function UsersPage() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => handleAssignRole(record)}>
-              <Shield className="mr-2 h-4 w-4" />
-              分配角色
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => handleDelete(record.id)}
-              className="text-destructive"
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              删除
-            </DropdownMenuItem>
+            <HasPermission resource="user" action="assign-role">
+              <DropdownMenuItem onClick={() => handleAssignRole(record)}>
+                <Shield className="mr-2 h-4 w-4" />
+                分配角色
+              </DropdownMenuItem>
+            </HasPermission>
+            <HasPermission resource="user" action="delete">
+              <DropdownMenuItem
+                onClick={() => handleDelete(record.id)}
+                className="text-destructive"
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                删除
+              </DropdownMenuItem>
+            </HasPermission>
           </DropdownMenuContent>
         </DropdownMenu>
       ),
@@ -227,15 +234,19 @@ export default function UsersPage() {
           actions: (
             <div className="flex items-center gap-2">
               {selectedUserIds.length > 0 && (
-                <Button variant="destructive" onClick={handleBulkDelete}>
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  删除选中 ({selectedUserIds.length})
-                </Button>
+                <HasPermission resource="user" action="delete">
+                  <Button variant="destructive" onClick={handleBulkDelete}>
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    删除选中 ({selectedUserIds.length})
+                  </Button>
+                </HasPermission>
               )}
-              <Button onClick={() => setCreateDialogOpen(true)}>
-                <Plus className="mr-2 h-4 w-4" />
-                添加用户
-              </Button>
+              <HasPermission resource="user" action="create">
+                <Button onClick={() => setCreateDialogOpen(true)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  添加用户
+                </Button>
+              </HasPermission>
             </div>
           ),
         }}
