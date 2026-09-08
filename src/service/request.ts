@@ -36,8 +36,11 @@ const CANCEL_WHITE_LIST: Array<{ path: string; method: Method }> = []
 // 超时时间
 const TIMEOUT = 5 * 1000
 
-// 请求队列
-const pendingRequests = new Map()
+// 请求队列：GET 存进行中的 promise 用于去重共享；写操作存 controller 用于取消前一个
+const pendingRequests = new Map<
+  string,
+  { controller: AbortController; promise?: Promise<unknown> }
+>()
 
 // token 请求状态码
 const HttpStatus = {
@@ -205,80 +208,104 @@ export async function request<D>(config: AxiosRequestConfig): Promise<D> {
   const requestKey = getRequestKey(url, config)
   const { signal } = controller
   config.signal = signal
-  // 如果重复请求 且不是白名单中的请求路径,取消前一个
-  if (
-    pendingRequests.has(requestKey) &&
-    !CANCEL_WHITE_LIST.some(
-      item => item.path === url && item.method === config.method
-    )
-  ) {
-    pendingRequests.get(requestKey).abort()
-  }
-  pendingRequests.set(requestKey, controller)
-
-  // 获取访问令牌
-  let accessToken = null
-  try {
-    const indexedDB = IndexedDBManager.getInstance()
-    accessToken = await indexedDB.getItem('accessToken')
-  } catch (error) {
-    console.error('Failed to get access token from IndexedDB:', error)
-  }
-
-  // const secret = AESToken(BASE_LINE_KEY_24);
-  const { headers = {}, params: configParams, ...axiosRequestConfig } = config
-
-  // 防止 GET 请求缓存GET
-  // const t = new Date().getTime()
   const isGetRequest = config.method === 'GET'
-  const params = isGetRequest ? { ...configParams } : {}
-  try {
-    const response = await axios(url, {
-      headers: {
-        ...headers,
-        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-      },
-      ...axiosRequestConfig,
-      baseURL: process.env.NEXT_PUBLIC_BASE_PATH,
-      timeout: TIMEOUT,
-      params: isGetRequest ? params : configParams,
-    })
-    const { status } = response
-    const httpStatus = getHttpStatus(status)
-    const httpStatusMessage = HttpStatusMessage.get(httpStatus)
+
+  // GET 去重共享：React 18 StrictMode（dev）会双跑 mount effect，产生同 key 并发请求；
+  // 若沿用"取消前一个"，先到的调用方会收到 CanceledError 而误弹"加载失败"提示（实际接口成功）。
+  // GET 幂等，改为共享同一个进行中的请求，两个调用方拿到同一结果；
+  // 写操作保留取消前一个，用于防双击重复提交。
+  if (pendingRequests.has(requestKey)) {
+    const existing = pendingRequests.get(requestKey)!
+    if (isGetRequest && existing.promise) {
+      return existing.promise as Promise<D>
+    }
+    // 如果重复请求 且不是白名单中的请求路径,取消前一个
     if (
-      [HttpStatus.OK, HttpStatus.OK_OTHER, HttpStatus.Redirection].includes(
-        httpStatus as any
+      !CANCEL_WHITE_LIST.some(
+        item => item.path === url && item.method === config.method
       )
     ) {
-      if (response.data?.statusCode >= HttpStatus.Redirection) {
-        const statusCode = response.data?.statusCode
-        const errorMessage = response.data.message
-
-        if (statusCode) {
-          const businessErrorMessage = SystemErrorCodeMessage.get(
-            statusCode as SystemErrorCode
-          )
-          const displayMessage = errorMessage || businessErrorMessage
-          showMessage(`${statusCode} ${displayMessage}`, 'error')
-          throw new Error(displayMessage)
-        } else {
-          const fullErrorMessage = `${statusCode} ${errorMessage} ${response.data.status}`
-          showMessage(fullErrorMessage, 'error')
-          throw new Error(fullErrorMessage)
-        }
-      }
-      // 从响应中提取 data 字段并返回
-      return response.data.data as D
-    } else {
-      const message = httpStatusMessage ?? '未知错误'
-      showMessage(message, 'error')
-      return response.data.data as D
+      existing.controller.abort()
     }
-  } catch (error) {
-    handleError(error as AxiosError)
-    throw error
+  }
+
+  const execute = async (): Promise<D> => {
+    // 获取访问令牌
+    let accessToken = null
+    try {
+      const indexedDB = IndexedDBManager.getInstance()
+      accessToken = await indexedDB.getItem('accessToken')
+    } catch (error) {
+      console.error('Failed to get access token from IndexedDB:', error)
+    }
+
+    // const secret = AESToken(BASE_LINE_KEY_24);
+    const { headers = {}, params: configParams, ...axiosRequestConfig } = config
+
+    // 防止 GET 请求缓存GET
+    // const t = new Date().getTime()
+    const params = isGetRequest ? { ...configParams } : {}
+    try {
+      const response = await axios(url, {
+        headers: {
+          ...headers,
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
+        ...axiosRequestConfig,
+        baseURL: process.env.NEXT_PUBLIC_BASE_PATH,
+        timeout: TIMEOUT,
+        params: isGetRequest ? params : configParams,
+      })
+      const { status } = response
+      const httpStatus = getHttpStatus(status)
+      const httpStatusMessage = HttpStatusMessage.get(httpStatus)
+      if (
+        [HttpStatus.OK, HttpStatus.OK_OTHER, HttpStatus.Redirection].includes(
+          httpStatus as any
+        )
+      ) {
+        if (response.data?.statusCode >= HttpStatus.Redirection) {
+          const statusCode = response.data?.statusCode
+          const errorMessage = response.data.message
+
+          if (statusCode) {
+            const businessErrorMessage = SystemErrorCodeMessage.get(
+              statusCode as SystemErrorCode
+            )
+            const displayMessage = errorMessage || businessErrorMessage
+            showMessage(`${statusCode} ${displayMessage}`, 'error')
+            throw new Error(displayMessage)
+          } else {
+            const fullErrorMessage = `${statusCode} ${errorMessage} ${response.data.status}`
+            showMessage(fullErrorMessage, 'error')
+            throw new Error(fullErrorMessage)
+          }
+        }
+        // 从响应中提取 data 字段并返回
+        return response.data.data as D
+      } else {
+        const message = httpStatusMessage ?? '未知错误'
+        showMessage(message, 'error')
+        return response.data.data as D
+      }
+    } catch (error) {
+      handleError(error as AxiosError)
+      throw error
+    }
+  }
+
+  const promise = execute()
+  pendingRequests.set(requestKey, {
+    controller,
+    ...(isGetRequest ? { promise } : {}),
+  })
+
+  try {
+    return await promise
   } finally {
-    pendingRequests.delete(requestKey)
+    // 仅当仍是本请求持有该 key 时清理（被取消的旧请求不得误删新请求的登记）
+    if (pendingRequests.get(requestKey)?.controller === controller) {
+      pendingRequests.delete(requestKey)
+    }
   }
 }
