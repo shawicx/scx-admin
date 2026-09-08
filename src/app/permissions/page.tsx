@@ -15,6 +15,7 @@ import { DataTable } from '@/components/table/data-table'
 import { CreatePermissionDialog } from '@/components/permissions/create-permission-dialog'
 import { EditPermissionDialog } from '@/components/permissions/edit-permission-dialog'
 import { DeletePermissionDialog } from '@/components/permissions/delete-permission-dialog'
+import { HasPermission } from '@/components/has-permission'
 import { getApiPermissionsListFunc } from '@/service/rbac'
 import type { PermissionResponseDto } from '@/service/rbac'
 import type { TableColumn } from '@/components/table/types'
@@ -202,17 +203,21 @@ export default function PermissionsPage() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => handleEdit(record)}>
-              <Edit className="mr-2 h-4 w-4" />
-              编辑
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => handleDelete(record)}
-              className="text-destructive"
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              删除
-            </DropdownMenuItem>
+            <HasPermission resource="permission" action="update">
+              <DropdownMenuItem onClick={() => handleEdit(record)}>
+                <Edit className="mr-2 h-4 w-4" />
+                编辑
+              </DropdownMenuItem>
+            </HasPermission>
+            <HasPermission resource="permission" action="delete">
+              <DropdownMenuItem
+                onClick={() => handleDelete(record)}
+                className="text-destructive"
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                删除
+              </DropdownMenuItem>
+            </HasPermission>
           </DropdownMenuContent>
         </DropdownMenu>
       ),
@@ -220,11 +225,12 @@ export default function PermissionsPage() {
   ]
 
   const loadData = async (params: any) => {
-    const { pagination, searchValues, sorter } = params
+    const { searchValues, sorter } = params
 
+    // 树形展示需要全量数据：分页会把父菜单与子按钮切到不同页，组树断裂退化为平铺
     const queryParams: any = {
-      page: String(pagination.current),
-      limit: String(pagination.pageSize),
+      page: '1',
+      limit: '500',
     }
 
     if (searchValues.search) {
@@ -252,14 +258,8 @@ export default function PermissionsPage() {
       <DataTable
         columns={columns}
         loadData={loadData}
-        pagination={{
-          current: 1,
-          pageSize: 10,
-          total: 0,
-          pageSizeOptions: [10, 20, 50, 100],
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
+        // 树形层级展示：全量加载后不分页（分页会切断父子行）
+        pagination={false}
         rowKey="id"
         autoLoad={true}
         key={refreshTrigger}
@@ -274,15 +274,19 @@ export default function PermissionsPage() {
           actions: (
             <div className="flex items-center gap-2">
               {selectedPermissionIds.length > 0 && (
-                <Button variant="destructive" onClick={handleBulkDelete}>
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  删除选中 ({selectedPermissionIds.length})
-                </Button>
+                <HasPermission resource="permission" action="delete">
+                  <Button variant="destructive" onClick={handleBulkDelete}>
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    删除选中 ({selectedPermissionIds.length})
+                  </Button>
+                </HasPermission>
               )}
-              <Button onClick={() => setCreateDialogOpen(true)}>
-                <Plus className="mr-2 h-4 w-4" />
-                添加权限
-              </Button>
+              <HasPermission resource="permission" action="create">
+                <Button onClick={() => setCreateDialogOpen(true)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  添加权限
+                </Button>
+              </HasPermission>
             </div>
           ),
         }}

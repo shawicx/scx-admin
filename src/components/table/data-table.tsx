@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import {
   ArrowUpDown,
   ArrowUp,
@@ -82,9 +82,9 @@ export function DataTable<T = any>({
   const [sorter, setSorter] = useState<
     { field: string; order: 'asc' | 'desc' } | undefined
   >()
-  const [expandedKeys, setExpandedKeys] = useState<Set<string>>(
-    defaultExpandAll ? new Set() : new Set()
-  )
+  const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set())
+  // defaultExpandAll 只在数据首次到达时应用一次，用户手动收起后不再覆盖
+  const defaultExpandApplied = useRef(false)
 
   // 获取行键值
   const getRowKey = (record: T, index: number): string => {
@@ -192,6 +192,35 @@ export function DataTable<T = any>({
     return result
   }
 
+  // 收集树中所有含子节点的 key（用于默认/一键全展开）
+  const collectParentKeys = (data: Record<string, any>[]): Set<string> => {
+    const keys = new Set<string>()
+    const walk = (nodes: Record<string, any>[]) => {
+      nodes.forEach(item => {
+        const key = getRowKey(item as T, 0)
+        if (
+          item[childrenKey] &&
+          (item[childrenKey] as Record<string, any>[]).length > 0
+        ) {
+          keys.add(key)
+          walk(item[childrenKey] as Record<string, any>[])
+        }
+      })
+    }
+    walk(data)
+    return keys
+  }
+
+  // 数据首次到达时应用默认全展开（此前 expandedKeys 初始为空导致 defaultExpandAll 不生效）
+  useEffect(() => {
+    if (!treeData || !defaultExpandAll || defaultExpandApplied.current) return
+    const source = (loadData ? internalDataSource : dataSource) as
+      Record<string, any>[] | undefined
+    if (!source || source.length === 0) return
+    defaultExpandApplied.current = true
+    setExpandedKeys(collectParentKeys(arrayToTree(source)))
+  }, [treeData, defaultExpandAll, internalDataSource, dataSource, loadData])
+
   // 处理展开/折叠
   const handleExpand = (record: T) => {
     const key = getRowKey(record, 0)
@@ -209,28 +238,8 @@ export function DataTable<T = any>({
   // 处理全部展开/折叠
   const handleExpandAll = (expand: boolean) => {
     if (expand) {
-      const allKeys = new Set<string>()
-      const collectKeys = (
-        data: Record<string, any>[],
-        childrenField: string = childrenKey
-      ) => {
-        data.forEach(item => {
-          const key = getRowKey(item as T, 0)
-          if (
-            item[childrenField] &&
-            (item[childrenField] as Record<string, any>[]).length > 0
-          ) {
-            allKeys.add(key)
-            collectKeys(
-              item[childrenField] as Record<string, any>[],
-              childrenField
-            )
-          }
-        })
-      }
       const treeData = arrayToTree(internalDataSource as Record<string, any>[])
-      collectKeys(treeData)
-      setExpandedKeys(allKeys)
+      setExpandedKeys(collectParentKeys(treeData))
     } else {
       setExpandedKeys(new Set())
     }
@@ -405,6 +414,9 @@ export function DataTable<T = any>({
   const displayLoading = loadData ? internalLoading : loading
   const displayPagination = pagination === false ? false : internalPagination
 
+  // 展开箭头与缩进挂在第一个有标题的内容列（跳过复选框等无标题的首列）
+  const firstContentColumnKey = columns.find(col => col.title)?.key
+
   // 判断是否显示分页
   const shouldShowPagination =
     displayPagination &&
@@ -505,7 +517,8 @@ export function DataTable<T = any>({
                         const value = column.dataIndex
                           ? (record as any)[column.dataIndex]
                           : record
-                        const isFirstColumn = column.key === columns[0].key
+                        const isFirstColumn =
+                          column.key === firstContentColumnKey
 
                         return (
                           <TableCell
