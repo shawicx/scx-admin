@@ -14,20 +14,9 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { getApiUsersRolesFunc } from '@/service/identity'
-import { getApiRolesListFunc } from '@/service/rbac'
+import { getApiRolesAllFunc } from '@/service/rbac'
+import type { RoleResponseDto } from '@/service/rbac'
 import { toast } from '@/components/ui/use-toast'
-
-interface Role {
-  id: string
-  name: string
-  code: string
-}
-
-interface UserRole {
-  id: string
-  userId: string
-  roleId: string
-}
 
 interface RoleAssignDialogProps {
   open: boolean
@@ -40,7 +29,7 @@ export function RoleAssignDialog({
   onOpenChange,
   userId,
 }: RoleAssignDialogProps) {
-  const [allRoles, setAllRoles] = useState<Role[]>([])
+  const [allRoles, setAllRoles] = useState<RoleResponseDto[]>([])
   const [assignedRoles, setAssignedRoles] = useState<Set<string>>(new Set())
   const [isLoading, setIsLoading] = useState(false)
 
@@ -48,14 +37,11 @@ export function RoleAssignDialog({
     setIsLoading(true)
     try {
       const [rolesRes, userRolesRes] = await Promise.all([
-        getApiRolesListFunc({}),
+        getApiRolesAllFunc({}),
         getApiUsersRolesFunc({ id: userId }),
       ])
-      setAllRoles((rolesRes as { list: Role[] }).list)
-      const userRoles = userRolesRes?.data || []
-      setAssignedRoles(
-        new Set((userRoles as any).map((role: UserRole) => role.roleId))
-      )
+      setAllRoles(rolesRes.data || [])
+      setAssignedRoles(new Set((userRolesRes.data || []).map(role => role.id)))
     } catch (error) {
       console.error('Failed to load roles:', error)
       toast({

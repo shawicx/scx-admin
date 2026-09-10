@@ -2,6 +2,7 @@ import { RequestConfig, request } from '@/service/request'
 import type {
   PermissionSummaryDto,
   RoleResponseDto,
+  RolePermissionTreeResponseDto,
 } from '@/service/rbac/types'
 
 /**
@@ -378,4 +379,69 @@ export async function deleteApiRolesDeleteFunc(
     params,
   }
   return request<DeleteApiRolesDeleteResultType>(config)
+}
+
+/**
+ * @description 角色权限树
+ * @param params GetApiRolesPermissionTreeRequestType
+ * @returns Promise<GetApiRolesPermissionTreeResultType>
+ */
+export interface GetApiRolesPermissionTreeRequestType {
+  /** @description 角色 ID */
+  id: string
+}
+
+/**
+ * @description 角色权限树 的返回数据类型
+ */
+export interface GetApiRolesPermissionTreeResultType {
+  /** @description 响应数据数组 */
+  data: RolePermissionTreeResponseDto[]
+}
+
+/**
+ * @description 角色权限树
+ * @param params GetApiRolesPermissionTreeRequestType
+ * @returns Promise<GetApiRolesPermissionTreeResultType>
+ */
+export async function getApiRolesPermissionTreeFunc(
+  params: GetApiRolesPermissionTreeRequestType
+): Promise<GetApiRolesPermissionTreeResultType> {
+  const config: RequestConfig = {
+    url: '/api/roles/permission-tree',
+    method: 'GET',
+    params,
+  }
+  return request<GetApiRolesPermissionTreeResultType>(config)
+}
+
+/**
+ * @description 全量角色列表
+ * @param params GetApiRolesAllRequestType
+ * @returns Promise<GetApiRolesAllResultType>
+ */
+export interface GetApiRolesAllRequestType {}
+
+/**
+ * @description 全量角色列表 的返回数据类型
+ */
+export interface GetApiRolesAllResultType {
+  /** @description 响应数据数组 */
+  data: RoleResponseDto[]
+}
+
+/**
+ * @description 全量角色列表
+ * @param params GetApiRolesAllRequestType
+ * @returns Promise<GetApiRolesAllResultType>
+ */
+export async function getApiRolesAllFunc(
+  params: GetApiRolesAllRequestType
+): Promise<GetApiRolesAllResultType> {
+  const config: RequestConfig = {
+    url: '/api/roles/all',
+    method: 'GET',
+    params,
+  }
+  return request<GetApiRolesAllResultType>(config)
 }

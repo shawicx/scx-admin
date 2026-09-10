@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -12,13 +12,13 @@ import {
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
 import {
-  getApiPermissionsListFunc,
-  getApiRolesPermissionsFunc,
+  getApiRolesPermissionTreeFunc,
   postApiRolesAssignPermissionsFunc,
 } from '@/service/rbac'
+import type { RolePermissionTreeResponseDto } from '@/service/rbac'
 import { toast } from '@/components/ui/use-toast'
-import type { PermissionResponseDto } from '@/service/rbac'
 
 interface PermissionAssignDialogProps {
   open: boolean
@@ -27,14 +27,7 @@ interface PermissionAssignDialogProps {
   onSuccess?: () => void
 }
 
-interface PermissionItem {
-  id: string
-  name: string
-  action: string
-  resource: string
-  description?: string
-  checked: boolean
-}
+type PermissionNode = RolePermissionTreeResponseDto
 
 export function PermissionAssignDialog({
   open,
@@ -44,43 +37,49 @@ export function PermissionAssignDialog({
 }: PermissionAssignDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [permissions, setPermissions] = useState<PermissionItem[]>([])
+  const [tree, setTree] = useState<PermissionNode[]>([])
+  const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({})
+
+  const toggleNode = useCallback((node: PermissionNode, checked: boolean) => {
+    const ids: string[] = []
+    const collect = (n: PermissionNode) => {
+      ids.push(n.id)
+      ;(n.children ?? []).forEach(collect)
+    }
+    collect(node)
+
+    setCheckedMap(prev => {
+      const next = { ...prev }
+      ids.forEach(id => {
+        if (checked) next[id] = true
+        else delete next[id]
+      })
+      return next
+    })
+  }, [])
 
   useEffect(() => {
     const loadData = async () => {
       if (open && roleId) {
         setIsLoading(true)
         try {
-          const [allPermissionsRes, rolePermissionsRes] = await Promise.all([
-            getApiPermissionsListFunc({}),
-            getApiRolesPermissionsFunc({ id: roleId }),
-          ])
+          const treeRes = await getApiRolesPermissionTreeFunc({ id: roleId })
+          const nodes = treeRes.data || []
+          setTree(nodes)
 
-          const rolePermissions =
-            (rolePermissionsRes.data as unknown as PermissionResponseDto[]) ||
-            []
-          console.debug(rolePermissions, 'rolePermissions')
-
-          const rolePermissionIds = new Set(rolePermissions.map(p => p.id))
-
-          const allPermissions = (
-            (allPermissionsRes as { list?: PermissionResponseDto[] }).list || []
-          ).map(p => ({
-            id: p.id,
-            name: p.name,
-            action: p.action ?? '',
-            resource: p.resource ?? '',
-            description: p.description ?? undefined,
-            checked: rolePermissionIds.has(p.id),
-          }))
-
-          setPermissions(allPermissions)
+          const initialChecked: Record<string, boolean> = {}
+          const walk = (node: PermissionNode) => {
+            if (node.checked) initialChecked[node.id] = true
+            ;(node.children ?? []).forEach(walk)
+          }
+          nodes.forEach(walk)
+          setCheckedMap(initialChecked)
         } catch (error) {
-          console.error('Failed to load permissions:', error)
+          console.error('Failed to load permission tree:', error)
           toast({
             variant: 'destructive',
             title: '错误',
-            description: '加载权限列表失败',
+            description: '加载权限树失败',
           })
         } finally {
           setIsLoading(false)
@@ -91,10 +90,23 @@ export function PermissionAssignDialog({
     loadData()
   }, [open, roleId])
 
-  const handlePermissionToggle = (permissionId: string) => {
-    setPermissions(prev =>
-      prev.map(p => (p.id === permissionId ? { ...p, checked: !p.checked } : p))
+  const hasCheckedDescendant = (node: PermissionNode): boolean => {
+    return (node.children ?? []).some(
+      child => !!checkedMap[child.id] || hasCheckedDescendant(child)
     )
+  }
+
+  // 勾选任一按钮时其父级菜单一并提交，避免角色拿到按钮却看不到所属菜单
+  const collectCheckedIds = (nodes: PermissionNode[]): string[] => {
+    const ids: string[] = []
+    const walk = (node: PermissionNode): boolean => {
+      const childrenSelected = (node.children ?? []).map(walk).some(Boolean)
+      const selected = !!checkedMap[node.id] || childrenSelected
+      if (selected) ids.push(node.id)
+      return selected
+    }
+    nodes.forEach(walk)
+    return ids
   }
 
   const handleSubmit = async () => {
@@ -102,13 +114,9 @@ export function PermissionAssignDialog({
 
     setIsSubmitting(true)
     try {
-      const selectedPermissionIds = permissions
-        .filter(p => p.checked)
-        .map(p => p.id)
-
       await postApiRolesAssignPermissionsFunc({
         id: roleId,
-        permissionIds: selectedPermissionIds,
+        permissionIds: collectCheckedIds(tree),
       })
 
       toast({
@@ -130,13 +138,73 @@ export function PermissionAssignDialog({
     }
   }
 
+  const renderNode = (node: PermissionNode) => {
+    const isChecked = !!checkedMap[node.id]
+    const indeterminate = !isChecked && hasCheckedDescendant(node)
+    const hasChildren = (node.children?.length ?? 0) > 0
+    const isMenu = node.type === 'MENU'
+
+    return (
+      <div key={node.id}>
+        <div className="flex items-start space-x-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors">
+          <Checkbox
+            id={`permission-${node.id}`}
+            checked={isChecked}
+            indeterminate={indeterminate}
+            onChange={e => toggleNode(node, e.target.checked)}
+            className="mt-1"
+          />
+          <div className="flex-1 space-y-1 min-w-0">
+            <Label
+              htmlFor={`permission-${node.id}`}
+              className="font-medium cursor-pointer"
+            >
+              {node.name}
+              <Badge
+                variant={isMenu ? 'secondary' : 'outline'}
+                className="ml-2"
+              >
+                {isMenu ? '菜单' : '按钮'}
+              </Badge>
+            </Label>
+            <div className="text-sm text-muted-foreground">
+              {node.action && (
+                <span className="inline-block px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground mr-2">
+                  {node.action}
+                </span>
+              )}
+              {node.resource && (
+                <span className="inline-block px-2 py-0.5 rounded-md bg-muted text-muted-foreground mr-2">
+                  {node.resource}
+                </span>
+              )}
+              {node.path && (
+                <span className="font-mono text-xs">{node.path}</span>
+              )}
+            </div>
+            {node.description && (
+              <p className="text-sm text-muted-foreground">
+                {node.description}
+              </p>
+            )}
+          </div>
+        </div>
+        {hasChildren && (
+          <div className="ml-6 mt-2 space-y-2 border-l pl-4">
+            {node.children!.map(child => renderNode(child))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[80vh]">
         <DialogHeader>
           <DialogTitle>分配权限</DialogTitle>
           <DialogDescription>
-            为角色选择需要分配的权限，至少选择一个权限
+            为角色选择需要分配的权限，角色已有的权限默认勾选
           </DialogDescription>
         </DialogHeader>
 
@@ -144,42 +212,15 @@ export function PermissionAssignDialog({
           <div className="flex items-center justify-center py-8">
             <div className="text-sm text-muted-foreground">加载中...</div>
           </div>
+        ) : tree.length === 0 ? (
+          <div className="flex items-center justify-center py-8">
+            <div className="text-sm text-muted-foreground">
+              暂无可分配的权限
+            </div>
+          </div>
         ) : (
-          <div className="max-h-[60vh] overflow-y-auto pr-4 space-y-3">
-            {permissions.map(permission => (
-              <div
-                key={permission.id}
-                className="flex items-start space-x-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
-              >
-                <Checkbox
-                  id={`permission-${permission.id}`}
-                  checked={permission.checked}
-                  onChange={() => handlePermissionToggle(permission.id)}
-                  className="mt-1"
-                />
-                <div className="flex-1 space-y-1">
-                  <Label
-                    htmlFor={`permission-${permission.id}`}
-                    className="font-medium cursor-pointer"
-                  >
-                    {permission.name}
-                  </Label>
-                  <div className="text-sm text-muted-foreground">
-                    <span className="inline-block px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground mr-2">
-                      {permission.action}
-                    </span>
-                    <span className="inline-block px-2 py-0.5 rounded-md bg-muted text-muted-foreground">
-                      {permission.resource}
-                    </span>
-                  </div>
-                  {permission.description && (
-                    <p className="text-sm text-muted-foreground">
-                      {permission.description}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
+          <div className="max-h-[60vh] overflow-y-auto pr-4 space-y-2">
+            {tree.map(node => renderNode(node))}
           </div>
         )}
 
