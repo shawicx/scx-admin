@@ -12,6 +12,7 @@ import {
   ClipboardList,
   LogIn,
   CircleDot,
+  BookText,
 } from 'lucide-react'
 import type { MeMenuNodeDto } from '@/service/identity'
 
@@ -40,6 +41,7 @@ export const iconMap: Record<string, LucideIcon> = {
   files: FolderOpen,
   'operation-logs': ClipboardList,
   'login-logs': LogIn,
+  dicts: BookText,
 }
 
 /**

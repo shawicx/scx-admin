@@ -12,6 +12,8 @@ export interface RoleResponseDto {
   description?: string | null
   /** @description 是否系统内置角色 */
   isSystem: boolean
+  /** @description 数据权限范围（ALL / SELF） */
+  dataScope: string
   /** @description 创建时间 */
   createdAt: string
   /** @description 更新时间 */

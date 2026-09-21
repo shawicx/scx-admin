@@ -19,6 +19,8 @@ export interface PutApiRolesUpdateRequestType {
   code?: string | null
   /** @description 角色描述（最长 255 字符） */
   description?: string | null
+  /** @description 数据权限范围：ALL（全部）/ SELF（仅本人） */
+  dataScope?: string | null
 }
 
 /**
@@ -35,6 +37,8 @@ export interface PutApiRolesUpdateResultType {
   description: string | null
   /** @description 是否系统内置角色 */
   isSystem: boolean
+  /** @description 数据权限范围（ALL / SELF） */
+  dataScope: string
   /** @description 创建时间 */
   createdAt: string
   /** @description 更新时间 */
@@ -69,6 +73,8 @@ export interface PostApiRolesCreateRequestType {
   code: string
   /** @description 角色描述（最长 255 字符） */
   description?: string | null
+  /** @description 数据权限范围：ALL（全部）/ SELF（仅本人），缺省 SELF；部门级档位待部门体系上线后开放 */
+  dataScope?: string | null
 }
 
 /**
@@ -85,6 +91,8 @@ export interface PostApiRolesCreateResultType {
   description: string | null
   /** @description 是否系统内置角色 */
   isSystem: boolean
+  /** @description 数据权限范围（ALL / SELF） */
+  dataScope: string
   /** @description 创建时间 */
   createdAt: string
   /** @description 更新时间 */
@@ -243,6 +251,8 @@ export interface GetApiRolesDetailResultType {
   description: string | null
   /** @description 是否系统内置角色 */
   isSystem: boolean
+  /** @description 数据权限范围（ALL / SELF） */
+  dataScope: string
   /** @description 创建时间 */
   createdAt: string
   /** @description 更新时间 */
@@ -289,6 +299,8 @@ export interface GetApiRolesByCodeResultType {
   description: string | null
   /** @description 是否系统内置角色 */
   isSystem: boolean
+  /** @description 数据权限范围（ALL / SELF） */
+  dataScope: string
   /** @description 创建时间 */
   createdAt: string
   /** @description 更新时间 */

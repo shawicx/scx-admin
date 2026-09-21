@@ -1,3 +1,5 @@
 export * from './JueSeGuanLi'
 export * from './QuanXianGuanLi'
+export * from './ZiDianLeiXing'
+export * from './ZiDianShuJu'
 export * from './types'
