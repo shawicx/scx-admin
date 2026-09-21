@@ -35,10 +35,12 @@ export interface PutApiFilesUploadSessionsChunksByUploadIdByPartNumberResultType
 export async function putApiFilesUploadSessionsChunksByUploadIdByPartNumberFunc(
   params: PutApiFilesUploadSessionsChunksByUploadIdByPartNumberRequestType
 ): Promise<PutApiFilesUploadSessionsChunksByUploadIdByPartNumberResultType> {
+  const { md5, ...body } = params
   const config: RequestConfig = {
     url: `/api/files/upload/sessions/${params.uploadId}/chunks/${params.partNumber}`,
     method: 'PUT',
-    params,
+    data: body,
+    params: { md5 },
   }
   return request<PutApiFilesUploadSessionsChunksByUploadIdByPartNumberResultType>(
     config
