@@ -1,4 +1,5 @@
 import axios from 'axios'
+import CryptoJS from 'crypto-js'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
 import {
   postApiFilesUploadInitFunc,
@@ -29,11 +30,21 @@ export interface ChunkedUploadResult {
 }
 
 async function computeFileSha256(file: File): Promise<string> {
-  const buffer = await file.arrayBuffer()
-  const digest = await crypto.subtle.digest('SHA-256', buffer)
-  return Array.from(new Uint8Array(digest))
-    .map(byte => byte.toString(16).padStart(2, '0'))
-    .join('')
+  if (crypto?.subtle) {
+    const buffer = await file.arrayBuffer()
+    const digest = await crypto.subtle.digest('SHA-256', buffer)
+    return Array.from(new Uint8Array(digest))
+      .map(byte => byte.toString(16).padStart(2, '0'))
+      .join('')
+  }
+  // HTTP 非 localhost 的部署环境是非安全上下文，crypto.subtle 不可用，回退纯 JS 增量哈希
+  const hasher = CryptoJS.algo.SHA256.create()
+  const step = 4 * 1024 * 1024
+  for (let offset = 0; offset < file.size; offset += step) {
+    const buffer = await file.slice(offset, offset + step).arrayBuffer()
+    hasher.update(CryptoJS.lib.WordArray.create(buffer))
+  }
+  return hasher.finalize().toString(CryptoJS.enc.Hex)
 }
 
 function decideChunkSize(size: number): number {
