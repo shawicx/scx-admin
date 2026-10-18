@@ -39,6 +39,7 @@ export function Header() {
   const routeMap = useMemo(() => {
     const map: Record<string, string> = {
       '/': '首页',
+      '/chat': 'AI 对话',
       '/profile': '个人资料',
       '/403': '无权限',
       // 日志容器段中文名：后端菜单树只 seed 了两个日志叶子，无 /logs 容器行

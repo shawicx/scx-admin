@@ -13,6 +13,7 @@ import {
   LogIn,
   CircleDot,
   BookText,
+  Sparkles,
 } from 'lucide-react'
 import type { MeMenuNodeDto } from '@/service/identity'
 
@@ -27,11 +28,12 @@ export interface MenuItem {
 /** 与角色无关的账户级导航，始终显示（不进 RBAC） */
 export const FIXED_MENU_ITEMS: MenuItem[] = [
   { id: 'dashboard', title: '仪表板', icon: Home, href: '/' },
+  { id: 'chat', title: 'AI 对话', icon: Sparkles, href: '/chat' },
   { id: 'profile', title: '个人资料', icon: UserCircle, href: '/profile' },
 ]
 
 /** 路由守卫始终放行的路径（含 403 页自身，避免守卫死循环） */
-export const PUBLIC_ROUTES = ['/', '/profile', '/403']
+export const PUBLIC_ROUTES = ['/', '/chat', '/profile', '/403']
 
 /** 后端菜单 icon 字符串 → lucide 图标组件 */
 export const iconMap: Record<string, LucideIcon> = {

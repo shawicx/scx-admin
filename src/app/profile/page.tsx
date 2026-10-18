@@ -15,6 +15,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { ProfileEditForm } from '@/components/user/profile-edit-form'
 import type { SavedProfile } from '@/components/user/profile-edit-form'
+import { AiModelSettingsForm } from '@/components/user/ai-model-settings-form'
 import { useAuth } from '@/stores/auth'
 import { IndexedDBManager } from '@/lib/indexeddb-manager'
 import { resolveAvatarUrl } from '@/lib/avatar'
@@ -301,6 +302,19 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>AI 模型设置</CardTitle>
+          <CardDescription>
+            配置 OpenAI 兼容模型（API 地址 / 模型名 / API Key），供「AI
+            对话」页面使用
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <AiModelSettingsForm />
+        </CardContent>
+      </Card>
     </div>
   )
 }

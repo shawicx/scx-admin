@@ -57,3 +57,63 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* AI 对话气泡内的 Markdown 排版（无 typography 插件，手动约束常用元素） */
+@layer components {
+  .chat-markdown > :first-child {
+    margin-top: 0;
+  }
+  .chat-markdown > :last-child {
+    margin-bottom: 0;
+  }
+  .chat-markdown p {
+    @apply my-2;
+  }
+  .chat-markdown h1,
+  .chat-markdown h2,
+  .chat-markdown h3,
+  .chat-markdown h4 {
+    @apply mb-2 mt-4 font-semibold;
+  }
+  .chat-markdown h1 {
+    @apply text-base;
+  }
+  .chat-markdown h2 {
+    @apply text-base;
+  }
+  .chat-markdown h3,
+  .chat-markdown h4 {
+    @apply text-sm;
+  }
+  .chat-markdown ul {
+    @apply my-2 list-disc pl-5;
+  }
+  .chat-markdown ol {
+    @apply my-2 list-decimal pl-5;
+  }
+  .chat-markdown li {
+    @apply my-1;
+  }
+  .chat-markdown a {
+    @apply text-primary underline underline-offset-2;
+  }
+  .chat-markdown blockquote {
+    @apply my-2 border-l-2 border-border pl-3 text-muted-foreground;
+  }
+  .chat-markdown table {
+    @apply my-2 w-full border-collapse text-xs;
+  }
+  .chat-markdown th,
+  .chat-markdown td {
+    @apply border border-border px-2 py-1 text-left;
+  }
+  .chat-markdown th {
+    @apply bg-background font-medium;
+  }
+  .chat-markdown hr {
+    @apply my-3 border-border;
+  }
+  .chat-markdown :not(pre) > code {
+    @apply rounded bg-background px-1 py-0.5 font-mono text-xs;
+  }
+}
