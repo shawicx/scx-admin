@@ -31,9 +31,7 @@ const editDictDataSchema = z.object({
     .string()
     .min(1, '存储值不能为空')
     .max(100, '存储值不能超过100个字符'),
-  sort: z.coerce
-    .number({ invalid_type_error: '排序号必须为数字' })
-    .int('排序号必须为整数'),
+  sort: z.coerce.number({ error: '排序号必须为数字' }).int('排序号必须为整数'),
   status: z.boolean(),
 })
 
