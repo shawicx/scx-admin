@@ -1,4 +1,5 @@
-import { RequestConfig, request } from '@/service/request'
+import { request } from '@/service/request'
+import type { RequestConfig } from '@/service/request'
 import type { FileResponseDto } from '@/service/file/types'
 
 /**
@@ -41,14 +42,16 @@ export interface PostApiFilesUploadResultType {
  * @returns Promise<PostApiFilesUploadResultType>
  */
 export async function postApiFilesUploadFunc(
-  params: PostApiFilesUploadRequestType
+  params: PostApiFilesUploadRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiFilesUploadResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/files/upload',
     method: 'POST',
     data: (() => {
       const fd = new FormData()
-      Object.entries(params).forEach(([k, v]) => {
+      Object.entries(params).forEach(([k, v]: [string, unknown]) => {
         if (v === null || v === undefined) return
         if (Array.isArray(v)) {
           v.forEach(item =>
@@ -92,14 +95,16 @@ export interface PostApiFilesBatchUploadResultType {
  * @returns Promise<PostApiFilesBatchUploadResultType>
  */
 export async function postApiFilesBatchUploadFunc(
-  params: PostApiFilesBatchUploadRequestType
+  params: PostApiFilesBatchUploadRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiFilesBatchUploadResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/files/batch-upload',
     method: 'POST',
     data: (() => {
       const fd = new FormData()
-      Object.entries(params).forEach(([k, v]) => {
+      Object.entries(params).forEach(([k, v]: [string, unknown]) => {
         if (v === null || v === undefined) return
         if (Array.isArray(v)) {
           v.forEach(item =>
@@ -159,12 +164,14 @@ export interface GetApiFilesListResultType {
  * @returns Promise<GetApiFilesListResultType>
  */
 export async function getApiFilesListFunc(
-  params: GetApiFilesListRequestType
+  params: GetApiFilesListRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiFilesListResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/files/list',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiFilesListResultType>(config)
 }
@@ -209,12 +216,14 @@ export interface GetApiFilesInfoResultType {
  * @returns Promise<GetApiFilesInfoResultType>
  */
 export async function getApiFilesInfoFunc(
-  params: GetApiFilesInfoRequestType
+  params: GetApiFilesInfoRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiFilesInfoResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/files/info',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiFilesInfoResultType>(config)
 }
@@ -245,9 +254,11 @@ export interface DeleteApiFilesBatchDeleteResultType {
  * @returns Promise<DeleteApiFilesBatchDeleteResultType>
  */
 export async function deleteApiFilesBatchDeleteFunc(
-  params: DeleteApiFilesBatchDeleteRequestType
+  params: DeleteApiFilesBatchDeleteRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<DeleteApiFilesBatchDeleteResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/files/batch-delete',
     method: 'DELETE',
     data: params,

@@ -1,4 +1,5 @@
-import { RequestConfig, request } from '@/service/request'
+import { request } from '@/service/request'
+import type { RequestConfig } from '@/service/request'
 import type { FileResponseDto } from '@/service/file/types'
 
 /**
@@ -13,6 +14,8 @@ export interface PutApiFilesUploadSessionsChunksByUploadIdByPartNumberRequestTyp
   partNumber: string
   /** @description 分片内容 MD5（可选，与服务端 ETag 比对） */
   md5?: string
+  /** @description 原始二进制请求体 */
+  data: Blob
 }
 
 /**
@@ -33,14 +36,17 @@ export interface PutApiFilesUploadSessionsChunksByUploadIdByPartNumberResultType
  * @returns Promise<PutApiFilesUploadSessionsChunksByUploadIdByPartNumberResultType>
  */
 export async function putApiFilesUploadSessionsChunksByUploadIdByPartNumberFunc(
-  params: PutApiFilesUploadSessionsChunksByUploadIdByPartNumberRequestType
+  params: PutApiFilesUploadSessionsChunksByUploadIdByPartNumberRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PutApiFilesUploadSessionsChunksByUploadIdByPartNumberResultType> {
-  const { md5, ...body } = params
+  const { uploadId, partNumber, md5, ...body } = params
   const config: RequestConfig = {
+    ...options,
     url: `/api/files/upload/sessions/${params.uploadId}/chunks/${params.partNumber}`,
     method: 'PUT',
-    data: body,
+    data: body.data,
     params: { md5 },
+    headers: { ...options.headers, 'Content-Type': 'application/octet-stream' },
   }
   return request<PutApiFilesUploadSessionsChunksByUploadIdByPartNumberResultType>(
     config
@@ -87,12 +93,13 @@ export interface PostApiFilesUploadSessionsCompleteByUploadIdResultType {
  * @returns Promise<PostApiFilesUploadSessionsCompleteByUploadIdResultType>
  */
 export async function postApiFilesUploadSessionsCompleteByUploadIdFunc(
-  params: PostApiFilesUploadSessionsCompleteByUploadIdRequestType
+  params: PostApiFilesUploadSessionsCompleteByUploadIdRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiFilesUploadSessionsCompleteByUploadIdResultType> {
   const config: RequestConfig = {
+    ...options,
     url: `/api/files/upload/sessions/${params.uploadId}/complete`,
     method: 'POST',
-    params,
   }
   return request<PostApiFilesUploadSessionsCompleteByUploadIdResultType>(config)
 }
@@ -139,9 +146,11 @@ export interface PostApiFilesUploadInitResultType {
  * @returns Promise<PostApiFilesUploadInitResultType>
  */
 export async function postApiFilesUploadInitFunc(
-  params: PostApiFilesUploadInitRequestType
+  params: PostApiFilesUploadInitRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiFilesUploadInitResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/files/upload/init',
     method: 'POST',
     data: params,
@@ -189,12 +198,13 @@ export interface GetApiFilesUploadSessionsByUploadIdResultType {
  * @returns Promise<GetApiFilesUploadSessionsByUploadIdResultType>
  */
 export async function getApiFilesUploadSessionsByUploadIdFunc(
-  params: GetApiFilesUploadSessionsByUploadIdRequestType
+  params: GetApiFilesUploadSessionsByUploadIdRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiFilesUploadSessionsByUploadIdResultType> {
   const config: RequestConfig = {
+    ...options,
     url: `/api/files/upload/sessions/${params.uploadId}`,
     method: 'GET',
-    params,
   }
   return request<GetApiFilesUploadSessionsByUploadIdResultType>(config)
 }
@@ -225,12 +235,13 @@ export interface DeleteApiFilesUploadSessionsByUploadIdResultType {
  * @returns Promise<DeleteApiFilesUploadSessionsByUploadIdResultType>
  */
 export async function deleteApiFilesUploadSessionsByUploadIdFunc(
-  params: DeleteApiFilesUploadSessionsByUploadIdRequestType
+  params: DeleteApiFilesUploadSessionsByUploadIdRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<DeleteApiFilesUploadSessionsByUploadIdResultType> {
   const config: RequestConfig = {
+    ...options,
     url: `/api/files/upload/sessions/${params.uploadId}`,
     method: 'DELETE',
-    params,
   }
   return request<DeleteApiFilesUploadSessionsByUploadIdResultType>(config)
 }

@@ -1,4 +1,5 @@
-import { RequestConfig, request } from '@/service/request'
+import { request } from '@/service/request'
+import type { RequestConfig } from '@/service/request'
 import type { ChannelResponseDto } from '@/service/notification/types'
 
 /**
@@ -47,9 +48,11 @@ export interface PutApiChannelsUpdateResultType {
  * @returns Promise<PutApiChannelsUpdateResultType>
  */
 export async function putApiChannelsUpdateFunc(
-  params: PutApiChannelsUpdateRequestType
+  params: PutApiChannelsUpdateRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PutApiChannelsUpdateResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/channels/update',
     method: 'PUT',
     data: params,
@@ -103,9 +106,11 @@ export interface PostApiChannelsCreateResultType {
  * @returns Promise<PostApiChannelsCreateResultType>
  */
 export async function postApiChannelsCreateFunc(
-  params: PostApiChannelsCreateRequestType
+  params: PostApiChannelsCreateRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiChannelsCreateResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/channels/create',
     method: 'POST',
     data: params,
@@ -149,12 +154,14 @@ export interface GetApiChannelsListResultType {
  * @returns Promise<GetApiChannelsListResultType>
  */
 export async function getApiChannelsListFunc(
-  params: GetApiChannelsListRequestType
+  params: GetApiChannelsListRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiChannelsListResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/channels/list',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiChannelsListResultType>(config)
 }
@@ -180,12 +187,13 @@ export interface GetApiChannelsAllResultType {
  * @returns Promise<GetApiChannelsAllResultType>
  */
 export async function getApiChannelsAllFunc(
-  params: GetApiChannelsAllRequestType
+  params: GetApiChannelsAllRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiChannelsAllResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/channels/all',
     method: 'GET',
-    params,
   }
   return request<GetApiChannelsAllResultType>(config)
 }
@@ -214,12 +222,14 @@ export interface DeleteApiChannelsDeleteResultType {
  * @returns Promise<DeleteApiChannelsDeleteResultType>
  */
 export async function deleteApiChannelsDeleteFunc(
-  params: DeleteApiChannelsDeleteRequestType
+  params: DeleteApiChannelsDeleteRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<DeleteApiChannelsDeleteResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/channels/delete',
     method: 'DELETE',
-    params,
+    params: params,
   }
   return request<DeleteApiChannelsDeleteResultType>(config)
 }

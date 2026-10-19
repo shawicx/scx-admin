@@ -1,4 +1,5 @@
-import { RequestConfig, request } from '@/service/request'
+import { request } from '@/service/request'
+import type { RequestConfig } from '@/service/request'
 
 /**
  * @description 发送欢迎邮件
@@ -32,9 +33,11 @@ export interface PostApiMailSendWelcomeEmailResultType {
  * @returns Promise<PostApiMailSendWelcomeEmailResultType>
  */
 export async function postApiMailSendWelcomeEmailFunc(
-  params: PostApiMailSendWelcomeEmailRequestType
+  params: PostApiMailSendWelcomeEmailRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiMailSendWelcomeEmailResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/mail/send-welcome-email',
     method: 'POST',
     data: params,
@@ -72,9 +75,11 @@ export interface PostApiMailSendVerificationCodeResultType {
  * @returns Promise<PostApiMailSendVerificationCodeResultType>
  */
 export async function postApiMailSendVerificationCodeFunc(
-  params: PostApiMailSendVerificationCodeRequestType
+  params: PostApiMailSendVerificationCodeRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiMailSendVerificationCodeResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/mail/send-verification-code',
     method: 'POST',
     data: params,
@@ -100,8 +105,8 @@ export interface PostApiMailSendPasswordResetRequestType {
  * @description 发送密码重置邮件 的返回数据类型
  */
 export interface PostApiMailSendPasswordResetResultType {
-  /** @description 响应数据（文档未定义响应结构） */
-  data: unknown
+  /** @description  */
+  message: string
 }
 
 /**
@@ -110,9 +115,11 @@ export interface PostApiMailSendPasswordResetResultType {
  * @returns Promise<PostApiMailSendPasswordResetResultType>
  */
 export async function postApiMailSendPasswordResetFunc(
-  params: PostApiMailSendPasswordResetRequestType
+  params: PostApiMailSendPasswordResetRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiMailSendPasswordResetResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/mail/send-password-reset',
     method: 'POST',
     data: params,
@@ -138,8 +145,8 @@ export interface PostApiMailSendHtmlEmailRequestType {
  * @description 发送自定义 HTML 邮件 的返回数据类型
  */
 export interface PostApiMailSendHtmlEmailResultType {
-  /** @description 响应数据（文档未定义响应结构） */
-  data: unknown
+  /** @description  */
+  message: string
 }
 
 /**
@@ -148,9 +155,11 @@ export interface PostApiMailSendHtmlEmailResultType {
  * @returns Promise<PostApiMailSendHtmlEmailResultType>
  */
 export async function postApiMailSendHtmlEmailFunc(
-  params: PostApiMailSendHtmlEmailRequestType
+  params: PostApiMailSendHtmlEmailRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiMailSendHtmlEmailResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/mail/send-html-email',
     method: 'POST',
     data: params,

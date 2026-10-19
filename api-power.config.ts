@@ -51,5 +51,13 @@ export default defineConfig({
       source: 'https://api.apifox.com/v1/projects/8779787/export-openapi',
       token: 'APS-bEl8yPD58wfRzsXXkx4psEekqm4k2YhD',
     },
+    {
+      // AI 服务：直接用本地 ai-service 的 springdoc 作为源（SwaggerClient 按 URL 自动识别），
+      // 接口变更后重建镜像并 up -d，再跑 npx api-power generate 即可同步，无需 Apifox 中转
+      name: 'ai',
+      // source: 'https://api.apifox.com/v1/projects/8942404/export-openapi',
+      // token: 'APS-bEl8yPD58wfRzsXXkx4psEekqm4k2YhD',
+      source: 'http://localhost:3005/api/v3/api-docs',
+    },
   ],
 })

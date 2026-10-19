@@ -1,4 +1,5 @@
-import { RequestConfig, request } from '@/service/request'
+import { request } from '@/service/request'
+import type { RequestConfig } from '@/service/request'
 import type {
   OperationLogResponseDto,
   LoginLogResponseDto,
@@ -54,12 +55,14 @@ export interface GetApiLogsOperationsResultType {
  * @returns Promise<GetApiLogsOperationsResultType>
  */
 export async function getApiLogsOperationsFunc(
-  params: GetApiLogsOperationsRequestType
+  params: GetApiLogsOperationsRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiLogsOperationsResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/logs/operations',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiLogsOperationsResultType>(config)
 }
@@ -112,12 +115,14 @@ export interface GetApiLogsLoginsResultType {
  * @returns Promise<GetApiLogsLoginsResultType>
  */
 export async function getApiLogsLoginsFunc(
-  params: GetApiLogsLoginsRequestType
+  params: GetApiLogsLoginsRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiLogsLoginsResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/logs/logins',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiLogsLoginsResultType>(config)
 }

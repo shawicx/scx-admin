@@ -9,6 +9,9 @@ build/
 # AI
 openspec/
 
+# 临时输出
+.tmp*
+
 # Environment variables
 .env
 .env.local

@@ -1,4 +1,5 @@
-import { RequestConfig, request } from '@/service/request'
+import { request } from '@/service/request'
+import type { RequestConfig } from '@/service/request'
 import type {
   PermissionSummaryDto,
   RoleResponseDto,
@@ -51,9 +52,11 @@ export interface PutApiRolesUpdateResultType {
  * @returns Promise<PutApiRolesUpdateResultType>
  */
 export async function putApiRolesUpdateFunc(
-  params: PutApiRolesUpdateRequestType
+  params: PutApiRolesUpdateRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PutApiRolesUpdateResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/roles/update',
     method: 'PUT',
     data: params,
@@ -105,9 +108,11 @@ export interface PostApiRolesCreateResultType {
  * @returns Promise<PostApiRolesCreateResultType>
  */
 export async function postApiRolesCreateFunc(
-  params: PostApiRolesCreateRequestType
+  params: PostApiRolesCreateRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiRolesCreateResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/roles/create',
     method: 'POST',
     data: params,
@@ -141,9 +146,11 @@ export interface PostApiRolesAssignPermissionsResultType {
  * @returns Promise<PostApiRolesAssignPermissionsResultType>
  */
 export async function postApiRolesAssignPermissionsFunc(
-  params: PostApiRolesAssignPermissionsRequestType
+  params: PostApiRolesAssignPermissionsRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiRolesAssignPermissionsResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/roles/assign-permissions',
     method: 'POST',
     data: params,
@@ -175,12 +182,14 @@ export interface GetApiRolesPermissionsResultType {
  * @returns Promise<GetApiRolesPermissionsResultType>
  */
 export async function getApiRolesPermissionsFunc(
-  params: GetApiRolesPermissionsRequestType
+  params: GetApiRolesPermissionsRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiRolesPermissionsResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/roles/permissions',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiRolesPermissionsResultType>(config)
 }
@@ -217,12 +226,14 @@ export interface GetApiRolesListResultType {
  * @returns Promise<GetApiRolesListResultType>
  */
 export async function getApiRolesListFunc(
-  params: GetApiRolesListRequestType
+  params: GetApiRolesListRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiRolesListResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/roles/list',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiRolesListResultType>(config)
 }
@@ -265,12 +276,14 @@ export interface GetApiRolesDetailResultType {
  * @returns Promise<GetApiRolesDetailResultType>
  */
 export async function getApiRolesDetailFunc(
-  params: GetApiRolesDetailRequestType
+  params: GetApiRolesDetailRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiRolesDetailResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/roles/detail',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiRolesDetailResultType>(config)
 }
@@ -313,12 +326,14 @@ export interface GetApiRolesByCodeResultType {
  * @returns Promise<GetApiRolesByCodeResultType>
  */
 export async function getApiRolesByCodeFunc(
-  params: GetApiRolesByCodeRequestType
+  params: GetApiRolesByCodeRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiRolesByCodeResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/roles/by-code',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiRolesByCodeResultType>(config)
 }
@@ -349,12 +364,14 @@ export interface DeleteApiRolesRemovePermissionResultType {
  * @returns Promise<DeleteApiRolesRemovePermissionResultType>
  */
 export async function deleteApiRolesRemovePermissionFunc(
-  params: DeleteApiRolesRemovePermissionRequestType
+  params: DeleteApiRolesRemovePermissionRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<DeleteApiRolesRemovePermissionResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/roles/remove-permission',
     method: 'DELETE',
-    params,
+    params: params,
   }
   return request<DeleteApiRolesRemovePermissionResultType>(config)
 }
@@ -383,12 +400,14 @@ export interface DeleteApiRolesDeleteResultType {
  * @returns Promise<DeleteApiRolesDeleteResultType>
  */
 export async function deleteApiRolesDeleteFunc(
-  params: DeleteApiRolesDeleteRequestType
+  params: DeleteApiRolesDeleteRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<DeleteApiRolesDeleteResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/roles/delete',
     method: 'DELETE',
-    params,
+    params: params,
   }
   return request<DeleteApiRolesDeleteResultType>(config)
 }
@@ -417,12 +436,14 @@ export interface GetApiRolesPermissionTreeResultType {
  * @returns Promise<GetApiRolesPermissionTreeResultType>
  */
 export async function getApiRolesPermissionTreeFunc(
-  params: GetApiRolesPermissionTreeRequestType
+  params: GetApiRolesPermissionTreeRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiRolesPermissionTreeResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/roles/permission-tree',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiRolesPermissionTreeResultType>(config)
 }
@@ -448,12 +469,13 @@ export interface GetApiRolesAllResultType {
  * @returns Promise<GetApiRolesAllResultType>
  */
 export async function getApiRolesAllFunc(
-  params: GetApiRolesAllRequestType
+  params: GetApiRolesAllRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiRolesAllResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/roles/all',
     method: 'GET',
-    params,
   }
   return request<GetApiRolesAllResultType>(config)
 }

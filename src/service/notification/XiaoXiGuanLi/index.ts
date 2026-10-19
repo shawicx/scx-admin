@@ -1,4 +1,5 @@
-import { RequestConfig, request } from '@/service/request'
+import { request } from '@/service/request'
+import type { RequestConfig } from '@/service/request'
 import type { NotificationAdminDto } from '@/service/notification/types'
 
 /**
@@ -41,9 +42,11 @@ export interface PostApiNotificationsSendResultType {
  * @returns Promise<PostApiNotificationsSendResultType>
  */
 export async function postApiNotificationsSendFunc(
-  params: PostApiNotificationsSendRequestType
+  params: PostApiNotificationsSendRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiNotificationsSendResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/notifications/send',
     method: 'POST',
     data: params,
@@ -87,12 +90,14 @@ export interface GetApiNotificationsListResultType {
  * @returns Promise<GetApiNotificationsListResultType>
  */
 export async function getApiNotificationsListFunc(
-  params: GetApiNotificationsListRequestType
+  params: GetApiNotificationsListRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiNotificationsListResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/notifications/list',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiNotificationsListResultType>(config)
 }
@@ -123,12 +128,14 @@ export interface GetApiNotificationsDetailResultType {
  * @returns Promise<GetApiNotificationsDetailResultType>
  */
 export async function getApiNotificationsDetailFunc(
-  params: GetApiNotificationsDetailRequestType
+  params: GetApiNotificationsDetailRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiNotificationsDetailResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/notifications/detail',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiNotificationsDetailResultType>(config)
 }

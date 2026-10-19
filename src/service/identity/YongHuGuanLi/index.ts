@@ -1,4 +1,5 @@
-import { RequestConfig, request } from '@/service/request'
+import { request } from '@/service/request'
+import type { RequestConfig } from '@/service/request'
 import type {
   UserPreferences,
   UserRoleResponseDto,
@@ -34,9 +35,11 @@ export interface PostApiUsersSendLoginCodeResultType {
  * @returns Promise<PostApiUsersSendLoginCodeResultType>
  */
 export async function postApiUsersSendLoginCodeFunc(
-  params: PostApiUsersSendLoginCodeRequestType
+  params: PostApiUsersSendLoginCodeRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiUsersSendLoginCodeResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/send-login-code',
     method: 'POST',
     data: params,
@@ -68,9 +71,11 @@ export interface PostApiUsersSendEmailCodeResultType {
  * @returns Promise<PostApiUsersSendEmailCodeResultType>
  */
 export async function postApiUsersSendEmailCodeFunc(
-  params: PostApiUsersSendEmailCodeRequestType
+  params: PostApiUsersSendEmailCodeRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiUsersSendEmailCodeResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/send-email-code',
     method: 'POST',
     data: params,
@@ -130,9 +135,11 @@ export interface PostApiUsersRegisterResultType {
  * @returns Promise<PostApiUsersRegisterResultType>
  */
 export async function postApiUsersRegisterFunc(
-  params: PostApiUsersRegisterRequestType
+  params: PostApiUsersRegisterRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiUsersRegisterResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/register',
     method: 'POST',
     data: params,
@@ -164,12 +171,14 @@ export interface PostApiUsersLogoutResultType {
  * @returns Promise<PostApiUsersLogoutResultType>
  */
 export async function postApiUsersLogoutFunc(
-  params: PostApiUsersLogoutRequestType
+  params: PostApiUsersLogoutRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiUsersLogoutResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/logout',
     method: 'POST',
-    params,
+    params: params,
   }
   return request<PostApiUsersLogoutResultType>(config)
 }
@@ -200,9 +209,11 @@ export interface PostApiUsersRefreshTokenResultType {
  * @returns Promise<PostApiUsersRefreshTokenResultType>
  */
 export async function postApiUsersRefreshTokenFunc(
-  params: PostApiUsersRefreshTokenRequestType
+  params: PostApiUsersRefreshTokenRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiUsersRefreshTokenResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/refresh-token',
     method: 'POST',
     data: params,
@@ -250,9 +261,11 @@ export interface PostApiUsersLoginResultType {
  * @returns Promise<PostApiUsersLoginResultType>
  */
 export async function postApiUsersLoginFunc(
-  params: PostApiUsersLoginRequestType
+  params: PostApiUsersLoginRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiUsersLoginResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/login',
     method: 'POST',
     data: params,
@@ -302,9 +315,11 @@ export interface PostApiUsersLoginPasswordResultType {
  * @returns Promise<PostApiUsersLoginPasswordResultType>
  */
 export async function postApiUsersLoginPasswordFunc(
-  params: PostApiUsersLoginPasswordRequestType
+  params: PostApiUsersLoginPasswordRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiUsersLoginPasswordResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/login-password',
     method: 'POST',
     data: params,
@@ -366,9 +381,11 @@ export interface PostApiUsersCreateResultType {
  * @returns Promise<PostApiUsersCreateResultType>
  */
 export async function postApiUsersCreateFunc(
-  params: PostApiUsersCreateRequestType
+  params: PostApiUsersCreateRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiUsersCreateResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/create',
     method: 'POST',
     data: params,
@@ -402,9 +419,11 @@ export interface PostApiUsersAssignRolesBatchResultType {
  * @returns Promise<PostApiUsersAssignRolesBatchResultType>
  */
 export async function postApiUsersAssignRolesBatchFunc(
-  params: PostApiUsersAssignRolesBatchRequestType
+  params: PostApiUsersAssignRolesBatchRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiUsersAssignRolesBatchResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/assign-roles-batch',
     method: 'POST',
     data: params,
@@ -444,9 +463,11 @@ export interface PostApiUsersAssignRoleResultType {
  * @returns Promise<PostApiUsersAssignRoleResultType>
  */
 export async function postApiUsersAssignRoleFunc(
-  params: PostApiUsersAssignRoleRequestType
+  params: PostApiUsersAssignRoleRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiUsersAssignRoleResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/assign-role',
     method: 'POST',
     data: params,
@@ -482,9 +503,11 @@ export interface PatchApiUsersToggleStatusResultType {
  * @returns Promise<PatchApiUsersToggleStatusResultType>
  */
 export async function patchApiUsersToggleStatusFunc(
-  params: PatchApiUsersToggleStatusRequestType
+  params: PatchApiUsersToggleStatusRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PatchApiUsersToggleStatusResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/toggle-status',
     method: 'PATCH',
     data: params,
@@ -516,12 +539,14 @@ export interface GetApiUsersRolesResultType {
  * @returns Promise<GetApiUsersRolesResultType>
  */
 export async function getApiUsersRolesFunc(
-  params: GetApiUsersRolesRequestType
+  params: GetApiUsersRolesRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiUsersRolesResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/roles',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiUsersRolesResultType>(config)
 }
@@ -566,12 +591,14 @@ export interface GetApiUsersListResultType {
  * @returns Promise<GetApiUsersListResultType>
  */
 export async function getApiUsersListFunc(
-  params: GetApiUsersListRequestType
+  params: GetApiUsersListRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiUsersListResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/list',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiUsersListResultType>(config)
 }
@@ -600,12 +627,14 @@ export interface GetApiUsersPermissionsResultType {
  * @returns Promise<GetApiUsersPermissionsResultType>
  */
 export async function getApiUsersPermissionsFunc(
-  params: GetApiUsersPermissionsRequestType
+  params: GetApiUsersPermissionsRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiUsersPermissionsResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/permissions',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiUsersPermissionsResultType>(config)
 }
@@ -633,12 +662,13 @@ export interface GetApiUsersEncryptionKeyResultType {
  * @returns Promise<GetApiUsersEncryptionKeyResultType>
  */
 export async function getApiUsersEncryptionKeyFunc(
-  params: GetApiUsersEncryptionKeyRequestType
+  params: GetApiUsersEncryptionKeyRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiUsersEncryptionKeyResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/encryption-key',
     method: 'GET',
-    params,
   }
   return request<GetApiUsersEncryptionKeyResultType>(config)
 }
@@ -669,12 +699,14 @@ export interface GetApiUsersCheckRoleResultType {
  * @returns Promise<GetApiUsersCheckRoleResultType>
  */
 export async function getApiUsersCheckRoleFunc(
-  params: GetApiUsersCheckRoleRequestType
+  params: GetApiUsersCheckRoleRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiUsersCheckRoleResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/check-role',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiUsersCheckRoleResultType>(config)
 }
@@ -707,12 +739,14 @@ export interface GetApiUsersCheckPermissionResultType {
  * @returns Promise<GetApiUsersCheckPermissionResultType>
  */
 export async function getApiUsersCheckPermissionFunc(
-  params: GetApiUsersCheckPermissionRequestType
+  params: GetApiUsersCheckPermissionRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiUsersCheckPermissionResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/check-permission',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiUsersCheckPermissionResultType>(config)
 }
@@ -743,12 +777,14 @@ export interface DeleteApiUsersRemoveRoleResultType {
  * @returns Promise<DeleteApiUsersRemoveRoleResultType>
  */
 export async function deleteApiUsersRemoveRoleFunc(
-  params: DeleteApiUsersRemoveRoleRequestType
+  params: DeleteApiUsersRemoveRoleRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<DeleteApiUsersRemoveRoleResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/remove-role',
     method: 'DELETE',
-    params,
+    params: params,
   }
   return request<DeleteApiUsersRemoveRoleResultType>(config)
 }
@@ -779,9 +815,11 @@ export interface DeleteApiUsersBatchDeleteResultType {
  * @returns Promise<DeleteApiUsersBatchDeleteResultType>
  */
 export async function deleteApiUsersBatchDeleteFunc(
-  params: DeleteApiUsersBatchDeleteRequestType
+  params: DeleteApiUsersBatchDeleteRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<DeleteApiUsersBatchDeleteResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/batch-delete',
     method: 'DELETE',
     data: params,
@@ -832,12 +870,13 @@ export interface GetApiUsersMeResultType {
  * @returns Promise<GetApiUsersMeResultType>
  */
 export async function getApiUsersMeFunc(
-  params: GetApiUsersMeRequestType
+  params: GetApiUsersMeRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiUsersMeResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/me',
     method: 'GET',
-    params,
   }
   return request<GetApiUsersMeResultType>(config)
 }
@@ -890,9 +929,11 @@ export interface PutApiUsersMeResultType {
  * @returns Promise<PutApiUsersMeResultType>
  */
 export async function putApiUsersMeFunc(
-  params: PutApiUsersMeRequestType
+  params: PutApiUsersMeRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PutApiUsersMeResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/me',
     method: 'PUT',
     data: params,
@@ -954,9 +995,11 @@ export interface PutApiUsersMePreferencesResultType {
  * @returns Promise<PutApiUsersMePreferencesResultType>
  */
 export async function putApiUsersMePreferencesFunc(
-  params: PutApiUsersMePreferencesRequestType
+  params: PutApiUsersMePreferencesRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PutApiUsersMePreferencesResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/me/preferences',
     method: 'PUT',
     data: params,
@@ -987,12 +1030,13 @@ export interface GetApiUsersMeMenusResultType {
  * @returns Promise<GetApiUsersMeMenusResultType>
  */
 export async function getApiUsersMeMenusFunc(
-  params: GetApiUsersMeMenusRequestType
+  params: GetApiUsersMeMenusRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiUsersMeMenusResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/users/me/menus',
     method: 'GET',
-    params,
   }
   return request<GetApiUsersMeMenusResultType>(config)
 }

@@ -1,4 +1,5 @@
-import { RequestConfig, request } from '@/service/request'
+import { request } from '@/service/request'
+import type { RequestConfig } from '@/service/request'
 import type {
   PermissionResponseDto,
   PermissionTreeResponseDto,
@@ -79,9 +80,11 @@ export interface PutApiPermissionsUpdateResultType {
  * @returns Promise<PutApiPermissionsUpdateResultType>
  */
 export async function putApiPermissionsUpdateFunc(
-  params: PutApiPermissionsUpdateRequestType
+  params: PutApiPermissionsUpdateRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PutApiPermissionsUpdateResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/update',
     method: 'PUT',
     data: params,
@@ -161,9 +164,11 @@ export interface PostApiPermissionsCreateResultType {
  * @returns Promise<PostApiPermissionsCreateResultType>
  */
 export async function postApiPermissionsCreateFunc(
-  params: PostApiPermissionsCreateRequestType
+  params: PostApiPermissionsCreateRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiPermissionsCreateResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/create',
     method: 'POST',
     data: params,
@@ -195,12 +200,13 @@ export interface GetApiPermissionsButtonsByMenuIdResultType {
  * @returns Promise<GetApiPermissionsButtonsByMenuIdResultType>
  */
 export async function getApiPermissionsButtonsByMenuIdFunc(
-  params: GetApiPermissionsButtonsByMenuIdRequestType
+  params: GetApiPermissionsButtonsByMenuIdRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiPermissionsButtonsByMenuIdResultType> {
   const config: RequestConfig = {
+    ...options,
     url: `/api/permissions/${params.menuId}/buttons`,
     method: 'GET',
-    params,
   }
   return request<GetApiPermissionsButtonsByMenuIdResultType>(config)
 }
@@ -226,12 +232,13 @@ export interface GetApiPermissionsTreeResultType {
  * @returns Promise<GetApiPermissionsTreeResultType>
  */
 export async function getApiPermissionsTreeFunc(
-  params: GetApiPermissionsTreeRequestType
+  params: GetApiPermissionsTreeRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiPermissionsTreeResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/tree',
     method: 'GET',
-    params,
   }
   return request<GetApiPermissionsTreeResultType>(config)
 }
@@ -262,12 +269,14 @@ export interface GetApiPermissionsSearchResultType {
  * @returns Promise<GetApiPermissionsSearchResultType>
  */
 export async function getApiPermissionsSearchFunc(
-  params: GetApiPermissionsSearchRequestType
+  params: GetApiPermissionsSearchRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiPermissionsSearchResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/search',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiPermissionsSearchResultType>(config)
 }
@@ -293,12 +302,13 @@ export interface GetApiPermissionsResourcesResultType {
  * @returns Promise<GetApiPermissionsResourcesResultType>
  */
 export async function getApiPermissionsResourcesFunc(
-  params: GetApiPermissionsResourcesRequestType
+  params: GetApiPermissionsResourcesRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiPermissionsResourcesResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/resources',
     method: 'GET',
-    params,
   }
   return request<GetApiPermissionsResourcesResultType>(config)
 }
@@ -324,12 +334,13 @@ export interface GetApiPermissionsMenuTreeResultType {
  * @returns Promise<GetApiPermissionsMenuTreeResultType>
  */
 export async function getApiPermissionsMenuTreeFunc(
-  params: GetApiPermissionsMenuTreeRequestType
+  params: GetApiPermissionsMenuTreeRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiPermissionsMenuTreeResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/menu-tree',
     method: 'GET',
-    params,
   }
   return request<GetApiPermissionsMenuTreeResultType>(config)
 }
@@ -378,12 +389,14 @@ export interface GetApiPermissionsListResultType {
  * @returns Promise<GetApiPermissionsListResultType>
  */
 export async function getApiPermissionsListFunc(
-  params: GetApiPermissionsListRequestType
+  params: GetApiPermissionsListRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiPermissionsListResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/list',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiPermissionsListResultType>(config)
 }
@@ -409,12 +422,13 @@ export interface GetApiPermissionsLevel1ResultType {
  * @returns Promise<GetApiPermissionsLevel1ResultType>
  */
 export async function getApiPermissionsLevel1Func(
-  params: GetApiPermissionsLevel1RequestType
+  params: GetApiPermissionsLevel1RequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiPermissionsLevel1ResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/level-1',
     method: 'GET',
-    params,
   }
   return request<GetApiPermissionsLevel1ResultType>(config)
 }
@@ -471,12 +485,14 @@ export interface GetApiPermissionsDetailResultType {
  * @returns Promise<GetApiPermissionsDetailResultType>
  */
 export async function getApiPermissionsDetailFunc(
-  params: GetApiPermissionsDetailRequestType
+  params: GetApiPermissionsDetailRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiPermissionsDetailResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/detail',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiPermissionsDetailResultType>(config)
 }
@@ -505,12 +521,14 @@ export interface GetApiPermissionsByResourceResultType {
  * @returns Promise<GetApiPermissionsByResourceResultType>
  */
 export async function getApiPermissionsByResourceFunc(
-  params: GetApiPermissionsByResourceRequestType
+  params: GetApiPermissionsByResourceRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiPermissionsByResourceResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/by-resource',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiPermissionsByResourceResultType>(config)
 }
@@ -539,12 +557,14 @@ export interface GetApiPermissionsByLevelResultType {
  * @returns Promise<GetApiPermissionsByLevelResultType>
  */
 export async function getApiPermissionsByLevelFunc(
-  params: GetApiPermissionsByLevelRequestType
+  params: GetApiPermissionsByLevelRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiPermissionsByLevelResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/by-level',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiPermissionsByLevelResultType>(config)
 }
@@ -573,12 +593,14 @@ export interface GetApiPermissionsByActionResultType {
  * @returns Promise<GetApiPermissionsByActionResultType>
  */
 export async function getApiPermissionsByActionFunc(
-  params: GetApiPermissionsByActionRequestType
+  params: GetApiPermissionsByActionRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiPermissionsByActionResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/by-action',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiPermissionsByActionResultType>(config)
 }
@@ -604,12 +626,13 @@ export interface GetApiPermissionsActionsResultType {
  * @returns Promise<GetApiPermissionsActionsResultType>
  */
 export async function getApiPermissionsActionsFunc(
-  params: GetApiPermissionsActionsRequestType
+  params: GetApiPermissionsActionsRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiPermissionsActionsResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/actions',
     method: 'GET',
-    params,
   }
   return request<GetApiPermissionsActionsResultType>(config)
 }
@@ -638,12 +661,14 @@ export interface DeleteApiPermissionsDeleteResultType {
  * @returns Promise<DeleteApiPermissionsDeleteResultType>
  */
 export async function deleteApiPermissionsDeleteFunc(
-  params: DeleteApiPermissionsDeleteRequestType
+  params: DeleteApiPermissionsDeleteRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<DeleteApiPermissionsDeleteResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/permissions/delete',
     method: 'DELETE',
-    params,
+    params: params,
   }
   return request<DeleteApiPermissionsDeleteResultType>(config)
 }

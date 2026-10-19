@@ -15,11 +15,11 @@ import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/ui/password-input'
 import { toast } from '@/components/ui/use-toast'
 import {
-  getAiConfig,
-  saveAiConfig,
-  testAiConnection,
-  type AiModelConfig,
-} from '@/lib/ai-client'
+  getApiAiConfigFunc,
+  postApiAiConfigSaveFunc,
+  postApiAiConfigTestFunc,
+  type ModelConfigResponseDto,
+} from '@/service/ai'
 
 const aiModelSettingsSchema = z.object({
   baseUrl: z
@@ -51,7 +51,7 @@ export function AiModelSettingsForm() {
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isTesting, setIsTesting] = useState(false)
-  const [config, setConfig] = useState<AiModelConfig | null>(null)
+  const [config, setConfig] = useState<ModelConfigResponseDto | null>(null)
 
   const { reset, register, getValues, formState, handleSubmit } =
     useForm<AiModelSettingsValues>({
@@ -69,7 +69,7 @@ export function AiModelSettingsForm() {
     let cancelled = false
     const load = async () => {
       try {
-        const loaded = await getAiConfig()
+        const loaded = await getApiAiConfigFunc({})
         if (cancelled || !loaded) return
         setConfig(loaded)
         reset({
@@ -96,7 +96,7 @@ export function AiModelSettingsForm() {
     if (isSubmitting) return
     setIsSubmitting(true)
     try {
-      const saved = await saveAiConfig({
+      const saved = await postApiAiConfigSaveFunc({
         baseUrl: data.baseUrl.trim(),
         apiKey: data.apiKey.trim() || undefined,
         model: data.model.trim(),
@@ -113,13 +113,8 @@ export function AiModelSettingsForm() {
       })
       toast({ title: '成功', description: 'AI 模型配置已保存' })
     } catch (error) {
+      // 业务/网络错误已由 request.ts 统一 toast，这里只记录
       console.error('保存 AI 模型配置失败:', error)
-      toast({
-        variant: 'destructive',
-        title: '错误',
-        description:
-          error instanceof Error ? error.message : '保存 AI 模型配置失败',
-      })
     } finally {
       setIsSubmitting(false)
     }
@@ -138,7 +133,7 @@ export function AiModelSettingsForm() {
     }
     setIsTesting(true)
     try {
-      const result = await testAiConnection({
+      const result = await postApiAiConfigTestFunc({
         baseUrl,
         apiKey: getValues('apiKey').trim() || undefined,
       })
@@ -155,11 +150,7 @@ export function AiModelSettingsForm() {
         })
       }
     } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: '错误',
-        description: error instanceof Error ? error.message : '测试失败',
-      })
+      console.error('测试连接失败:', error)
     } finally {
       setIsTesting(false)
     }

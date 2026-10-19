@@ -1,4 +1,5 @@
-import { RequestConfig, request } from '@/service/request'
+import { request } from '@/service/request'
+import type { RequestConfig } from '@/service/request'
 import type { DictTypeResponseDto } from '@/service/rbac/types'
 
 /**
@@ -45,9 +46,11 @@ export interface PutApiDictsTypeUpdateResultType {
  * @returns Promise<PutApiDictsTypeUpdateResultType>
  */
 export async function putApiDictsTypeUpdateFunc(
-  params: PutApiDictsTypeUpdateRequestType
+  params: PutApiDictsTypeUpdateRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PutApiDictsTypeUpdateResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/dicts/type/update',
     method: 'PUT',
     data: params,
@@ -97,9 +100,11 @@ export interface PostApiDictsTypeCreateResultType {
  * @returns Promise<PostApiDictsTypeCreateResultType>
  */
 export async function postApiDictsTypeCreateFunc(
-  params: PostApiDictsTypeCreateRequestType
+  params: PostApiDictsTypeCreateRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PostApiDictsTypeCreateResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/dicts/type/create',
     method: 'POST',
     data: params,
@@ -143,12 +148,14 @@ export interface GetApiDictsTypeListResultType {
  * @returns Promise<GetApiDictsTypeListResultType>
  */
 export async function getApiDictsTypeListFunc(
-  params: GetApiDictsTypeListRequestType
+  params: GetApiDictsTypeListRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiDictsTypeListResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/dicts/type/list',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiDictsTypeListResultType>(config)
 }
@@ -191,12 +198,14 @@ export interface GetApiDictsTypeDetailResultType {
  * @returns Promise<GetApiDictsTypeDetailResultType>
  */
 export async function getApiDictsTypeDetailFunc(
-  params: GetApiDictsTypeDetailRequestType
+  params: GetApiDictsTypeDetailRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiDictsTypeDetailResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/dicts/type/detail',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiDictsTypeDetailResultType>(config)
 }
@@ -225,12 +234,14 @@ export interface DeleteApiDictsTypeDeleteResultType {
  * @returns Promise<DeleteApiDictsTypeDeleteResultType>
  */
 export async function deleteApiDictsTypeDeleteFunc(
-  params: DeleteApiDictsTypeDeleteRequestType
+  params: DeleteApiDictsTypeDeleteRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<DeleteApiDictsTypeDeleteResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/dicts/type/delete',
     method: 'DELETE',
-    params,
+    params: params,
   }
   return request<DeleteApiDictsTypeDeleteResultType>(config)
 }

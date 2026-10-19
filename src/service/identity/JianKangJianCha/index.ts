@@ -1,4 +1,5 @@
-import { RequestConfig, request } from '@/service/request'
+import { request } from '@/service/request'
+import type { RequestConfig } from '@/service/request'
 import type {
   ComponentHealthDto,
   SystemInfoDto,
@@ -37,12 +38,13 @@ export interface GetApiHealthResultType {
  * @returns Promise<GetApiHealthResultType>
  */
 export async function getApiHealthFunc(
-  params: GetApiHealthRequestType
+  params: GetApiHealthRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiHealthResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/health',
     method: 'GET',
-    params,
   }
   return request<GetApiHealthResultType>(config)
 }

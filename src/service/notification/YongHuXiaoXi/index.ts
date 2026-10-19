@@ -1,4 +1,5 @@
-import { RequestConfig, request } from '@/service/request'
+import { request } from '@/service/request'
+import type { RequestConfig } from '@/service/request'
 import type { InboxItemDto } from '@/service/notification/types'
 
 /**
@@ -25,9 +26,11 @@ export interface PutApiNotificationsReadResultType {
  * @returns Promise<PutApiNotificationsReadResultType>
  */
 export async function putApiNotificationsReadFunc(
-  params: PutApiNotificationsReadRequestType
+  params: PutApiNotificationsReadRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PutApiNotificationsReadResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/notifications/read',
     method: 'PUT',
     data: params,
@@ -59,9 +62,11 @@ export interface PutApiNotificationsReadAllResultType {
  * @returns Promise<PutApiNotificationsReadAllResultType>
  */
 export async function putApiNotificationsReadAllFunc(
-  params: PutApiNotificationsReadAllRequestType
+  params: PutApiNotificationsReadAllRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<PutApiNotificationsReadAllResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/notifications/read-all',
     method: 'PUT',
     data: params,
@@ -92,12 +97,13 @@ export interface GetApiNotificationsUnreadCountResultType {
  * @returns Promise<GetApiNotificationsUnreadCountResultType>
  */
 export async function getApiNotificationsUnreadCountFunc(
-  params: GetApiNotificationsUnreadCountRequestType
+  params: GetApiNotificationsUnreadCountRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiNotificationsUnreadCountResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/notifications/unread-count',
     method: 'GET',
-    params,
   }
   return request<GetApiNotificationsUnreadCountResultType>(config)
 }
@@ -134,12 +140,14 @@ export interface GetApiNotificationsInboxResultType {
  * @returns Promise<GetApiNotificationsInboxResultType>
  */
 export async function getApiNotificationsInboxFunc(
-  params: GetApiNotificationsInboxRequestType
+  params: GetApiNotificationsInboxRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiNotificationsInboxResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/notifications/inbox',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiNotificationsInboxResultType>(config)
 }
@@ -176,12 +184,14 @@ export interface GetApiNotificationsAnnouncementsResultType {
  * @returns Promise<GetApiNotificationsAnnouncementsResultType>
  */
 export async function getApiNotificationsAnnouncementsFunc(
-  params: GetApiNotificationsAnnouncementsRequestType
+  params: GetApiNotificationsAnnouncementsRequestType,
+  options: Omit<RequestConfig, 'url' | 'method' | 'data' | 'params'> = {}
 ): Promise<GetApiNotificationsAnnouncementsResultType> {
   const config: RequestConfig = {
+    ...options,
     url: '/api/notifications/announcements',
     method: 'GET',
-    params,
+    params: params,
   }
   return request<GetApiNotificationsAnnouncementsResultType>(config)
 }

@@ -1,32 +1,42 @@
 'use client'
 
 /**
- * @description AI 对话页（初版单会话）：历史加载、流式输出、停止生成、清空会话与未配置引导
+ * @description AI 对话页（多会话）：会话侧边栏切换/新建/重命名/删除/清空全部，流式输出与未配置引导
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { Eraser, Sparkles } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ChatInput } from '@/components/chat/chat-input'
 import {
   ChatMessage,
   type ChatMessageItem,
 } from '@/components/chat/chat-message'
+import { RenameSessionDialog } from '@/components/chat/rename-session-dialog'
+import { SessionSidebar } from '@/components/chat/session-sidebar'
 import { toast } from '@/components/ui/use-toast'
+import { AiApiError, streamChat } from '@/lib/ai-client'
 import {
-  AiApiError,
-  clearAiMessages,
-  getAiConfig,
-  getAiMessages,
-  streamChat,
-  type AiModelConfig,
-} from '@/lib/ai-client'
+  deleteApiAiSessionsDeleteFunc,
+  getApiAiConfigFunc,
+  getApiAiMessagesFunc,
+  getApiAiSessionsListFunc,
+  postApiAiMessagesClearFunc,
+  type ModelConfigResponseDto,
+  type SessionResponseDto,
+} from '@/service/ai'
 
 export default function ChatPage() {
   const [isLoading, setIsLoading] = useState(true)
-  const [config, setConfig] = useState<AiModelConfig | null>(null)
+  const [config, setConfig] = useState<ModelConfigResponseDto | null>(null)
+  const [sessions, setSessions] = useState<SessionResponseDto[]>([])
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null)
   const [messages, setMessages] = useState<ChatMessageItem[]>([])
   const [isStreaming, setIsStreaming] = useState(false)
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false)
+  const [renameTarget, setRenameTarget] = useState<SessionResponseDto | null>(
+    null
+  )
   const abortRef = useRef<AbortController | null>(null)
   const seqRef = useRef(0)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -36,19 +46,13 @@ export default function ChatPage() {
     let cancelled = false
     const load = async () => {
       try {
-        const [cfg, history] = await Promise.all([
-          getAiConfig(),
-          getAiMessages(),
+        const [cfg, sessionResult] = await Promise.all([
+          getApiAiConfigFunc({}),
+          getApiAiSessionsListFunc({}),
         ])
         if (cancelled) return
         setConfig(cfg)
-        setMessages(
-          history.map(message => ({
-            id: message.id,
-            role: message.role,
-            content: message.content,
-          }))
-        )
+        setSessions(sessionResult.list)
       } catch (error) {
         console.error('加载 AI 对话数据失败:', error)
       } finally {
@@ -75,9 +79,53 @@ export default function ChatPage() {
       element.scrollHeight - element.scrollTop - element.clientHeight < 80
   }
 
+  /** 静默刷新会话列表（新会话落列表、活跃时间重排） */
+  const refreshSessions = useCallback(async () => {
+    try {
+      const result = await getApiAiSessionsListFunc({})
+      setSessions(result.list)
+    } catch (error) {
+      console.error('刷新会话列表失败:', error)
+    }
+  }, [])
+
+  const handleSelectSession = useCallback(
+    async (sessionId: string) => {
+      if (sessionId === currentSessionId) return
+      abortRef.current?.abort()
+      setCurrentSessionId(sessionId)
+      setMessages([])
+      setIsLoadingMessages(true)
+      try {
+        const history = await getApiAiMessagesFunc({ sessionId })
+        setMessages(
+          history.list.map(message => ({
+            id: message.id,
+            role: message.role as ChatMessageItem['role'],
+            content: message.content,
+          }))
+        )
+      } catch (error) {
+        // 业务/网络错误已由 request.ts 统一 toast，这里只记录
+        console.error('加载会话消息失败:', error)
+      } finally {
+        setIsLoadingMessages(false)
+      }
+    },
+    [currentSessionId]
+  )
+
+  const handleNewChat = useCallback(() => {
+    abortRef.current?.abort()
+    setCurrentSessionId(null)
+    setMessages([])
+  }, [])
+
   const handleSend = useCallback(
     async (content: string) => {
       if (isStreaming) return
+      // 发送瞬间固化会话归属：onSession 仅在"新对话"时更新选中态
+      const sendSessionId = currentSessionId
       const assistantId = `local-assistant-${(seqRef.current += 1)}`
       setMessages(previous => [
         ...previous,
@@ -94,7 +142,10 @@ export default function ChatPage() {
       abortRef.current = controller
       try {
         await streamChat(content, {
-          signal: controller.signal,
+          sessionId: sendSessionId ?? undefined,
+          onSession: session => {
+            if (!sendSessionId) setCurrentSessionId(session.id)
+          },
           onDelta: piece =>
             setMessages(previous =>
               previous.map(message =>
@@ -148,30 +199,55 @@ export default function ChatPage() {
       } finally {
         setIsStreaming(false)
         abortRef.current = null
+        // 新会话入列表 / 既有会话活跃置顶
+        void refreshSessions()
       }
     },
-    [isStreaming]
+    [isStreaming, currentSessionId, refreshSessions]
   )
 
   const handleStop = () => {
     abortRef.current?.abort()
   }
 
-  const handleClear = async () => {
+  const handleDeleteSession = useCallback(
+    async (session: SessionResponseDto) => {
+      if (isStreaming && session.id === currentSessionId) {
+        abortRef.current?.abort()
+      }
+      try {
+        await deleteApiAiSessionsDeleteFunc({ id: session.id })
+        setSessions(previous => previous.filter(item => item.id !== session.id))
+        if (session.id === currentSessionId) {
+          setCurrentSessionId(null)
+          setMessages([])
+        }
+        toast({ title: '成功', description: '会话已删除' })
+      } catch (error) {
+        console.error('删除会话失败:', error)
+      }
+    },
+    [isStreaming, currentSessionId]
+  )
+
+  const handleClearAll = useCallback(async () => {
     if (isStreaming) abortRef.current?.abort()
     try {
-      await clearAiMessages()
+      await postApiAiMessagesClearFunc({})
+      setSessions([])
+      setCurrentSessionId(null)
       setMessages([])
-      toast({ title: '成功', description: '会话已清空' })
+      toast({ title: '成功', description: '全部会话已清空' })
     } catch (error) {
-      console.error('清空会话失败:', error)
-      toast({
-        variant: 'destructive',
-        title: '错误',
-        description: error instanceof Error ? error.message : '清空会话失败',
-      })
+      console.error('清空全部会话失败:', error)
     }
-  }
+  }, [isStreaming])
+
+  const handleRenamed = useCallback((updated: SessionResponseDto) => {
+    setSessions(previous =>
+      previous.map(item => (item.id === updated.id ? updated : item))
+    )
+  }, [])
 
   if (isLoading) {
     return (
@@ -206,48 +282,75 @@ export default function ChatPage() {
     )
   }
 
+  const currentSession = sessions.find(
+    session => session.id === currentSessionId
+  )
+  const headerTitle = currentSession?.title ?? '新对话'
+
   return (
-    <div className="flex h-[calc(100vh-7rem)] flex-col">
-      <div className="mb-3 flex items-center justify-between">
-        <div>
-          <h1 className="text-lg font-semibold">AI 对话</h1>
-          <p className="text-xs text-muted-foreground">
-            {config.model} · 单会话
-          </p>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleClear}
-          disabled={messages.length === 0 || isStreaming}
-        >
-          <Eraser className="mr-2 h-4 w-4" />
-          清空对话
-        </Button>
-      </div>
-      <div
-        ref={scrollRef}
-        onScroll={handleScroll}
-        className="flex-1 space-y-6 overflow-y-auto pr-1"
-      >
-        {messages.length === 0 ? (
-          <div className="flex h-full flex-col items-center justify-center gap-2 text-center text-muted-foreground">
-            <Sparkles className="h-8 w-8" />
-            <p className="text-sm">开始你的第一段对话吧</p>
+    <div className="flex h-[calc(100vh-7rem)] gap-4">
+      <SessionSidebar
+        sessions={sessions}
+        currentSessionId={currentSessionId}
+        disabled={isStreaming}
+        onSelect={handleSelectSession}
+        onNew={handleNewChat}
+        onRename={setRenameTarget}
+        onDelete={handleDeleteSession}
+        onClearAll={handleClearAll}
+      />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <div className="mb-3 flex items-center justify-between">
+          <div className="min-w-0">
+            <h1 className="truncate text-lg font-semibold" title={headerTitle}>
+              {headerTitle}
+            </h1>
+            <p className="text-xs text-muted-foreground">
+              {config.model} · {sessions.length} 个会话
+            </p>
           </div>
-        ) : (
-          messages.map(message => (
-            <ChatMessage key={message.id} message={message} />
-          ))
-        )}
+        </div>
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex-1 space-y-6 overflow-y-auto pr-1"
+        >
+          {isLoadingMessages ? (
+            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+              正在加载会话消息...
+            </div>
+          ) : !currentSessionId && messages.length === 0 ? (
+            <div className="flex h-full flex-col items-center justify-center gap-2 text-center text-muted-foreground">
+              <Sparkles className="h-8 w-8" />
+              <p className="text-sm">新建对话，或从左侧选择一个历史会话</p>
+            </div>
+          ) : messages.length === 0 ? (
+            <div className="flex h-full flex-col items-center justify-center gap-2 text-center text-muted-foreground">
+              <Sparkles className="h-8 w-8" />
+              <p className="text-sm">开始你的第一段对话吧</p>
+            </div>
+          ) : (
+            messages.map(message => (
+              <ChatMessage key={message.id} message={message} />
+            ))
+          )}
+        </div>
+        <div className="mt-3">
+          <ChatInput
+            onSend={handleSend}
+            onStop={handleStop}
+            isStreaming={isStreaming}
+          />
+        </div>
       </div>
-      <div className="mt-3">
-        <ChatInput
-          onSend={handleSend}
-          onStop={handleStop}
-          isStreaming={isStreaming}
-        />
-      </div>
+      <RenameSessionDialog
+        session={renameTarget}
+        open={renameTarget !== null}
+        onOpenChange={open => {
+          if (!open) setRenameTarget(null)
+        }}
+        onRenamed={handleRenamed}
+      />
     </div>
   )
 }
