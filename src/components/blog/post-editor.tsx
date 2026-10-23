@@ -338,6 +338,11 @@ export function PostEditor({ postId }: PostEditorProps) {
                 placeholder="文章摘要（列表页展示）"
                 {...form.register('summary')}
               />
+              {form.formState.errors.summary && (
+                <p className="text-sm text-red-500">
+                  {form.formState.errors.summary.message}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -525,6 +530,11 @@ export function PostEditor({ postId }: PostEditorProps) {
             <div className="space-y-2">
               <Label htmlFor="post-seo-title">SEO 标题</Label>
               <Input id="post-seo-title" {...form.register('seoTitle')} />
+              {form.formState.errors.seoTitle && (
+                <p className="text-sm text-red-500">
+                  {form.formState.errors.seoTitle.message}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -534,6 +544,11 @@ export function PostEditor({ postId }: PostEditorProps) {
                 rows={3}
                 {...form.register('seoDescription')}
               />
+              {form.formState.errors.seoDescription && (
+                <p className="text-sm text-red-500">
+                  {form.formState.errors.seoDescription.message}
+                </p>
+              )}
             </div>
           </div>
         </div>
