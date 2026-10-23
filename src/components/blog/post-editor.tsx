@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
 import { Save, Send, Undo2, Archive, Upload, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -21,8 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { HasPermission } from '@/components/has-permission'
+import { MarkdownEditor } from '@/components/blog/markdown-editor'
 import {
   getApiBlogAdminCategoriesFunc,
   getApiBlogAdminTagsFunc,
@@ -226,8 +224,6 @@ export function PostEditor({ postId }: PostEditorProps) {
     )
   }
 
-  const content = form.watch('content')
-
   return (
     <div className="space-y-6">
       {post && (
@@ -349,40 +345,7 @@ export function PostEditor({ postId }: PostEditorProps) {
               <Label>
                 正文 <span className="text-red-500">*</span>
               </Label>
-              <Tabs defaultValue="edit">
-                <TabsList>
-                  <TabsTrigger value="edit">编辑</TabsTrigger>
-                  <TabsTrigger value="preview">预览</TabsTrigger>
-                </TabsList>
-                <TabsContent value="edit">
-                  <Textarea
-                    rows={18}
-                    placeholder="支持 Markdown 语法"
-                    className="font-mono text-sm"
-                    {...form.register('content')}
-                  />
-                </TabsContent>
-                <TabsContent value="preview">
-                  <div className="min-h-[400px] rounded-md border p-4 text-sm">
-                    {content ? (
-                      <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                          pre: ({ children }) => (
-                            <pre className="overflow-x-auto rounded-md bg-muted p-3 text-xs">
-                              {children}
-                            </pre>
-                          ),
-                        }}
-                      >
-                        {content}
-                      </ReactMarkdown>
-                    ) : (
-                      <p className="text-muted-foreground">暂无内容</p>
-                    )}
-                  </div>
-                </TabsContent>
-              </Tabs>
+              <MarkdownEditor minHeight={420} {...form.register('content')} />
               {form.formState.errors.content && (
                 <p className="text-sm text-red-500">
                   {form.formState.errors.content.message}
