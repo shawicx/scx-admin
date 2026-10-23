@@ -48,7 +48,12 @@ export function CreateUserDialog({
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const form = useForm<CreateUserFormValues>({
+  // zod v4 的 .default() 使输入类型变为可选，需按 input/output 分离声明表单泛型
+  const form = useForm<
+    z.input<typeof createUserSchema>,
+    unknown,
+    z.output<typeof createUserSchema>
+  >({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
       name: '',

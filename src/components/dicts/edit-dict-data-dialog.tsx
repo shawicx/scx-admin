@@ -53,7 +53,12 @@ export function EditDictDataDialog({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const form = useForm<EditDictDataFormValues>({
+  // zod v4 的 coerce 输入类型为 unknown，需按 input/output 分离声明表单泛型
+  const form = useForm<
+    z.input<typeof editDictDataSchema>,
+    unknown,
+    z.output<typeof editDictDataSchema>
+  >({
     resolver: zodResolver(editDictDataSchema),
     defaultValues: {
       label: '',

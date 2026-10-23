@@ -49,7 +49,12 @@ export function CreateDictDataDialog({
 }: CreateDictDataDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const form = useForm<CreateDictDataFormValues>({
+  // zod v4 的 coerce 输入类型为 unknown，需按 input/output 分离声明表单泛型
+  const form = useForm<
+    z.input<typeof createDictDataSchema>,
+    unknown,
+    z.output<typeof createDictDataSchema>
+  >({
     resolver: zodResolver(createDictDataSchema),
     defaultValues: {
       label: '',
