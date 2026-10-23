@@ -14,6 +14,12 @@ import {
   CircleDot,
   BookText,
   Sparkles,
+  Newspaper,
+  FileText,
+  FolderTree,
+  Tags,
+  MessagesSquare,
+  LayoutDashboard,
 } from 'lucide-react'
 import type { MeMenuNodeDto } from '@/service/identity'
 
@@ -44,6 +50,11 @@ export const iconMap: Record<string, LucideIcon> = {
   'operation-logs': ClipboardList,
   'login-logs': LogIn,
   dicts: BookText,
+  'blog-dashboard': LayoutDashboard,
+  'blog-posts': Newspaper,
+  'blog-categories': FolderTree,
+  'blog-tags': Tags,
+  'blog-comments': MessagesSquare,
 }
 
 /**

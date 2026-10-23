@@ -44,6 +44,8 @@ export function Header() {
       '/403': '无权限',
       // 日志容器段中文名：后端菜单树只 seed 了两个日志叶子，无 /logs 容器行
       '/logs': '日志管理',
+      // 博客容器段中文名：后端菜单树只 seed 了博客叶子，无 /blog 容器行
+      '/blog': '博客管理',
     }
     /** @description 深度优先遍历菜单树，将 path → name 写入面包屑映射 */
     const walk = (nodes: MeMenuNodeDto[]) => {

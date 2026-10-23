@@ -59,5 +59,11 @@ export default defineConfig({
       // token: 'APS-bEl8yPD58wfRzsXXkx4psEekqm4k2YhD',
       source: 'http://localhost:3005/api/v3/api-docs',
     },
+    {
+      // 博客服务：直接用本地 blog-service 的 springdoc 作为源（同 ai 服务的做法），
+      // 接口变更后重启服务再跑 npx api-power generate 即可同步
+      name: 'blog',
+      source: 'http://localhost:3006/api/v3/api-docs',
+    },
   ],
 })
