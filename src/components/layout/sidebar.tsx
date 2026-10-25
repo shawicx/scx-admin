@@ -19,6 +19,18 @@ interface MenuItemComponentProps {
   level?: number
 }
 
+/**
+ * @description 判断当前路由是否落在菜单项自身或其子路由上（href 为空的占位项恒为 false）
+ * @param pathname 当前浏览器路由
+ * @param href 菜单项目标路由
+ * @returns boolean 是否命中（精确相等或位于其子路径下）
+ *
+ * @example isPathInside('/blog/posts/123', '/blog/posts') // true
+ */
+function isPathInside(pathname: string, href: string): boolean {
+  return href !== '' && (pathname === href || pathname.startsWith(`${href}/`))
+}
+
 function MenuItemComponent({
   item,
   pathname,
@@ -26,17 +38,16 @@ function MenuItemComponent({
 }: MenuItemComponentProps) {
   const [isExpanded, setIsExpanded] = useState(
     item.children
-      ? item.children.some(
-          child => child.href !== '' && pathname.startsWith(child.href)
-        )
+      ? item.children.some(child => isPathInside(pathname, child.href))
       : false
   )
   const Icon = item.icon
   const hasChildren = item.children && item.children.length > 0
   const isLeafLink = !hasChildren && item.href !== ''
-  const isActive = pathname === item.href
+  const isActive = isPathInside(pathname, item.href)
   const isParentActive =
-    hasChildren && item.children?.some(child => pathname === child.href)
+    hasChildren &&
+    item.children?.some(child => isPathInside(pathname, child.href))
 
   const handleClick = (e: React.MouseEvent) => {
     if (hasChildren) {
