@@ -90,6 +90,7 @@ bun run dev
 - `/register` - 注册页面
 - `/users` - 用户管理
 - `/settings` - 系统设置
+- `/blog/notes` - 随笔管理
 
 ## 开发规范
 

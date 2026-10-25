@@ -55,6 +55,7 @@ export const iconMap: Record<string, LucideIcon> = {
   'blog-categories': FolderTree,
   'blog-tags': Tags,
   'blog-comments': MessagesSquare,
+  'blog-notes': FileText,
 }
 
 /**
